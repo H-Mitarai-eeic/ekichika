@@ -1,2 +1,2 @@
 ## Agegyoza
-とりあえずcloneしてreadmeを作りました
+とりあえずcloneしてmainブランチとreadmeを作りました
