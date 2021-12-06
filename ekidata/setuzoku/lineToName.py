@@ -1,5 +1,6 @@
-f = open('line20210312free.csv')
-print("ekicode", "name", sep=",")
+f = open('join.csv')
+# print("ekicode", "name", sep=",")
 for line in f:
-    l = line.split(',')
-    print(l[0], l[4], sep=",")
+  line = line.replace('\n', '')
+  l = line.split(',')
+  print(l[1], l[2], "L" + l[0], sep=",")
