@@ -8,12 +8,12 @@
 }
 
 #states {
-  fill: #aaa;
+  fill: black;
 }
 
 #state-borders {
   fill: none;
-  stroke: #fff;
+  stroke: #aaa;
   stroke-width: 1.5px;
   stroke-linejoin: round;
   stroke-linecap: round;
@@ -69,7 +69,6 @@ g.append("rect")
 d3.json("./tokyo.topojson", function(error, tk) {
   if (error) throw error;
 
-  console.log(tk);
 
   g.append("g")
       .attr("id", "states")
@@ -77,7 +76,7 @@ d3.json("./tokyo.topojson", function(error, tk) {
       .data(topojson.feature(tk, tk.objects.tokyo).features)
     .enter().append("path")
       .attr("d", path);
-    //   .on("click", clicked);
+      // .on("click", clicked);
 
   g.append("path")
       .datum(topojson.mesh(tk, tk.objects.tokyo, function(a, b) { return a !== b; }))
