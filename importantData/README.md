@@ -4,7 +4,7 @@
 
 都内の隣接駅について,区切りで
 
-`fromID,fromGroupID,fromName,ToID,ToGroupID,ToName,routeID,routeName`
+`fromID,fromGroupID,fromName,ToID,ToGroupID,ToName,time,routeID,routeName`
 
 が入っています．
 
