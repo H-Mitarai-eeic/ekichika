@@ -1,0 +1,29 @@
+<html lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>D3 Test</title>
+<script type="text/javascript" src="./d3.js"></script>
+<style type="text/css">
+</style>
+</head>
+<body>
+
+<script type="text/javascript">
+    
+within_T_min(0, 0);
+function within_T_min(eki_code, T){
+    var Adj_list = {}
+    d3.csv("../importantData/join.csv").then(function(data){
+        data.forEach(function(d){
+            if (Adj_list[d.fromGroupID] == undefined){
+                Adj_list[d.fromGroupID] = [];
+            }
+            Adj_list[d.fromGroupID].push([d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, d.time]);
+        });
+    });
+    console.log(Adj_list);
+    return //到達可能駅のリスト
+}
+
+
+</script>
+</body></html>
