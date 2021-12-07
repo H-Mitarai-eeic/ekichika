@@ -8,11 +8,12 @@
 <body>
 
 <script type="text/javascript">
-    
-within_T_min('1130101', 10);
+
+within_T_min(1130101, 10);
 
 function within_T_min(startGroupID, T){
     var Adj_list = {}
+    var groupInfo = {}
     var time = {}
     var previousNode = {}
     var groupInfo = {}
@@ -21,32 +22,38 @@ function within_T_min(startGroupID, T){
 
     new Promise((resolve) => {
         Make_Adj_List();
-        console.log(Adj_list);
         resolve();
     }).then(() => {
-        dijkstra();
+        setTimeout(() => {
+            dijkstra();
+        }, 1000);
     });
 
     //return //到達可能駅のリスト
-
     function Make_Adj_List(){
         d3.csv("../importantData/join.csv").then(function(data){
             data.forEach(function(d){
                 if (Adj_list[d.fromGroupID] == undefined){
                     //console.log(d.fromGroupID);
-                    Adj_list[d.fromGroupID] = [];
-                    groupInfo[d.fromGroupID] = []
+                    Adj_list[d.fromGroupID] = [[d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, d.time]];
+                    groupInfo[d.fromGroupID] = [[d.fromID, d.fromName, d.routeID, d.routeName]];
                     time[d.fromGroupID] = T + 100;
                     previousNode[d.fromGroupID] = false;
                 }
-                Adj_list[d.fromGroupID].push([d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, d.time]);
-                groupInfo[d.fromGroupID].push([d.fromID, d.fromName, d.routeID, d.routeName])
+                else{
+                    Adj_list[d.fromGroupID].push([d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, d.time]);
+                    groupInfo[d.fromGroupID].push([d.fromID, d.fromName, d.routeID, d.routeName])
+                }
+                //console.log(Adj_list);
             });
+            //console.log("1")
+            //console.log(Adj_list);
         });
     }
     function dijkstra(){
         time[startGroupID] = 0;
-        console.log(time[startGroupID]);
+        //console.log("2")
+        //console.log(Adj_list);
         previousNode[startGroupID] = "start";
 
         queue.enqueue(-time[startGroupID], startGroupID);
