@@ -155,6 +155,7 @@ function meet_up(startGroupID, N, T){
     });
 
     //return //到達可能駅のリスト
+
     function Make_Adj_List(){
         var groupInfo_flag = {};
 
@@ -204,28 +205,31 @@ function meet_up(startGroupID, N, T){
         });
     }
     function dijkstra_meetup(){
-        time[startGroupID] = 0;
-        previousNode[startGroupID] = "start";
-
-        queue.enqueue(-time[startGroupID], startGroupID);
+        for(var i = 0; i < N; i++){
+            time[i][startGroupID[i]] = 0;
+            previousNode[i][startGroupID[i]] = "start";
+            queue.enqueue(-time[startGroupID[i]], [i, startGroupID[i]]);
+        }
 
         while(queue.size() != 0){
-            var currentGroupID = queue.dequeue();
-            for(var i = 0; i < Adj_list[currentGroupID].length; i++){
-                var nextGroupID = Adj_list[currentGroupID][i][0];
-                var nextRouteID = Adj_list[currentGroupID][i][3];
-                var dt = parseInt(Adj_list[currentGroupID][i][5]);
-                var current_node_time = parseInt(time[currentGroupID]);
-                var next_node_time = parseInt(time[nextGroupID]);
+            var dequeued_item = queue.dequeue();
+            var i = dequeued_item[0]; //i is personal_id
+            var currentGroupID = dequeued_item[1];
+            for(var j = 0; j < Adj_list[currentGroupID].length; j++){
+                var nextGroupID = Adj_list[currentGroupID][j][0];
+                var nextRouteID = Adj_list[currentGroupID][j][3];
+                var dt = parseInt(Adj_list[currentGroupID][j][5]);
+                var current_node_time = parseInt(time[i][currentGroupID]);
+                var next_node_time = parseInt(time[i][nextGroupID]);
 
 
-                if (previousRouteID[currentGroupID].indexOf(nextRouteID) == -1 && startGroupID != currentGroupID){
+                if (previousRouteID[i][currentGroupID].indexOf(nextRouteID) == -1 && startGroupID.indexOf(currentGroupID) == -1){
                     changeTrains_flag = parseInt(1);
                 }else{
                     changeTrains_flag = parseInt(0);
                 }
                 if( (next_node_time >= current_node_time + dt + stopTime + (changeTrains_time*changeTrains_flag)) && (current_node_time + dt + (changeTrains_time*changeTrains_flag) < T)){
-                    var nextRouteName = Adj_list[currentGroupID][i][4]
+                    var nextRouteName = Adj_list[currentGroupID][j][4]
                     time[nextGroupID] = current_node_time + dt + stopTime + (changeTrains_time*changeTrains_flag);
                     previousNode[nextGroupID].push([currentGroupID, nextRouteName]);
                     previousRouteID[nextGroupID].push(nextRouteID)
