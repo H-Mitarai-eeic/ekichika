@@ -9,7 +9,8 @@
 
 <script type="text/javascript">
 
-within_T_min(1130101, 10);
+within_T_min(1130101, 100);
+//meet_up([1130101, 1130102], 2, 100);
 
 function within_T_min(startGroupID, T){
     var Adj_list = {}
@@ -18,23 +19,25 @@ function within_T_min(startGroupID, T){
     var previousNode = {}
     var previousRouteID = {}
     var groupInfo = {}
-    var groupInfo_flag = {}
 
     var queue = new pairing_heap();
 
     var ARAKAWASEN = 0.8;
     var changeTrains_time = 5;
+    var stopTime = 0.7;
     new Promise((resolve) => {
         Make_Adj_List();
         resolve();
     }).then(() => {
         setTimeout(() => {
             dijkstra();
-        }, 1000);
+        }, 100);
     });
 
     //return //到達可能駅のリスト
     function Make_Adj_List(){
+        var groupInfo_flag = {}
+
         d3.csv("../importantData/join.csv").then(function(data){
             data.forEach(function(d){
                 var time_tmp
@@ -80,7 +83,6 @@ function within_T_min(startGroupID, T){
         });
     }
     function dijkstra(){
-        var stopTime = 0.5;
         time[startGroupID] = 0;
         //console.log("2");
         //console.log(Adj_list);
@@ -110,14 +112,14 @@ function within_T_min(startGroupID, T){
                     previousRouteID[nextGroupID].push(nextRouteID)
                     queue.enqueue(-time[nextGroupID], nextGroupID);
                     
-                    console.log(current_node_time);
-                    console.log(groupInfo[currentGroupID]);
+                    //console.log(current_node_time);
+                    //console.log(groupInfo[currentGroupID]);
                     //console.log(changeTrains_time*changeTrains_flag);
                     //console.log(previousRouteID[currentGroupID]);
                     //console.log(previousRouteID[nextGroupID]);
-                    console.log(previousNode[nextGroupID]);
-                    console.log(groupInfo[nextGroupID]);
-                    console.log(time[nextGroupID]);
+                    //console.log(previousNode[nextGroupID]);
+                    //console.log(groupInfo[nextGroupID]);
+                    //console.log(time[nextGroupID]);
                 }
             }
 
@@ -125,6 +127,114 @@ function within_T_min(startGroupID, T){
     }
 }
 
+function meet_up(startGroupID, N, T){
+    var Adj_list = {};
+    var groupInfo = {};
+    var groupInfo = {};
+    var visit_flag = {};
+
+    var time = Array(N);
+    var previousNode = Array(N);
+    var previousRouteID = Array(N);
+    time.fill({});
+    previousNode.fill({});
+    previousRouteID.fill({})
+
+    var queue = new pairing_heap();
+
+    var ARAKAWASEN = 0.8;
+    var changeTrains_time = 5;
+    var stopTime = 0.7;
+    new Promise((resolve) => {
+        Make_Adj_List();
+        resolve();
+    }).then(() => {
+        setTimeout(() => {
+            dijkstra();
+        }, 100);
+    });
+
+    //return //到達可能駅のリスト
+    function Make_Adj_List(){
+        var groupInfo_flag = {};
+
+        d3.csv("../importantData/join.csv").then(function(data){
+            data.forEach(function(d){
+                var time_tmp
+                if (d.time == 0){
+                    time_tmp = ARAKAWASEN;
+                }else{
+                    time_tmp = d.time;
+                }
+                if (Adj_list[d.fromGroupID] == undefined){
+                    Adj_list[d.fromGroupID] = [[d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, time_tmp]];
+                    groupInfo[d.fromGroupID] = [[d.fromID, d.fromName, d.routeID, d.routeName]];
+                    groupInfo_flag[d.fromGroupID] = [d.fromID];
+                    for(var i = 0; i < N; i++){
+                        time[i][d.fromGroupID] = T + 100;
+                        previousNode[i][d.fromGroupID] = [];
+                        previousRouteID[i][d.fromGroupID] = [];
+                    }
+                }
+                else{
+                    Adj_list[d.fromGroupID].push([d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, time_tmp]);
+                    if (groupInfo_flag[d.fromGroupID].indexOf(d.fromID) == -1){
+                        groupInfo[d.fromGroupID].push([d.fromID, d.fromName, d.routeID, d.routeName]);
+                        groupInfo_flag[d.fromGroupID].push(d.fromID);
+                    }
+                }
+                if (Adj_list[d.toGroupID] == undefined){
+                    Adj_list[d.toGroupID] = [[d.fromGroupID, d.fromID, d.fromName, d.routeID, d.routeName, time_tmp]];
+                    groupInfo[d.toGroupID] = [[d.toID, d.toName, d.routeID, d.routeName]];
+                    groupInfo_flag[d.toGroupID] = [d.toID];
+                    for(var i = 0; i < N; i++){
+                        time[i][d.toGroupID] = T + 100;
+                        previousNode[i][d.toGroupID] = [];
+                        previousRouteID[i][d.toGroupID] = [];
+                    }
+                }
+                else{
+                    Adj_list[d.toGroupID].push([d.fromGroupID, d.fromID, d.fromName, d.routeID, d.routeName, time_tmp]);
+                    if (groupInfo_flag[d.toGroupID].indexOf(d.toID) == -1){
+                        groupInfo[d.toGroupID].push([d.toID, d.toName, d.routeID, d.routeName]);
+                        groupInfo_flag[d.toGroupID].push(d.toID);
+                    }
+                } 
+            });
+        });
+    }
+    function dijkstra_meetup(){
+        time[startGroupID] = 0;
+        previousNode[startGroupID] = "start";
+
+        queue.enqueue(-time[startGroupID], startGroupID);
+
+        while(queue.size() != 0){
+            var currentGroupID = queue.dequeue();
+            for(var i = 0; i < Adj_list[currentGroupID].length; i++){
+                var nextGroupID = Adj_list[currentGroupID][i][0];
+                var nextRouteID = Adj_list[currentGroupID][i][3];
+                var dt = parseInt(Adj_list[currentGroupID][i][5]);
+                var current_node_time = parseInt(time[currentGroupID]);
+                var next_node_time = parseInt(time[nextGroupID]);
+
+
+                if (previousRouteID[currentGroupID].indexOf(nextRouteID) == -1 && startGroupID != currentGroupID){
+                    changeTrains_flag = parseInt(1);
+                }else{
+                    changeTrains_flag = parseInt(0);
+                }
+                if( (next_node_time >= current_node_time + dt + stopTime + (changeTrains_time*changeTrains_flag)) && (current_node_time + dt + (changeTrains_time*changeTrains_flag) < T)){
+                    var nextRouteName = Adj_list[currentGroupID][i][4]
+                    time[nextGroupID] = current_node_time + dt + stopTime + (changeTrains_time*changeTrains_flag);
+                    previousNode[nextGroupID].push([currentGroupID, nextRouteName]);
+                    previousRouteID[nextGroupID].push(nextRouteID)
+                    queue.enqueue(-time[nextGroupID], nextGroupID);
+                }
+            }
+        }
+    }
+}
 // https://qiita.com/330k/items/daa144d82b000c72f774
 function pairing_heap(){
     "use strict";
