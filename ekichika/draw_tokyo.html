@@ -45,6 +45,7 @@
       .scaleExtent([1, 8])
       .on("zoom", function (event) {
         g.selectAll("path").attr("transform", event.transform);
+        g.selectAll("circle").attr("transform", event.transform);
       });
 
     var svg = d3
@@ -65,18 +66,30 @@
     // .attr("stroke-width", 20);
 
     d3.csv("data.csv").then(function (data) {
-      // console.log(data);
+      console.log(data);
       showMap();
+
+      function position(p) {
+        p.attr("cx", function (d) {
+          return projection([d.ido, d.keido])[0];
+        });
+        p.attr("cy", function (d) {
+          return projection([d.ido, d.keido])[1];
+        });
+      }
+      var circle = svg
+        .selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("class", "circle")
+        .attr("r", 2.5)
+        .attr("fill", "red")
+        .call(position);
     });
 
-    // d3.csv("data.csv").then(function (data) {
-    //   showMap();
-    // });
-
     function showMap() {
-      console.log("hoge");
       d3.json("./tokyo.topojson").then(function (tk) {
-        console.log(tk);
         var tokyo = topojson.feature(tk, tk.objects.tokyo);
 
         g.append("g")
