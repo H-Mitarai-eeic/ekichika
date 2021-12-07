@@ -21,6 +21,8 @@ function within_T_min(startGroupID, T){
 
     var queue = new pairing_heap();
 
+    var ARAKAWASEN = 0.8;
+
     new Promise((resolve) => {
         Make_Adj_List();
         resolve();
@@ -34,29 +36,35 @@ function within_T_min(startGroupID, T){
     function Make_Adj_List(){
         d3.csv("../importantData/join.csv").then(function(data){
             data.forEach(function(d){
+                var time_tmp
+                if (d.time == 0){
+                    time_tmp = ARAKAWASEN;
+                }else{
+                    time_tmp = d.time;
+                }
                 if (Adj_list[d.fromGroupID] == undefined){
-                    Adj_list[d.fromGroupID] = [[d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, d.time]];
+                    Adj_list[d.fromGroupID] = [[d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, time_tmp]];
                     groupInfo[d.fromGroupID] = [[d.fromID, d.fromName, d.routeID, d.routeName]];
                     groupInfo_flag[d.fromGroupID] = [d.fromID];
                     time[d.fromGroupID] = T + 100;
                     previousNode[d.fromGroupID] = false;
                 }
                 else{
-                    Adj_list[d.fromGroupID].push([d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, d.time]);
+                    Adj_list[d.fromGroupID].push([d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, time_tmp]);
                     if (groupInfo_flag[d.fromGroupID].indexOf(d.fromID) == -1){
                         groupInfo[d.fromGroupID].push([d.fromID, d.fromName, d.routeID, d.routeName]);
                         groupInfo_flag[d.fromGroupID].push(d.fromID);
                     }
                 }
                 if (Adj_list[d.toGroupID] == undefined){
-                    Adj_list[d.toGroupID] = [[d.fromGroupID, d.fromID, d.fromName, d.routeID, d.routeName, d.time]];
+                    Adj_list[d.toGroupID] = [[d.fromGroupID, d.fromID, d.fromName, d.routeID, d.routeName, time_tmp]];
                     groupInfo[d.toGroupID] = [[d.toID, d.toName, d.routeID, d.routeName]];
                     groupInfo_flag[d.toGroupID] = [d.toID];
                     time[d.toGroupID] = T + 100;
                     previousNode[d.fromGroupID] = false;
                 }
                 else{
-                    Adj_list[d.toGroupID].push([d.fromGroupID, d.fromID, d.fromName, d.routeID, d.routeName, d.time]);
+                    Adj_list[d.toGroupID].push([d.fromGroupID, d.fromID, d.fromName, d.routeID, d.routeName, time_tmp]);
                     if (groupInfo_flag[d.toGroupID].indexOf(d.toID) == -1){
                         groupInfo[d.toGroupID].push([d.toID, d.toName, d.routeID, d.routeName]);
                         groupInfo_flag[d.toGroupID].push(d.toID);
