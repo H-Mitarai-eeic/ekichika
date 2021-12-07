@@ -18,7 +18,6 @@
     stroke-linecap: round;
     pointer-events: none;
   }
-
 </style>
 <body>
   <script src="./d3.js" charset="utf-8"></script>
@@ -43,10 +42,16 @@
 
     var zoom = d3
       .zoom()
-      .scaleExtent([1, 10])
+      .scaleExtent([1,100])
       .on("zoom", function (event) {
         g.selectAll("path").attr("transform", event.transform);
         g.selectAll("circle").attr("transform", event.transform);
+        g.selectAll("circle").attr("r", function (d) {
+          return Math.sqrt(d.noriire) / Math.cbrt(event.transform.k);
+        });
+        g.selectAll("circle").attr("stroke-width", function (d) {
+          return 1 / Math.cbrt(event.transform.k);
+        });
       });
 
     var svg = d3
@@ -70,7 +75,7 @@
       showMap();
       setTimeout(() => {
         showCircle(data);
-      }, 200);
+      }, 120);
     });
 
     function showMap() {
@@ -105,10 +110,10 @@
         p.attr("cy", function (d) {
           return projection([d.ido, d.keido])[1];
         });
-        // p.attr("r", function(d){
-        //   console.log(d);
-        //   return scale
-        // })
+        p.attr("r", function (d) {
+          return 1.5 * Math.sqrt(d.noriire);
+        });
+        p.attr("stroke-width", 1);
       }
 
       var circle = g
@@ -117,8 +122,9 @@
         .enter()
         .append("circle")
         .attr("class", "circle")
-        .attr("r", 2)
+        // .attr("r", 2)
         .attr("fill", "red")
+        .attr("stroke", "white")
         .call(position);
     }
 
