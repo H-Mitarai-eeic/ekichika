@@ -16,13 +16,14 @@ function within_T_min(startGroupID, T){
     var groupInfo = {}
     var time = {}
     var previousNode = {}
+    var previousRouteID = {}
     var groupInfo = {}
     var groupInfo_flag = {}
 
     var queue = new pairing_heap();
 
     var ARAKAWASEN = 0.8;
-
+    var changeTrains_time = 5;
     new Promise((resolve) => {
         Make_Adj_List();
         resolve();
@@ -47,7 +48,8 @@ function within_T_min(startGroupID, T){
                     groupInfo[d.fromGroupID] = [[d.fromID, d.fromName, d.routeID, d.routeName]];
                     groupInfo_flag[d.fromGroupID] = [d.fromID];
                     time[d.fromGroupID] = T + 100;
-                    previousNode[d.fromGroupID] = false;
+                    previousNode[d.fromGroupID] = [];
+                    previousRouteID[d.fromGroupID] = [];
                 }
                 else{
                     Adj_list[d.fromGroupID].push([d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, time_tmp]);
@@ -61,7 +63,8 @@ function within_T_min(startGroupID, T){
                     groupInfo[d.toGroupID] = [[d.toID, d.toName, d.routeID, d.routeName]];
                     groupInfo_flag[d.toGroupID] = [d.toID];
                     time[d.toGroupID] = T + 100;
-                    previousNode[d.fromGroupID] = false;
+                    previousNode[d.toGroupID] = [];
+                    previousRouteID[d.toGroupID] = [];
                 }
                 else{
                     Adj_list[d.toGroupID].push([d.fromGroupID, d.fromID, d.fromName, d.routeID, d.routeName, time_tmp]);
@@ -73,13 +76,13 @@ function within_T_min(startGroupID, T){
                 //console.log(Adj_list);
             });
             //console.log("1")
-            console.log(groupInfo);
+            //console.log(groupInfo);
         });
     }
     function dijkstra(){
         var stopTime = 0.5;
         time[startGroupID] = 0;
-        //console.log("2")
+        //console.log("2");
         //console.log(Adj_list);
         previousNode[startGroupID] = "start";
 
@@ -89,15 +92,30 @@ function within_T_min(startGroupID, T){
             var currentGroupID = queue.dequeue();
             for(var i = 0; i < Adj_list[currentGroupID].length; i++){
                 var nextGroupID = Adj_list[currentGroupID][i][0];
+                var nextRouteID = Adj_list[currentGroupID][i][3];
                 var dt = parseInt(Adj_list[currentGroupID][i][5]);
                 var current_node_time = parseInt(time[currentGroupID]);
                 var next_node_time = parseInt(time[nextGroupID]);
-                if( (next_node_time > current_node_time + dt) && (current_node_time + dt < T)){
-                    var UsedRouteName = Adj_list[currentGroupID][i][4]
-                    time[nextGroupID] =current_node_time + dt + stopTime;
-                    previousNode[nextGroupID] = [currentGroupID, UsedRouteName];
-                    queue.enqueue(-time[nextGroupID], nextGroupID);
 
+
+                if (previousRouteID[currentGroupID].indexOf(nextRouteID) == -1 && startGroupID != currentGroupID){
+                    changeTrains_flag = parseInt(1);
+                }else{
+                    changeTrains_flag = parseInt(0);
+                }
+                if( (next_node_time >= current_node_time + dt + stopTime + (changeTrains_time*changeTrains_flag)) && (current_node_time + dt + (changeTrains_time*changeTrains_flag) < T)){
+                    var nextRouteName = Adj_list[currentGroupID][i][4]
+                    time[nextGroupID] = current_node_time + dt + stopTime + (changeTrains_time*changeTrains_flag);
+                    previousNode[nextGroupID].push([currentGroupID, nextRouteName]);
+                    previousRouteID[nextGroupID].push(nextRouteID)
+                    queue.enqueue(-time[nextGroupID], nextGroupID);
+                    
+                    console.log(current_node_time);
+                    console.log(groupInfo[currentGroupID]);
+                    //console.log(changeTrains_time*changeTrains_flag);
+                    //console.log(previousRouteID[currentGroupID]);
+                    //console.log(previousRouteID[nextGroupID]);
+                    console.log(previousNode[nextGroupID]);
                     console.log(groupInfo[nextGroupID]);
                     console.log(time[nextGroupID]);
                 }
