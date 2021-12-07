@@ -13,10 +13,24 @@
   #state-borders {
     fill: none;
     stroke: black;
-    stroke-width: 1.5px;
+    /* stroke-width: 1.5px; */
     stroke-linejoin: round;
     stroke-linecap: round;
     pointer-events: none;
+  }
+  .tooltip {
+    position: absolute;
+    width: auto;
+    height: auto;
+    padding: 8px;
+    font: 16px sans-serif;
+    color: #fff;
+    background: #333;
+    -webkit-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    -moz-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    border-radius: 4px;
+    visibility: hidden;
   }
 </style>
 <body>
@@ -42,17 +56,33 @@
 
     var zoom = d3
       .zoom()
-      .scaleExtent([1,100])
+      .scaleExtent([1, 100])
       .on("zoom", function (event) {
         g.selectAll("path").attr("transform", event.transform);
         g.selectAll("circle").attr("transform", event.transform);
         g.selectAll("circle").attr("r", function (d) {
-          return Math.sqrt(d.noriire) / Math.cbrt(event.transform.k);
+          return (1.2 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k);
         });
         g.selectAll("circle").attr("stroke-width", function (d) {
           return 1 / Math.cbrt(event.transform.k);
         });
+        g.selectAll("#state-borders").attr("stroke-width", function (d) {
+          return 1.5 / Math.cbrt(event.transform.k);
+        });
+        console.log(
+          "translate(" + event.transform.x + ", " + event.transform.y + ")"
+        );
+        tooltip.style(
+          "transform",
+          "translate(" + event.transform.x + "px, " + event.transform.y + "px)"
+        );
       });
+
+    var tooltip = d3
+      .select("body")
+      .append("div")
+      .attr("class", "tooltip")
+      .call(zoom);
 
     var svg = d3
       .select("body")
@@ -98,6 +128,7 @@
             })
           )
           .attr("id", "state-borders")
+          .attr("stroke-width", 1.5)
           .attr("d", path);
       });
     }
@@ -111,7 +142,7 @@
           return projection([d.ido, d.keido])[1];
         });
         p.attr("r", function (d) {
-          return 1.5 * Math.sqrt(d.noriire);
+          return 1.2 * Math.sqrt(d.noriire);
         });
         p.attr("stroke-width", 1);
       }
@@ -121,11 +152,27 @@
         .data(data)
         .enter()
         .append("circle")
+        .sort(order)
         .attr("class", "circle")
         // .attr("r", 2)
         .attr("fill", "red")
         .attr("stroke", "white")
-        .call(position);
+        .call(position)
+        .on("mouseover", function (event, d) {
+          //event忘れないように
+          tooltip.style("visibility", "visible").html(d.name);
+        })
+        .on("mousemove", function (event, d) {
+          var [x, y] = projection([d.ido, d.keido]);
+          tooltip.style("top", y + "px").style("left", x + "px");
+        })
+        .on("mouseout", function (event, d) {
+          tooltip.style("visibility", "hidden");
+        });
+
+      function order(a, b) {
+        return b.noriire - a.noriire;
+      }
     }
 
     // function clicked(d) {
@@ -157,7 +204,6 @@
       height = w.innerHeight || e.clientHeight || BODY.clientHeight;
       svg.attr("width", width).attr("height", height);
       svg.selectAll(".background").attr("width", width).attr("height", height);
-      console.log(svg.attr("width"));
     }
   </script>
 </body>
