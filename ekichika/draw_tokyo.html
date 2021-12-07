@@ -4,14 +4,10 @@
   .background {
     fill: black;
     pointer-events: all;
-    position: relative;
-    z-index: 10;
   }
 
   #states {
     fill: grey;
-    position: relative;
-    z-index: 1;
   }
 
   #state-borders {
@@ -21,14 +17,8 @@
     stroke-linejoin: round;
     stroke-linecap: round;
     pointer-events: none;
-    position: relative;
-    z-index: 2;
   }
 
-  .circle {
-    position: relative;
-    z-index: 3;
-  }
 </style>
 <body>
   <script src="./d3.js" charset="utf-8"></script>
@@ -45,7 +35,7 @@
 
     var projection = d3
       .geoMercator()
-      .scale(40000)
+      .scale(60000)
       .center([139.463191, 35.710335])
       .translate([width / 2, height / 2]);
 
@@ -53,7 +43,7 @@
 
     var zoom = d3
       .zoom()
-      .scaleExtent([1, 8])
+      .scaleExtent([1, 10])
       .on("zoom", function (event) {
         g.selectAll("path").attr("transform", event.transform);
         g.selectAll("circle").attr("transform", event.transform);
@@ -71,7 +61,6 @@
 
     g.append("rect")
       .attr("class", "background")
-      // .attr("style", "z-index:0")
       .attr("width", width)
       .attr("height", height);
     // .attr("stroke", "lightgrey")
@@ -79,7 +68,9 @@
 
     d3.csv("data.csv").then(function (data) {
       showMap();
-      showCircle(data);
+      setTimeout(() => {
+        showCircle(data);
+      }, 200);
     });
 
     function showMap() {
@@ -114,6 +105,10 @@
         p.attr("cy", function (d) {
           return projection([d.ido, d.keido])[1];
         });
+        // p.attr("r", function(d){
+        //   console.log(d);
+        //   return scale
+        // })
       }
 
       var circle = g
