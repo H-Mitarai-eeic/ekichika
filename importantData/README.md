@@ -34,3 +34,7 @@ ekiCodeGroupNameIdoKeidoNoriire.csvは同名でも全ての駅を別の駅とし
 が入っています．
 
 最初の読み込み時に駅データを取り込んで，その構造体に接続情報をjoin.csvから付加するイメージです．
+
+## color.csv
+
+都内の路線について，Wikipediaに載っている情報を元に，色をrgbで記載しています.
