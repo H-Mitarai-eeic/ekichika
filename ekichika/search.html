@@ -10,21 +10,20 @@
 <script type="text/javascript">
 
 //within_T_min(1130101, 100);
-meet_up([1130101, 1130205], 2, 10);
+meet_up([1130101, 1130212, 2400605, 1132005], 4, 100);
 
 function within_T_min(startGroupID, T){
-    var Adj_list = {}
-    var groupInfo = {}
-    var time = {}
-    var previousNode = {}
-    var previousRouteID = {}
-    var groupInfo = {}
+    var Adj_list = {}   //隣接リスト　keyはgroupe ID
+    var groupInfo = {}  //グループIDでそのグループ内の駅情報を検索するための辞書 keyはgroupe ID
+    var time = {}       //その駅グループに到達するまでの所要時間    keyはgroupe ID
+    var previousNode = {}   //ひとつ前の[駅グループ, routename]を格納　keyはgroupe ID
+    var previousRouteID = {}    //その駅グループに来るのに使用した路線ＩＤ　keyはgroupe ID
 
-    var queue = new pairing_heap();
+    var queue = new pairing_heap(); //最大ヒープ
 
-    var ARAKAWASEN = 0.8;
-    var changeTrains_time = 5;
-    var stopTime = 0.7;
+    var ARAKAWASEN = 0.8;   //所要時間0分の駅間の所要時間
+    var changeTrains_time = 5;  //乗り換え時間
+    var stopTime = 0.7;         //停車時間
     new Promise((resolve) => {
         Make_Adj_List();
         resolve();
@@ -42,7 +41,7 @@ function within_T_min(startGroupID, T){
             data.forEach(function(d){
                 var time_tmp
                 if (d.time == 0){
-                    time_tmp = ARAKAWASEN;
+                    time_tmp = ARAKAWASEN;  //d.time=0のときの例外処理
                 }else{
                     time_tmp = d.time;
                 }
@@ -76,30 +75,25 @@ function within_T_min(startGroupID, T){
                         groupInfo_flag[d.toGroupID].push(d.toID);
                     }
                 } 
-                //console.log(Adj_list);
             });
-            //console.log("1")
-            //console.log(groupInfo);
         });
     }
     function dijkstra(){
-        time[startGroupID] = 0;
-        //console.log("2");
-        //console.log(Adj_list);
+        time[startGroupID] = 0; //スタート地点の時間は0
         previousNode[startGroupID] = "start";
 
-        queue.enqueue(-time[startGroupID], startGroupID);
+        queue.enqueue(-time[startGroupID], startGroupID);   //最大ヒープなのでtimeにマイナス付ける
 
         while(queue.size() != 0){
             var currentGroupID = queue.dequeue();
             for(var i = 0; i < Adj_list[currentGroupID].length; i++){
                 var nextGroupID = Adj_list[currentGroupID][i][0];
                 var nextRouteID = Adj_list[currentGroupID][i][3];
-                var dt = parseInt(Adj_list[currentGroupID][i][5]);
+                var dt = parseInt(Adj_list[currentGroupID][i][5]);  //次の駅までの所要時間
                 var current_node_time = parseInt(time[currentGroupID]);
                 var next_node_time = parseInt(time[nextGroupID]);
 
-
+                //乗り換え判定
                 if (previousRouteID[currentGroupID].indexOf(nextRouteID) == -1 && startGroupID != currentGroupID){
                     changeTrains_flag = parseInt(1);
                 }else{
@@ -111,15 +105,6 @@ function within_T_min(startGroupID, T){
                     previousNode[nextGroupID].push([currentGroupID, nextRouteName]);
                     previousRouteID[nextGroupID].push(nextRouteID)
                     queue.enqueue(-time[nextGroupID], nextGroupID);
-                    
-                    //console.log(current_node_time);
-                    //console.log(groupInfo[currentGroupID]);
-                    //console.log(changeTrains_time*changeTrains_flag);
-                    //console.log(previousRouteID[currentGroupID]);
-                    //console.log(previousRouteID[nextGroupID]);
-                    //console.log(previousNode[nextGroupID]);
-                    //console.log(groupInfo[nextGroupID]);
-                    //console.log(time[nextGroupID]);
                 }
             }
 
@@ -132,14 +117,12 @@ function meet_up(startGroupID, N, T){
     var groupInfo = {};
     var numOfVisitors = {};
 
+    //以下の変数は人数分準備
     var time = Array(N);
     var previousNode = Array(N);
     var previousRouteID = Array(N);
     var visited_flag = Array(N);    //訪問済みならtrue 未訪問はfalse
-    //time.fill({});
-    //previousNode.fill({});
-    //previousRouteID.fill({});
-    //visited_flag.fill({});
+
     for(var i = 0; i < N; i++){
         time[i] = {};
         previousNode[i] = {};
