@@ -31,3 +31,10 @@ topojsonで地図を出し，拡大縮小ができるようにしたい．駅を
 ・駅ネットワーク描画のためのデータ構造
 
 {{eki:品川, eki2:大崎, time:3, rosen:山手線}, {eki:大崎, eki2:五反田, time:3, rosen:山手線}}
+
+
+### 駅を押すと，google mapのグルメ検索が開く様にする
+
+`https://www.google.co.jp/maps/search/%E3%83%AC%E3%82%B9%E3%83%88%E3%83%A9%E3%83%B3/@KEIDO,IDO,14z?hl=ja`
+
+にアクセスすればいける
