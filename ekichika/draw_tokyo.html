@@ -168,8 +168,10 @@
         })
         .on("mouseout", function (event, d) {
           tooltip.style("visibility", "hidden");
+        })
+        .on("click", function (event, d) {
+          openGoogleMap(d);
         });
-
       function order(a, b) {
         return b.noriire - a.noriire;
       }
@@ -204,6 +206,13 @@
       height = w.innerHeight || e.clientHeight || BODY.clientHeight;
       svg.attr("width", width).attr("height", height);
       svg.selectAll(".background").attr("width", width).attr("height", height);
+    }
+
+    function openGoogleMap(d) {
+      window.open(
+        "https://www.google.co.jp/maps/search/%E3%83%AC%E3%82%B9%E3%83%88%E3%83%A9%E3%83%B3+" +
+          d.name
+      );
     }
   </script>
 </body>
