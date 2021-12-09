@@ -18,20 +18,6 @@
     stroke-linecap: round;
     pointer-events: none;
   }
-  .tooltip {
-    position: absolute;
-    width: auto;
-    height: auto;
-    padding: 8px;
-    font: 16px sans-serif;
-    color: #fff;
-    background: #333;
-    -webkit-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    -moz-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    border-radius: 4px;
-    visibility: hidden;
-  }
 </style>
 <body>
   <script src="./d3.js" charset="utf-8"></script>
@@ -69,20 +55,7 @@
         g.selectAll("#state-borders").attr("stroke-width", function (d) {
           return 1.5 / Math.cbrt(event.transform.k);
         });
-        console.log(
-          "translate(" + event.transform.x + ", " + event.transform.y + ")"
-        );
-        tooltip.style(
-          "transform",
-          "translate(" + event.transform.x + "px, " + event.transform.y + "px)"
-        );
       });
-
-    var tooltip = d3
-      .select("body")
-      .append("div")
-      .attr("class", "tooltip")
-      .call(zoom);
 
     var svg = d3
       .select("body")
@@ -154,8 +127,7 @@
         .append("circle")
         .sort(order)
         .attr("class", "circle")
-        // .attr("r", 2)
-        .attr("fill", "red")
+        .attr("fill", "blue")
         .attr("stroke", "white")
         .call(position)
         .on("mouseover", function (event, d) {
@@ -169,6 +141,9 @@
         .on("mouseout", function (event, d) {
           tooltip.style("visibility", "hidden");
         })
+        .on("mouseover", function (event, d) {})
+        .on("mousemove", function (event, d) {})
+        .on("mouseout", function (event, d) {})
         .on("click", function (event, d) {
           openGoogleMap(d);
         });
