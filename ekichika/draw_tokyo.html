@@ -42,7 +42,7 @@
 
     var zoom = d3
       .zoom()
-      .scaleExtent([1, 100])
+      .scaleExtent([1, 200])
       .on("zoom", function (event) {
         g.selectAll("path").attr("transform", event.transform);
         g.selectAll("circle")
@@ -129,7 +129,6 @@
         p.attr("y2", function (d) {
           return projection([d.toIdo, d.toKeido])[1];
         });
-        p.attr("stroke-width", 1);
         p.attr("stroke", function (d) {
           return "rgb(" + d.r + "," + d.g + "," + d.b + ")";
         });
