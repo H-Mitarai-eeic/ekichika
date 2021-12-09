@@ -127,19 +127,27 @@ function within_T_min(startGroupID, T){
             var currentStationName = stationInfo[currentStationID].stationName;
             var currentGroupID = stationInfo[currentStationID].GroupID;
             var currentStationRouteName = stationInfo[currentStationID].routeName;
+            var currentStationRouteID = stationInfo[currentStationID].routeID;
             if (visited_station_flag[currentStationID] == false){
                 visited_station_flag[currentStationID] = true;
                 if (previousStation[currentStationID][0] != currentGroupID){
                     //Groupが違えば乗り換えでない
                     stationQueue.push([previousStation[currentStationID][1], currentStationID]);
                 }
-                console.log(stationInfo[currentStationID]);
-                for(var i = 0; i < Adj_list[currentStationID].length; i++){
-                    var nextStationID = Adj_list[currentStationID][i][1];
-                    var dt = parseFloat(Adj_list[currentStationID][i][5]);  //次の駅までの所要時間
+                //同一路線が繋がらないバグ修正
+                for(var j = 0; j < Adj_list[currentStationID].length; j++){
+                        Adj_stationID = Adj_list[currentStationID][j][1];
+                        Adj_stationRouteID = Adj_list[currentStationID][j][3];
+                        if (Adj_stationRouteID == currentStationRouteID && previousStation[currentStationID][1] != Adj_stationID && visited_station_flag[Adj_stationID] == true){
+                            stationQueue.push([currentStationID, Adj_stationID]);
+                        }
+                }
+                for(var j = 0; j < Adj_list[currentStationID].length; j++){
+                    var nextStationID = Adj_list[currentStationID][j][1];
+                    var dt = parseFloat(Adj_list[currentStationID][j][5]);  //次の駅までの所要時間
                     var current_node_time = parseFloat(time[currentStationID]);
                     var next_node_time = parseFloat(time[nextStationID]);
-                    if( (next_node_time > current_node_time + dt && current_node_time + dt　< T)){
+                    if( (next_node_time > current_node_time + dt && current_node_time + dt < T)){
                         time[nextStationID] = current_node_time + dt;
                         previousStation[nextStationID] = [currentGroupID, currentStationID, currentStationName, currentStationRouteName];
                         queue.enqueue(-time[nextStationID], nextStationID);
