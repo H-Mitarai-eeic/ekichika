@@ -89,9 +89,6 @@
         showline(data);
       }, 120);
     });
-    
-    console.log(stationQueue);
-    within_T_min(1130208, 30);
 
     function showMap() {
       d3.json("./tokyo.topojson").then(function (tk) {
@@ -184,10 +181,16 @@
         // .on("mouseout", function (event, d) {
         //   tooltip.style("visibility", "hidden");
         // })
-        .on("click", function (event, d) {
-          // openGoogleMap(d);
-          return returngroupcode(d);
-        });
+        // .on("click", function (event, d) {
+        //   d3.selectAll("line").attr("opacity", 0);
+        //   console.log(d);
+        //   within_T_min(d.GroupID, 20);
+        //   setTimeout(() => {
+            
+        //   }, 1000);
+          
+        //   console.log(stationQueue);
+        // });
       function order(a, b) {
         return b.noriire - a.noriire;
       }
@@ -217,9 +220,6 @@
       height = w.innerHeight || e.clientHeight || BODY.clientHeight;
       svg.attr("width", width).attr("height", height);
       svg.selectAll(".background").attr("width", width).attr("height", height);
-    }
-    function returngroupcode(d) {
-      console.log(d);
     }
 
     function openGoogleMap(d) {
