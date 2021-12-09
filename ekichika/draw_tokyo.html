@@ -22,6 +22,7 @@
 <body>
   <script src="./d3.js" charset="utf-8"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
+  <script src="./search.js"></script>
   <script>
     var w = window,
       d = document,
@@ -42,7 +43,7 @@
 
     var zoom = d3
       .zoom()
-      .scaleExtent([1, 100])
+      .scaleExtent([1, 200])
       .on("zoom", function (event) {
         g.selectAll("path").attr("transform", event.transform);
         g.selectAll("circle")
@@ -84,7 +85,6 @@
       }, 250);
     });
     d3.csv("joinWithIdoKeido.csv").then(function (data) {
-      console.log(data);
       setTimeout(() => {
         showline(data);
       }, 120);
@@ -129,12 +129,13 @@
         p.attr("y2", function (d) {
           return projection([d.toIdo, d.toKeido])[1];
         });
-        p.attr("stroke-width", 1);
         p.attr("stroke", function (d) {
           return "rgb(" + d.r + "," + d.g + "," + d.b + ")";
         });
         p.attr("class", function (d) {
-          return d.fromID + "_" + d.toID + " " + d.toID + "_" + d.fromID;
+          return (
+            "s" + d.fromID + "_" + d.toID + " " + "s" + d.toID + "_" + d.fromID
+          );
         });
       }
       var links = g
@@ -183,9 +184,36 @@
         //   tooltip.style("visibility", "hidden");
         // })
         .on("click", function (event, d) {
-          // openGoogleMap(d);
-          return returngroupcode(d);
+          d3.selectAll("line").attr("opacity", 0);
+          console.log(d);
+          within_T_min(d.GroupID, 60);
+          setTimeout(() => {
+            console.log(stationQueue);
+            while (stationQueue.length) {
+              console.log(stationQueue.length);
+              var rinsetsu_stations = stationQueue.shift();
+              g.select(
+                ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
+              ).attr("opacity", 1);
+            }
+          }, 1000);
+          // setTimeout(() => {
+          //   deque_and_visualize();
+          // }, 1000);
+          // function deque_and_visualize() {
+          //   while (stationQueue.length) {
+          //     setTimeout(() => {
+          //       var rinsetsu_statons = stationQueue.shift();
+          //       console.log(rinsetsu_statons);
+          //       d3.select(
+          //         "." + rinsetsu_statons[0] + "_" + rinsetsu_statons[1]
+          //       ).attr("opacity", 1);
+          //     }, 100);
+          //   }
+          // }
         });
+
+      circle.on("mouseover", onMouseover).on("mouseout", onMouseout);
       function order(a, b) {
         return b.noriire - a.noriire;
       }
@@ -216,9 +244,6 @@
       svg.attr("width", width).attr("height", height);
       svg.selectAll(".background").attr("width", width).attr("height", height);
     }
-    function returngroupcode(d) {
-      console.log(d);
-    }
 
     function openGoogleMap(d) {
       window.open(
@@ -226,5 +251,54 @@
           d.name
       );
     }
+
+    // >>> for tooltip >>>
+
+    function onMouseover(event) {
+      console.log("MouseOver");
+      console.log(d3.select(this).datum().name);
+      d3.select(this).attr("fill", "white");
+
+      //console.log(event);
+      // var data_label = [
+      //   d3.select(this).datum().name,
+      //   d3.select(this).datum().noriire,
+      // ];
+      var data_label = d3.select(this).datum().name;
+      circle_cx = d3.select(this).attr("cx");
+      circle_cy = d3.select(this).attr("cy");
+      circle_r = d3.select(this).attr("r");
+
+      y_col = circle_cy - circle_r;
+
+      var textSize = 30;
+      g.selectAll(".data_label")
+        .data(data_label)
+        .enter()
+        .append("text")
+        .attr("class", "data_label")
+        .attr("fill", "black")
+        .attr("stroke", "gray")
+        .attr("font-weight", "bold")
+        // .attr("text-anchor", "center")
+        .attr("x", circle_cx)
+        .attr("y", function (d, i) {
+          return (textSize + 1) * i + y_col - 30;
+        })
+        // .attr("transform", event.transform)
+        .attr("font-size", textSize)
+        .text(function (d) {
+          return d;
+        });
+    }
+
+    function onMouseout(event) {
+      console.log("MouseOut");
+      d3.select(this).attr("fill", function (d) {
+        return "white";
+      });
+      svg.selectAll(".data_label").remove();
+    }
+    // <<< for tooltip <<<
   </script>
 </body>
