@@ -53,7 +53,7 @@
           .attr("stroke-width", 1 / Math.cbrt(event.transform.k));
         g.selectAll("line")
           .attr("transform", event.transform)
-          .attr("stroke-width", 1 / Math.cbrt(event.transform.k));
+          .attr("stroke-width", 2 / Math.cbrt(event.transform.k));
         g.selectAll("#state-borders").attr(
           "stroke-width",
           1.5 / Math.cbrt(event.transform.k)
@@ -130,18 +130,21 @@
           return projection([d.toIdo, d.toKeido])[1];
         });
         p.attr("stroke-width", 1);
+        p.attr("stroke", function (d) {
+          return "rgb(" + d.r + "," + d.g + "," + d.b + ")";
+        });
       }
       var links = g
         .selectAll("line")
         .data(data)
         .enter()
         .append("line")
-        .attr("stroke", "red")
+        // .attr("stroke", "red")
         // .attr("class", "line")
         // .attr("class", function (d) {
         //   return d.from + "_to_" + d.to;
         // })
-        .attr("stroke-width", 1)
+        .attr("stroke-width", 2)
         .call(position);
     }
 
@@ -166,7 +169,7 @@
         .append("circle")
         .sort(order)
         .attr("class", "circle")
-        .attr("fill", "blue")
+        .attr("fill", "white")
         .attr("fill-opacity", 0)
         .attr("stroke", "white")
         .call(position)
