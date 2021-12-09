@@ -6,12 +6,19 @@
 
 `fromID,fromGroupID,fromName,toID,toGroupID,toName,time,routeID,routeName`
 
-
-
 が入っています．
 
 都内の接続情報が入っていますが，A->Bが入っている場合B->Aは入っていないことに注意してください．
 
+## joinWithIdpKeido.csv
+
+都内の隣接駅について,区切りで
+
+`fromID,fromGroupID,fromName,fromIdo,fromKeido,toID,toGroupID,toName,toIdo,toKeido,time,routeID,routeName`
+
+が入っています．
+
+基本は`join.csv`と一緒ですが，地図上に表示しやすい様緯度と経度も持っています(必要があればですが，探索部分に使っているjoin.csvとの一本化は可能だと思います．)
 
 ## daihyoEkiData.csv
 
