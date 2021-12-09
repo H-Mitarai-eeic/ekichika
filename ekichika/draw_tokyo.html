@@ -45,16 +45,19 @@
       .scaleExtent([1, 100])
       .on("zoom", function (event) {
         g.selectAll("path").attr("transform", event.transform);
-        g.selectAll("circle").attr("transform", event.transform);
-        g.selectAll("circle").attr("r", function (d) {
-          return (1.2 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k);
-        });
-        g.selectAll("circle").attr("stroke-width", function (d) {
-          return 1 / Math.cbrt(event.transform.k);
-        });
-        g.selectAll("#state-borders").attr("stroke-width", function (d) {
-          return 1.5 / Math.cbrt(event.transform.k);
-        });
+        g.selectAll("circle")
+          .attr("transform", event.transform)
+          .attr("r", function (d) {
+            return (1.2 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k);
+          })
+          .attr("stroke-width", 1 / Math.cbrt(event.transform.k));
+        g.selectAll("line")
+          .attr("transform", event.transform)
+          .attr("stroke-width", 1 / Math.cbrt(event.transform.k));
+        g.selectAll("#state-borders").attr(
+          "stroke-width",
+          1.5 / Math.cbrt(event.transform.k)
+        );
       });
 
     var svg = d3
@@ -73,11 +76,17 @@
       .attr("height", height);
     // .attr("stroke", "lightgrey")
     // .attr("stroke-width", 20);
+    showMap();
 
     d3.csv("data.csv").then(function (data) {
-      showMap();
       setTimeout(() => {
         showCircle(data);
+      }, 250);
+    });
+    d3.csv("joinWithIdoKeido.csv").then(function (data) {
+      console.log(data);
+      setTimeout(() => {
+        showline(data);
       }, 120);
     });
 
@@ -107,19 +116,20 @@
     }
 
     function showline(data) {
-      function position(p){
+      function position(p) {
         p.attr("x1", function (d) {
-          return projection([d.ido, d.keido])[0];
+          return projection([d.fromIdo, d.fromKeido])[0];
         });
         p.attr("y1", function (d) {
-          return projection([d.ido, d.keido])[1];
+          return projection([d.fromIdo, d.fromKeido])[1];
         });
         p.attr("x2", function (d) {
-          return projection([d.ido, d.keido])[0];
+          return projection([d.toIdo, d.toKeido])[0];
         });
         p.attr("y2", function (d) {
-          return projection([d.ido, d.keido])[1];
+          return projection([d.toIdo, d.toKeido])[1];
         });
+        p.attr("stroke-width", 1);
       }
       var links = g
         .selectAll("line")
@@ -127,10 +137,12 @@
         .enter()
         .append("line")
         .attr("stroke", "red")
+        // .attr("class", "line")
         // .attr("class", function (d) {
         //   return d.from + "_to_" + d.to;
         // })
-        .attr("stroke-width", 1);
+        .attr("stroke-width", 1)
+        .call(position);
     }
 
     function showCircle(data) {
