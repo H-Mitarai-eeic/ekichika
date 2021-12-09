@@ -1,6 +1,6 @@
 <html lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>D3 Test</title>
+<title>search branch:mitarai</title>
 <script type="text/javascript" src="./d3.js"></script>
 <style type="text/css">
 </style>
@@ -9,8 +9,8 @@
 
 <script type="text/javascript">
 
-//within_T_min(1130101, 100);
-meet_up([1130101, 1130212, 2400605, 1132005], 4, 100);
+within_T_min(1130101, 100);
+//meet_up([1130101, 1130212, 2400605, 1132005], 4, 100);
 
 function within_T_min(startGroupID, T){
     var Adj_list = {}   //隣接リスト　keyはgroupe ID
@@ -89,9 +89,9 @@ function within_T_min(startGroupID, T){
             for(var i = 0; i < Adj_list[currentGroupID].length; i++){
                 var nextGroupID = Adj_list[currentGroupID][i][0];
                 var nextRouteID = Adj_list[currentGroupID][i][3];
-                var dt = parseInt(Adj_list[currentGroupID][i][5]);  //次の駅までの所要時間
-                var current_node_time = parseInt(time[currentGroupID]);
-                var next_node_time = parseInt(time[nextGroupID]);
+                var dt = parseFloat(Adj_list[currentGroupID][i][5]);  //次の駅までの所要時間
+                var current_node_time = parseFloat(time[currentGroupID]);
+                var next_node_time = parseFloat(time[nextGroupID]);
 
                 //乗り換え判定
                 if (previousRouteID[currentGroupID].indexOf(nextRouteID) == -1 && startGroupID != currentGroupID){
@@ -223,9 +223,9 @@ function meet_up(startGroupID, N, T){
                 for(var j = 0; j < Adj_list[currentGroupID].length; j++){
                     var nextGroupID = Adj_list[currentGroupID][j][0];
                     var nextRouteID = Adj_list[currentGroupID][j][3];
-                    var dt = parseInt(Adj_list[currentGroupID][j][5]);
-                    var current_node_time = parseInt(time[i][currentGroupID]);
-                    var next_node_time = parseInt(time[i][nextGroupID]);
+                    var dt = parseFloat(Adj_list[currentGroupID][j][5]);
+                    var current_node_time = parseFloat(time[i][currentGroupID]);
+                    var next_node_time = parseFloat(time[i][nextGroupID]);
 
 
                     if (previousRouteID[i][currentGroupID].indexOf(nextRouteID) == -1 && startGroupID.indexOf(currentGroupID) == -1){
