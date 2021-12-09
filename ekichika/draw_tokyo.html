@@ -85,11 +85,13 @@
       }, 250);
     });
     d3.csv("joinWithIdoKeido.csv").then(function (data) {
-      console.log(data);
       setTimeout(() => {
         showline(data);
       }, 120);
     });
+    
+    console.log(stationQueue);
+    within_T_min(1130208, 30);
 
     function showMap() {
       d3.json("./tokyo.topojson").then(function (tk) {
