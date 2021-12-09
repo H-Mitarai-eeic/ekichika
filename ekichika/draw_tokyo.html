@@ -45,16 +45,19 @@
       .scaleExtent([1, 100])
       .on("zoom", function (event) {
         g.selectAll("path").attr("transform", event.transform);
-        g.selectAll("circle").attr("transform", event.transform);
-        g.selectAll("circle").attr("r", function (d) {
-          return (1.2 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k);
-        });
-        g.selectAll("circle").attr("stroke-width", function (d) {
-          return 1 / Math.cbrt(event.transform.k);
-        });
-        g.selectAll("#state-borders").attr("stroke-width", function (d) {
-          return 1.5 / Math.cbrt(event.transform.k);
-        });
+        g.selectAll("circle")
+          .attr("transform", event.transform)
+          .attr("r", function (d) {
+            return (1.2 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k);
+          })
+          .attr("stroke-width", 1 / Math.cbrt(event.transform.k));
+        g.selectAll("line")
+          .attr("transform", event.transform)
+          .attr("stroke-width", 2 / Math.cbrt(event.transform.k));
+        g.selectAll("#state-borders").attr(
+          "stroke-width",
+          1.5 / Math.cbrt(event.transform.k)
+        );
       });
 
     var svg = d3
@@ -73,11 +76,17 @@
       .attr("height", height);
     // .attr("stroke", "lightgrey")
     // .attr("stroke-width", 20);
+    showMap();
 
     d3.csv("data.csv").then(function (data) {
-      showMap();
       setTimeout(() => {
         showCircle(data);
+      }, 250);
+    });
+    d3.csv("joinWithIdoKeido.csv").then(function (data) {
+      console.log(data);
+      setTimeout(() => {
+        showline(data);
       }, 120);
     });
 
@@ -106,6 +115,37 @@
       });
     }
 
+    function showline(data) {
+      function position(p) {
+        p.attr("x1", function (d) {
+          return projection([d.fromIdo, d.fromKeido])[0];
+        });
+        p.attr("y1", function (d) {
+          return projection([d.fromIdo, d.fromKeido])[1];
+        });
+        p.attr("x2", function (d) {
+          return projection([d.toIdo, d.toKeido])[0];
+        });
+        p.attr("y2", function (d) {
+          return projection([d.toIdo, d.toKeido])[1];
+        });
+        p.attr("stroke-width", 1);
+        p.attr("stroke", function (d) {
+          return "rgb(" + d.r + "," + d.g + "," + d.b + ")";
+        });
+        p.attr("class", function (d) {
+          return d.fromID + "_" + d.toID + " " + d.toID + "_" + d.fromID;
+        });
+      }
+      var links = g
+        .selectAll("line")
+        .data(data)
+        .enter()
+        .append("line")
+        .attr("stroke-width", 2)
+        .call(position);
+    }
+
     function showCircle(data) {
       function position(p) {
         p.attr("cx", function (d) {
@@ -127,25 +167,24 @@
         .append("circle")
         .sort(order)
         .attr("class", "circle")
-        .attr("fill", "blue")
+        .attr("fill", "white")
+        .attr("fill-opacity", 0)
         .attr("stroke", "white")
         .call(position)
-        .on("mouseover", function (event, d) {
-          //event忘れないように
-          tooltip.style("visibility", "visible").html(d.name);
-        })
-        .on("mousemove", function (event, d) {
-          var [x, y] = projection([d.ido, d.keido]);
-          tooltip.style("top", y + "px").style("left", x + "px");
-        })
-        .on("mouseout", function (event, d) {
-          tooltip.style("visibility", "hidden");
-        })
-        .on("mouseover", function (event, d) {})
-        .on("mousemove", function (event, d) {})
-        .on("mouseout", function (event, d) {})
+        // .on("mouseover", function (event, d) {
+        //   //event忘れないように
+        //   tooltip.style("visibility", "visible").html(d.name);
+        // })
+        // .on("mousemove", function (event, d) {
+        //   var [x, y] = projection([d.ido, d.keido]);
+        //   tooltip.style("top", y + "px").style("left", x + "px");
+        // })
+        // .on("mouseout", function (event, d) {
+        //   tooltip.style("visibility", "hidden");
+        // })
         .on("click", function (event, d) {
-          openGoogleMap(d);
+          // openGoogleMap(d);
+          return returngroupcode(d);
         });
       function order(a, b) {
         return b.noriire - a.noriire;
@@ -168,11 +207,6 @@
     //       .attr("d", path);
     // }
 
-    // function zoomed(event) {
-    //   projection.translate(d3.event.translate).scale(d3.event.scale);
-    //   g.selectAll("path").attr("d", path);
-    // }
-
     function resizing() {
       w = window;
       e = d.documentElement;
@@ -181,6 +215,9 @@
       height = w.innerHeight || e.clientHeight || BODY.clientHeight;
       svg.attr("width", width).attr("height", height);
       svg.selectAll(".background").attr("width", width).attr("height", height);
+    }
+    function returngroupcode(d) {
+      console.log(d);
     }
 
     function openGoogleMap(d) {
