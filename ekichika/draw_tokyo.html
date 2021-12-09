@@ -45,6 +45,7 @@
       .zoom()
       .scaleExtent([1, 200])
       .on("zoom", function (event) {
+        // g.attr("transform", event.transform);
         g.selectAll("path").attr("transform", event.transform);
         g.selectAll("circle")
           .attr("transform", event.transform)
@@ -169,51 +170,31 @@
         .sort(order)
         .attr("class", "circle")
         .attr("fill", "white")
-        .attr("fill-opacity", 0)
+        .attr("fill-opacity", 0.2)
         .attr("stroke", "white")
-        .call(position)
-        // .on("mouseover", function (event, d) {
-        //   //event忘れないように
-        //   tooltip.style("visibility", "visible").html(d.name);
-        // })
-        // .on("mousemove", function (event, d) {
-        //   var [x, y] = projection([d.ido, d.keido]);
-        //   tooltip.style("top", y + "px").style("left", x + "px");
-        // })
-        // .on("mouseout", function (event, d) {
-        //   tooltip.style("visibility", "hidden");
-        // })
-        .on("click", function (event, d) {
-          d3.selectAll("line").attr("opacity", 0);
-          console.log(d);
-          within_T_min(d.GroupID, 60);
-          setTimeout(() => {
-            console.log(stationQueue);
-            while (stationQueue.length) {
-              console.log(stationQueue.length);
-              var rinsetsu_stations = stationQueue.shift();
-              g.select(
-                ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
-              ).attr("opacity", 1);
-            }
-          }, 1000);
-          // setTimeout(() => {
-          //   deque_and_visualize();
-          // }, 1000);
-          // function deque_and_visualize() {
-          //   while (stationQueue.length) {
-          //     setTimeout(() => {
-          //       var rinsetsu_statons = stationQueue.shift();
-          //       console.log(rinsetsu_statons);
-          //       d3.select(
-          //         "." + rinsetsu_statons[0] + "_" + rinsetsu_statons[1]
-          //       ).attr("opacity", 1);
-          //     }, 100);
-          //   }
-          // }
-        });
+        .call(position);
 
-      circle.on("mouseover", onMouseover).on("mouseout", onMouseout);
+      circle.on("click", function (event, d) {
+        d3.selectAll("line").attr("opacity", 0);
+        console.log(d);
+        within_T_min(d.GroupID, 60);
+        setTimeout(() => {
+          console.log(stationQueue);
+          while (stationQueue.length) {
+            console.log(stationQueue.length);
+            var rinsetsu_stations = stationQueue.shift();
+            g.select(
+              ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
+            ).attr("opacity", 1);
+          }
+        }, 1000);
+      });
+      circle.append("title").text(function (d) {
+        console.log(d);
+        return d.name;
+      });
+
+      // circle.on("mouseover", onMouseover).on("mouseout", onMouseout);
       function order(a, b) {
         return b.noriire - a.noriire;
       }
