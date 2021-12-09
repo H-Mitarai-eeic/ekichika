@@ -106,6 +106,33 @@
       });
     }
 
+    function showline(data) {
+      function position(p){
+        p.attr("x1", function (d) {
+          return projection([d.ido, d.keido])[0];
+        });
+        p.attr("y1", function (d) {
+          return projection([d.ido, d.keido])[1];
+        });
+        p.attr("x2", function (d) {
+          return projection([d.ido, d.keido])[0];
+        });
+        p.attr("y2", function (d) {
+          return projection([d.ido, d.keido])[1];
+        });
+      }
+      var links = g
+        .selectAll("line")
+        .data(data)
+        .enter()
+        .append("line")
+        .attr("stroke", "red")
+        // .attr("class", function (d) {
+        //   return d.from + "_to_" + d.to;
+        // })
+        .attr("stroke-width", 1);
+    }
+
     function showCircle(data) {
       function position(p) {
         p.attr("cx", function (d) {
@@ -130,20 +157,17 @@
         .attr("fill", "blue")
         .attr("stroke", "white")
         .call(position)
-        .on("mouseover", function (event, d) {
-          //event忘れないように
-          tooltip.style("visibility", "visible").html(d.name);
-        })
-        .on("mousemove", function (event, d) {
-          var [x, y] = projection([d.ido, d.keido]);
-          tooltip.style("top", y + "px").style("left", x + "px");
-        })
-        .on("mouseout", function (event, d) {
-          tooltip.style("visibility", "hidden");
-        })
-        .on("mouseover", function (event, d) {})
-        .on("mousemove", function (event, d) {})
-        .on("mouseout", function (event, d) {})
+        // .on("mouseover", function (event, d) {
+        //   //event忘れないように
+        //   tooltip.style("visibility", "visible").html(d.name);
+        // })
+        // .on("mousemove", function (event, d) {
+        //   var [x, y] = projection([d.ido, d.keido]);
+        //   tooltip.style("top", y + "px").style("left", x + "px");
+        // })
+        // .on("mouseout", function (event, d) {
+        //   tooltip.style("visibility", "hidden");
+        // })
         .on("click", function (event, d) {
           openGoogleMap(d);
         });
@@ -166,11 +190,6 @@
     //   g.selectAll("path").transition()
     //       .duration(700)
     //       .attr("d", path);
-    // }
-
-    // function zoomed(event) {
-    //   projection.translate(d3.event.translate).scale(d3.event.scale);
-    //   g.selectAll("path").attr("d", path);
     // }
 
     function resizing() {
