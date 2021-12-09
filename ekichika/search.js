@@ -2,12 +2,12 @@
 
 var stationQueue = [];
 
-function within_T_min(startGroupID, T){
+function within_T_min(startGroupID, T) {
     var Adj_list = {};   //隣接リスト　keyはstation ID
     var groupInfo = {};  //グループIDでそのグループ内の駅情報を検索するための辞書 keyはgroupe ID
     var stationInfo = {};   //駅idで駅情報検索
     var time = {};       //その駅グループに到達するまでの所要時間    keyはgroupe ID
-    var visited_station_flag = {};  
+    var visited_station_flag = {};
     var previousStation = {};  //ひとつ前の[駅ID, routename]を格納　keyはgroupe ID
 
     var queue = new pairing_heap(); //最大ヒープ
@@ -27,43 +27,43 @@ function within_T_min(startGroupID, T){
     });
 
     //return //到達可能駅のリスト
-    function Make_Adj_List(){
+    function Make_Adj_List() {
         var groupInfo_flag = {}
 
-        d3.csv("../importantData/join.csv").then(function(data){
-            data.forEach(function(d){
+        d3.csv("./join.csv").then(function (data) {
+            data.forEach(function (d) {
                 var time_tmp
                 //時間を設定
-                if (d.time == 0){
+                if (d.time == 0) {
                     time_tmp = parseFloat(ARAKAWASEN) + parseFloat(stopTime);  //d.time=0のときの例外処理
-                }else{
+                } else {
                     time_tmp = parseFloat(d.time) + parseFloat(stopTime);
                 }
                 //groupInfoを追加
-                if (groupInfo[d.fromGroupID] == undefined){
+                if (groupInfo[d.fromGroupID] == undefined) {
                     groupInfo[d.fromGroupID] = [[d.fromID, d.fromName, d.routeID, d.routeName]];
                     groupInfo_flag[d.fromGroupID] = [d.fromID];
-                }else if(groupInfo_flag[d.fromGroupID].indexOf(d.fromID) == -1){
+                } else if (groupInfo_flag[d.fromGroupID].indexOf(d.fromID) == -1) {
                     groupInfo[d.fromGroupID].push([d.fromID, d.fromName, d.routeID, d.routeName]);
                     groupInfo_flag[d.fromGroupID].push(d.fromID);
                 }
-                if (groupInfo[d.toGroupID] == undefined){
+                if (groupInfo[d.toGroupID] == undefined) {
                     groupInfo[d.toGroupID] = [[d.toID, d.toName, d.routeID, d.routeName]];
                     groupInfo_flag[d.toGroupID] = [d.toID];
-                }else if(groupInfo_flag[d.toGroupID].indexOf(d.toID) == -1){
+                } else if (groupInfo_flag[d.toGroupID].indexOf(d.toID) == -1) {
                     groupInfo[d.toGroupID].push([d.toID, d.toName, d.routeID, d.routeName]);
                     groupInfo_flag[d.toGroupID].push(d.toID);
                 }
                 //隣接リストに追加
-                if (Adj_list[d.fromID] == undefined){
+                if (Adj_list[d.fromID] == undefined) {
                     Adj_list[d.fromID] = [[d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, time_tmp]];
-                    stationInfo[d.fromID] = {GroupID: d.fromGroupID, stationName: d.fromName, routeID: d.routeID, routeName: d.routeName};
+                    stationInfo[d.fromID] = { GroupID: d.fromGroupID, stationName: d.fromName, routeID: d.routeID, routeName: d.routeName };
                     time[d.fromID] = T + 100;
                     //previousStation[d.fromID] = [];
                     visited_station_flag[d.fromID] = false;
 
-                    for (var i = 0; i < groupInfo[d.fromGroupID].length; i++){
-                        if(groupInfo[d.fromGroupID][i][0] != d.fromID){
+                    for (var i = 0; i < groupInfo[d.fromGroupID].length; i++) {
+                        if (groupInfo[d.fromGroupID][i][0] != d.fromID) {
                             var StID_tmp = groupInfo[d.fromGroupID][i][0];
                             var StName_tmp = groupInfo[d.fromGroupID][i][1];
                             var RouteID_tmp = groupInfo[d.fromGroupID][i][2];
@@ -73,18 +73,18 @@ function within_T_min(startGroupID, T){
                         }
                     }
                 }
-                else{
+                else {
                     Adj_list[d.fromID].push([d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, time_tmp]);
                 }
-                if (Adj_list[d.toID] == undefined){
+                if (Adj_list[d.toID] == undefined) {
                     Adj_list[d.toID] = [[d.fromGroupID, d.fromID, d.fromName, d.routeID, d.routeName, time_tmp]];
-                    stationInfo[d.toID] = {GroupID: d.toGroupID, stationName: d.toName, routeID: d.routeID, routeName: d.routeName};
+                    stationInfo[d.toID] = { GroupID: d.toGroupID, stationName: d.toName, routeID: d.routeID, routeName: d.routeName };
                     time[d.toID] = T + 100;
                     //previousStation[d.toID] = [];
                     visited_station_flag[d.toID] = false;
                     //同一グループ内の駅とつなげる
-                    for (var i = 0; i < groupInfo[d.toGroupID].length; i++){
-                        if(groupInfo[d.toGroupID][i][0] != d.toID){
+                    for (var i = 0; i < groupInfo[d.toGroupID].length; i++) {
+                        if (groupInfo[d.toGroupID][i][0] != d.toID) {
                             var StID_tmp = groupInfo[d.toGroupID][i][0];
                             var StName_tmp = groupInfo[d.toGroupID][i][1];
                             var RouteID_tmp = groupInfo[d.toGroupID][i][2];
@@ -94,48 +94,48 @@ function within_T_min(startGroupID, T){
                         }
                     }
                 }
-                else{
+                else {
                     Adj_list[d.toID].push([d.fromGroupID, d.fromID, d.fromName, d.routeID, d.routeName, time_tmp]);
-                } 
+                }
 
 
             });
         });
     }
-    function dijkstra(){
-        for(var j = 0; j < groupInfo[startGroupID].length; j++){
+    function dijkstra() {
+        for (var j = 0; j < groupInfo[startGroupID].length; j++) {
             var startStationID = groupInfo[startGroupID][j][0];
             time[startStationID] = 0; //スタート地点の時間は0
             previousStation[startStationID] = [startGroupID, -1, "start", "start"];
             queue.enqueue(-time[startStationID], startStationID);   //最大ヒープなのでtimeにマイナス付ける
         }
 
-        while(queue.size() != 0){
+        while (queue.size() != 0) {
             var currentStationID = queue.dequeue();
             var currentStationName = stationInfo[currentStationID].stationName;
             var currentGroupID = stationInfo[currentStationID].GroupID;
             var currentStationRouteName = stationInfo[currentStationID].routeName;
             var currentStationRouteID = stationInfo[currentStationID].routeID;
-            if (visited_station_flag[currentStationID] == false){
+            if (visited_station_flag[currentStationID] == false) {
                 visited_station_flag[currentStationID] = true;
-                if (previousStation[currentStationID][0] != currentGroupID){
+                if (previousStation[currentStationID][0] != currentGroupID) {
                     //Groupが違えば乗り換えでない
                     stationQueue.push([previousStation[currentStationID][1], currentStationID]);
                 }
                 //同一路線が繋がらないバグ修正
-                for(var j = 0; j < Adj_list[currentStationID].length; j++){
-                        Adj_stationID = Adj_list[currentStationID][j][1];
-                        Adj_stationRouteID = Adj_list[currentStationID][j][3];
-                        if (Adj_stationRouteID == currentStationRouteID && previousStation[currentStationID][1] != Adj_stationID && visited_station_flag[Adj_stationID] == true){
-                            stationQueue.push([currentStationID, Adj_stationID]);
-                        }
+                for (var j = 0; j < Adj_list[currentStationID].length; j++) {
+                    Adj_stationID = Adj_list[currentStationID][j][1];
+                    Adj_stationRouteID = Adj_list[currentStationID][j][3];
+                    if (Adj_stationRouteID == currentStationRouteID && previousStation[currentStationID][1] != Adj_stationID && visited_station_flag[Adj_stationID] == true) {
+                        stationQueue.push([currentStationID, Adj_stationID]);
+                    }
                 }
-                for(var j = 0; j < Adj_list[currentStationID].length; j++){
+                for (var j = 0; j < Adj_list[currentStationID].length; j++) {
                     var nextStationID = Adj_list[currentStationID][j][1];
                     var dt = parseFloat(Adj_list[currentStationID][j][5]);  //次の駅までの所要時間
                     var current_node_time = parseFloat(time[currentStationID]);
                     var next_node_time = parseFloat(time[nextStationID]);
-                    if( (next_node_time > current_node_time + dt && current_node_time + dt < T)){
+                    if ((next_node_time > current_node_time + dt && current_node_time + dt < T)) {
                         time[nextStationID] = current_node_time + dt;
                         previousStation[nextStationID] = [currentGroupID, currentStationID, currentStationName, currentStationRouteName];
                         queue.enqueue(-time[nextStationID], nextStationID);
@@ -147,17 +147,17 @@ function within_T_min(startGroupID, T){
     }
 }
 
-function pairing_heap(){
+function pairing_heap() {
     "use strict";
     var _root = null;
     var _size = 0;
-    var _merge = function (i, j){
+    var _merge = function (i, j) {
         var ret = null;
 
-        if(i === null) return j;
-        if(j === null) return i;
+        if (i === null) return j;
+        if (j === null) return i;
 
-        if(i.p < j.p){
+        if (i.p < j.p) {
             ret = i;
             i = j;
             j = ret;
@@ -167,18 +167,18 @@ function pairing_heap(){
 
         return i;
     };
-    var _mergeList = function (s){
+    var _mergeList = function (s) {
         var n = null;
         var a = null;
         var b = null;
         var j = null;
 
-        while(s !== null){
+        while (s !== null) {
             a = s;
             b = null;
             s = s.next;
             a.next = null;
-            if(s !== null){
+            if (s !== null) {
                 b = s;
                 s = s.next;
                 b.next = null;
@@ -187,7 +187,7 @@ function pairing_heap(){
             a.next = n;
             n = a;
         }
-        while(n !== null){
+        while (n !== null) {
             j = n;
             n = n.next;
             s = _merge(j, s);
@@ -195,7 +195,7 @@ function pairing_heap(){
         return s;
     };
 
-    var enqueue = function(priority, value){
+    var enqueue = function (priority, value) {
         _root = _merge(_root, {
             p: priority,
             v: value,
@@ -204,23 +204,23 @@ function pairing_heap(){
         });
         _size = _size + 1;
     };
-    var dequeue = function(){
+    var dequeue = function () {
         var result = null;
 
-        if(_size){
+        if (_size) {
             result = _root.v;
             _root = _mergeList(_root.head);
             _size = _size - 1;
 
             return result;
-        }else{
+        } else {
             return (void 0);
         }
     };
-    var top = function(){
+    var top = function () {
         return _root.v;
     };
-    var size = function(){
+    var size = function () {
         return _size;
     };
 
