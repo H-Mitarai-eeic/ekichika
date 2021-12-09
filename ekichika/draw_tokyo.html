@@ -214,27 +214,6 @@
         });
 
       circle.on("mouseover", onMouseover).on("mouseout", onMouseout);
-      // .on("mouseover", function (event, d) {
-      //   //event忘れないように
-      //   tooltip.style("visibility", "visible").html(d.name);
-      // })
-      // .on("mousemove", function (event, d) {
-      //   var [x, y] = projection([d.ido, d.keido]);
-      //   tooltip.style("top", y + "px").style("left", x + "px");
-      // })
-      // .on("mouseout", function (event, d) {
-      //   tooltip.style("visibility", "hidden");
-      // })
-      // .on("click", function (event, d) {
-      //   d3.selectAll("line").attr("opacity", 0);
-      //   console.log(d);
-      //   within_T_min(d.GroupID, 20);
-      //   setTimeout(() => {
-
-      //   }, 1000);
-
-      //   console.log(stationQueue);
-      // });
       function order(a, b) {
         return b.noriire - a.noriire;
       }
