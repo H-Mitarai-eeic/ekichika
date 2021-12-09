@@ -133,17 +133,15 @@
         p.attr("stroke", function (d) {
           return "rgb(" + d.r + "," + d.g + "," + d.b + ")";
         });
+        p.attr("class", function (d) {
+          return d.fromID + "_" + d.toID + " " + d.toID + "_" + d.fromID;
+        });
       }
       var links = g
         .selectAll("line")
         .data(data)
         .enter()
         .append("line")
-        // .attr("stroke", "red")
-        // .attr("class", "line")
-        // .attr("class", function (d) {
-        //   return d.from + "_to_" + d.to;
-        // })
         .attr("stroke-width", 2)
         .call(position);
     }
@@ -185,7 +183,8 @@
         //   tooltip.style("visibility", "hidden");
         // })
         .on("click", function (event, d) {
-          openGoogleMap(d);
+          // openGoogleMap(d);
+          return returngroupcode(d);
         });
       function order(a, b) {
         return b.noriire - a.noriire;
@@ -216,6 +215,9 @@
       height = w.innerHeight || e.clientHeight || BODY.clientHeight;
       svg.attr("width", width).attr("height", height);
       svg.selectAll(".background").attr("width", width).attr("height", height);
+    }
+    function returngroupcode(d) {
+      console.log(d);
     }
 
     function openGoogleMap(d) {
