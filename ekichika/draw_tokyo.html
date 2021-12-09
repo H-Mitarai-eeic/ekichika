@@ -133,7 +133,9 @@
           return "rgb(" + d.r + "," + d.g + "," + d.b + ")";
         });
         p.attr("class", function (d) {
-          return d.fromID + "_" + d.toID + " " + d.toID + "_" + d.fromID;
+          return (
+            "s" + d.fromID + "_" + d.toID + " " + "s" + d.toID + "_" + d.fromID
+          );
         });
       }
       var links = g
@@ -181,16 +183,35 @@
         // .on("mouseout", function (event, d) {
         //   tooltip.style("visibility", "hidden");
         // })
-        // .on("click", function (event, d) {
-        //   d3.selectAll("line").attr("opacity", 0);
-        //   console.log(d);
-        //   within_T_min(d.GroupID, 20);
-        //   setTimeout(() => {
-            
-        //   }, 1000);
-          
-        //   console.log(stationQueue);
-        // });
+        .on("click", function (event, d) {
+          d3.selectAll("line").attr("opacity", 0);
+          console.log(d);
+          within_T_min(d.GroupID, 60);
+          setTimeout(() => {
+            console.log(stationQueue);
+            while (stationQueue.length) {
+              console.log(stationQueue.length);
+              var rinsetsu_stations = stationQueue.shift();
+              g.select(
+                ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
+              ).attr("opacity", 1);
+            }
+          }, 1000);
+          // setTimeout(() => {
+          //   deque_and_visualize();
+          // }, 1000);
+          // function deque_and_visualize() {
+          //   while (stationQueue.length) {
+          //     setTimeout(() => {
+          //       var rinsetsu_statons = stationQueue.shift();
+          //       console.log(rinsetsu_statons);
+          //       d3.select(
+          //         "." + rinsetsu_statons[0] + "_" + rinsetsu_statons[1]
+          //       ).attr("opacity", 1);
+          //     }, 100);
+          //   }
+          // }
+        });
       function order(a, b) {
         return b.noriire - a.noriire;
       }
