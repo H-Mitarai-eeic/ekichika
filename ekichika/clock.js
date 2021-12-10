@@ -1,4 +1,7 @@
-// setInterval(
+var hour = 0;
+var preTime = 0;
+var time = 0;
+var isLocked = false;
 function setClock(x, y) {
 
   var clk = document.getElementById('scale');
@@ -15,23 +18,59 @@ function setClock(x, y) {
   if (deg <= 0) {
     deg += 360;
   }
-  var time = Math.round(deg / 6);
+  preTime = time;
+  time = Math.round(deg / 6);
+
+  if (55 <= time && time <= 60 && 0 <= preTime && preTime <= 5) {
+    if (isLocked) {
+      isLocked = false;
+    } else if (hour == 0) {
+      deg = 0;
+      document.querySelector(".min").style.transform = `rotate(${deg}deg)`;
+      isLocked = true;
+    } else {
+      --hour;
+    }
+  }
+
+  if (55 <= preTime && preTime <= 60 && 0 <= time && time <= 5) {
+    // if (time == 0 && preTime == 60) {
+    // hour = Math.min(hour + 1, 2);
+    if (isLocked) {
+      isLocked = false;
+    } else if (hour == 2) {
+      deg = 355;
+      document.querySelector(".min").style.transform = `rotate(${deg}deg)`;
+      isLocked = true;
+    } else {
+      ++hour;
+    }
+
+  }
+  if (isLocked) {
+    return
+  }
+
   // console.log(time);
   // 時間を取得
-  var now = new Date();
+  // var now = new Date();
 
   // 針の角度
-  var deg_h = now.getHours() * (360 / 12) + now.getMinutes() * (360 / 12 / 60);
+  // var deg_h = now.getHours() * (360 / 12) + now.getMinutes() * (360 / 12 / 60);
   // var deg_m = now.getMinutes() * (360 / 60);
   var deg_m = deg;
-  var deg_s = now.getSeconds() * (360 / 60);
-  document.getElementById("setTime").innerHTML = time + "分";
+  var deg_h = hour * 30 + deg_m / 12;
+  // var deg_s = now.getSeconds() * (360 / 60);
+  if (hour == 0) {
+    document.getElementById("setTime").innerHTML = time + "分";
+  } else {
+    document.getElementById("setTime").innerHTML = hour + "時間" + time + "分";
+  }
   // それぞれの針に角度を設定
   document.querySelector(".hour").style.transform = `rotate(${deg_h}deg)`;
   document.querySelector(".min").style.transform = `rotate(${deg_m}deg)`;
   // document.querySelector(".sec").style.transform = `rotate(${deg_s}deg)`;
 };
-// , 100);
 
 
 
