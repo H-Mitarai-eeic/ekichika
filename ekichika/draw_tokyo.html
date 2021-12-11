@@ -25,7 +25,7 @@
     width: 100%;
     padding: 40px;
     box-sizing: border-box;
-
+    background-color: black;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -33,7 +33,7 @@
 
   .clock {
     background-color: rgba(255, 243, 217, 0.2);
-    border: 3px solid #c6a35b;
+    border: 3px solid #5bc6af;
     width: 400px;
     height: 400px;
     position: relative;
@@ -43,7 +43,7 @@
   .clock::after {
     width: 16px;
     height: 16px;
-    background: #c6a35b;
+    background: #5bc6af;
     content: "";
 
     position: absolute;
@@ -60,7 +60,7 @@
   .hour {
     width: 8px;
     height: 140px;
-    background: #c6a35b;
+    background: #5bc6af;
     top: calc(50% - 140px);
     left: calc(50% - 4px);
   }
@@ -68,17 +68,9 @@
   .min {
     width: 4px;
     height: 180px;
-    background: #c6a35b;
+    background: #5bc6af;
     top: calc(50% - 180px);
     left: calc(50% - 2px);
-  }
-
-  .sec {
-    width: 1px;
-    height: 180px;
-    background: #d4bb92;
-    top: calc(50% - 180px);
-    left: calc(50% - 0.5px);
   }
 
   .scale {
@@ -102,11 +94,12 @@
     content: "";
     width: 4px;
     height: 12px;
-    background-color: #c6a35b;
+    background-color: #5bc6af;
   }
 
   #setTime {
-    font-size: 20px;
+    font-size: 30px;
+    color: #5bc6af;
   }
   /* <<< for clock <<< */
 </style>
@@ -121,6 +114,9 @@
       BODY = d.getElementsByTagName("body")[0];
     var width = w.innerWidth || e.clientWidth || BODY.clientWidth;
     var height = w.innerHeight || e.clientHeight || BODY.clientHeight;
+
+    var userSetHour = 0;
+    var userSetTime = 30;
 
     d3.select(window).on("resize", resizing);
 
@@ -268,7 +264,7 @@
       circle.on("click", function (event, d) {
         d3.selectAll("line").attr("opacity", 0);
         console.log(d);
-        within_T_min(d.GroupID, 30);
+        within_T_min(d.GroupID, userSetHour * 60 + userSetTime);
         setTimeout(() => {
           console.log(stationQueue);
           while (stationQueue.length) {
@@ -373,14 +369,15 @@
     }
     // <<< for tooltip <<<
   </script>
+  <!-- >>> for clock >>> -->
   <div class="wrapper">
     <div class="clock" id="clock">
       <div class="scale" id="scale"></div>
       <div class="hour line"></div>
       <div class="min line"></div>
-      <!-- <div class="sec line"></div> -->
     </div>
     <div id="setTime"></div>
   </div>
   <script src="./clock.js"></script>
+  <!-- <<< for clock <<< -->
 </body>

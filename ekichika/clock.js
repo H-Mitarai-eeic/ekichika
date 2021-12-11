@@ -1,7 +1,11 @@
 var hour = 0;
 var preTime = 0;
-var time = 0;
+var time = 30;
 var isLocked = false;
+var deg_m = 6 * time;
+var deg_h = hour * 30 + deg_m / 12;
+// var userSetHour = hour;
+// var userSetTime = time;
 function setClock(x, y) {
 
   var clk = document.getElementById('scale');
@@ -47,19 +51,19 @@ function setClock(x, y) {
     }
 
   }
+  // console.log(hour, userSetTime);
+
   if (isLocked) {
     return
   }
-
-  // console.log(time);
-  // 時間を取得
-  // var now = new Date();
-
+  userSetHour = hour;
+  userSetTime = time;
+  if (userSetTime == 60) {
+    --userSetTime;
+  }
   // 針の角度
-  // var deg_h = now.getHours() * (360 / 12) + now.getMinutes() * (360 / 12 / 60);
-  // var deg_m = now.getMinutes() * (360 / 60);
-  var deg_m = deg;
-  var deg_h = hour * 30 + deg_m / 12;
+  deg_m = 6 * time;
+  deg_h = hour * 30 + deg_m / 12;
   // var deg_s = now.getSeconds() * (360 / 60);
   if (hour == 0) {
     document.getElementById("setTime").innerHTML = time + "分";
@@ -85,6 +89,15 @@ window.onload = function () {
     // 角度をつける
     document.querySelector(".scale div:nth-child(" + i + ")").style.transform = `rotate(${i * 30}deg)`;
   }
+  if (hour == 0) {
+    document.getElementById("setTime").innerHTML = time + "分";
+  } else {
+    document.getElementById("setTime").innerHTML = hour + "時間" + time + "分";
+  }
+  // それぞれの針に角度を設定
+  document.querySelector(".hour").style.transform = `rotate(${deg_h}deg)`;
+  document.querySelector(".min").style.transform = `rotate(${deg_m}deg)`;
+
 }
 
 function muuXY(e, that) {
