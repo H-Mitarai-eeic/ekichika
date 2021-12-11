@@ -103,7 +103,7 @@
   }
   /* <<< for clock <<< */
 </style>
-<body bgcolor=black>
+<body bgcolor="black">
   <script src="./d3.js" charset="utf-8"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="./search.js"></script>
@@ -117,6 +117,7 @@
 
     var userSetHour = 0;
     var userSetTime = 30;
+    var ekiNameToEkiData = {};
 
     d3.select(window).on("resize", resizing);
 
@@ -168,6 +169,9 @@
     showMap();
 
     d3.csv("data.csv").then(function (data) {
+      data.forEach(function (d) {
+        ekiNameToEkiData[d.name] = d;
+      });
       setTimeout(() => {
         showCircle(data);
       }, 250);
@@ -247,6 +251,9 @@
           return 1.2 * Math.sqrt(d.noriire);
         });
         p.attr("stroke-width", 1);
+        p.attr("id", function (d) {
+          return d.name + d.GroupID;
+        });
       }
 
       var circle = g
@@ -277,7 +284,7 @@
         }, 1000);
       });
       circle.append("title").text(function (d) {
-        console.log(d);
+        // console.log(d);
         return d.name;
       });
 
@@ -368,8 +375,38 @@
       svg.selectAll(".data_label").remove();
     }
     // <<< for tooltip <<<
+
+    function ekiSearch() {
+      var inputName = document.getElementById("inputEkiname").value;
+      if (ekiNameToEkiData[inputName] == undefined) {
+        console.log("Not Found");
+        alert(inputName + "駅が見つかりません");
+        return;
+      }
+      inputEkidata = ekiNameToEkiData[inputName];
+
+      console.log("#" + inputEkidata.name + inputEkidata.GroupID);
+      g.select("#" + inputEkidata.name + inputEkidata.GroupID)
+        .transition()
+        .duration(1500)
+        .ease(d3.easeSin, d3.easeSinInOut)
+        .attr("r", function (d) {
+          console.log(d);
+          return 1.2 * Math.sqrt(d.noriire) * 20;
+        })
+        .transition()
+        .ease(d3.easeSin, d3.easeSinInOut)
+        .attr("r", function (d) {
+          return 1.2 * Math.sqrt(d.noriire);
+        });
+    }
   </script>
   <!-- >>> for clock >>> -->
+  <div class="wrapper">
+    <input type="text" id="inputEkiname" />
+    <br />
+    <button id="searchButton" onclick="ekiSearch()">Search</button>
+  </div>
   <div class="wrapper">
     <div class="clock" id="clock">
       <div class="scale" id="scale"></div>
