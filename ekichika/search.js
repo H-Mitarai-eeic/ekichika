@@ -30,7 +30,7 @@ function within_T_min(startGroupID, T){
     function Make_Adj_List(){
         var groupInfo_flag = {}
 
-        d3.csv("../importantData/join.csv").then(function(data){
+        d3.csv("join.csv").then(function(data){
             data.forEach(function(d){
                 var time_tmp
                 //時間を設定
