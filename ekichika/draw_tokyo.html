@@ -247,7 +247,8 @@
       g.selectAll(".wave").remove();
       // g.selectAll(".wave_in").remove();
       g.selectAll("circle").attr("fill-opacity", 0.2).attr("fill", "white");
-      g.selectAll("line").attr("opacity", 1);
+      g.selectAll("line").transition().duration(500)
+        .ease(d3.easeLinear).attr("opacity", 1);
       clicked_stations = [];
       last_center_station = NaN;
     }
@@ -416,13 +417,15 @@
       } else if (clicked_stations.length == 1) {
         //一回の時
         console.log("selected one station");
-        d3.selectAll("line").attr("opacity", 0);
+        d3.selectAll("line").transition().duration(500)
+        .ease(d3.easeLinear).attr("opacity", 0);
         show_within_stations(clicked_stations[0]);
         // clicked_stations = [];
         //stationQueue = [];
       } else {
         console.log("selected more than one station");
-        d3.selectAll("line").attr("opacity", 0);
+        d3.selectAll("line").transition().duration(500)
+        .ease(d3.easeLinear).attr("opacity", 0);
         show_center_station();
         // clicked_stations = [];
         //stationQueue = [];
@@ -437,7 +440,8 @@
           var rinsetsu_stations = stationQueue.shift();
           g.select(
             ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
-          ).attr("opacity", 1);
+          ).transition().duration(500)
+        .ease(d3.easeLinear).attr("opacity", 1);
         }
       }, 1000);
     }
@@ -450,7 +454,8 @@
           var rinsetsu_stations = stationQueue.shift();
           g.select(
             ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
-          ).attr("opacity", 1);
+          ).transition().duration(500)
+        .ease(d3.easeLinear).attr("opacity", 1);
         }
         if (goal_station_name_ID.length > 0) {
           var center_station = goal_station_name_ID.shift();
@@ -472,7 +477,7 @@
             .attr("transform");
           var kakudairitu =
             0.2 / d3.select("#" + center_station).attr("stroke-width");
-          g.selectAll(".wave_out_animation").attr("to", 8)
+          g.selectAll(".wave_out_animation").attr("to", 8);
           var wave = g
             .append("circle")
             .attr("stroke", "white")
@@ -524,18 +529,23 @@
       inputEkidata = ekiNameToEkiData[inputName];
 
       console.log("#" + inputEkidata.name + inputEkidata.GroupID);
+      var kakudairitu =
+        0.2 /
+        d3
+          .select("#" + inputEkidata.name + inputEkidata.GroupID)
+          .attr("stroke-width");
       g.select("#" + inputEkidata.name + inputEkidata.GroupID)
         .transition()
-        .duration(1500)
+        .duration(1000)
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
           console.log(d);
-          return 1.2 * Math.sqrt(d.noriire) * 20;
+          return (1.2 * Math.sqrt(d.noriire) * 20) / (kakudairitu**3) / 2;
         })
         .transition()
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
-          return 1.2 * Math.sqrt(d.noriire);
+          return (1.2 * Math.sqrt(d.noriire)) / kakudairitu / 2;
         });
     }
   </script>
