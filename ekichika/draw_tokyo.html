@@ -25,7 +25,8 @@
     width: 100%;
     padding: 40px;
     box-sizing: border-box;
-    background-color: black;
+    /* background-color: black; */
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -33,7 +34,7 @@
 
   .clock {
     background-color: rgba(255, 243, 217, 0.2);
-    border: 3px solid #5bc6af;
+    border: 3px solid #fff;
     width: 400px;
     height: 400px;
     position: relative;
@@ -43,7 +44,7 @@
   .clock::after {
     width: 16px;
     height: 16px;
-    background: #5bc6af;
+    background: #fff;
     content: "";
 
     position: absolute;
@@ -60,7 +61,7 @@
   .hour {
     width: 8px;
     height: 140px;
-    background: #5bc6af;
+    background: #fff;
     top: calc(50% - 140px);
     left: calc(50% - 4px);
   }
@@ -68,7 +69,7 @@
   .min {
     width: 4px;
     height: 180px;
-    background: #5bc6af;
+    background: #fff;
     top: calc(50% - 180px);
     left: calc(50% - 2px);
   }
@@ -94,19 +95,83 @@
     content: "";
     width: 4px;
     height: 12px;
-    background-color: #5bc6af;
+    background-color: #fff;
   }
 
   #setTime {
     font-size: 30px;
-    color: #5bc6af;
+    color: #fff;
   }
   /* <<< for clock <<< */
 </style>
-<body bgcolor=black>
+<link rel="stylesheet" href="sidebar.css" />
+<body bgcolor="black">
+  <!-- >>> for sidebar >>> -->
+  <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu" />
+  <label for="openSidebarMenu" class="sidebarIconToggle">
+    <div class="spinner diagonal part-1"></div>
+    <div class="spinner horizontal"></div>
+    <div class="spinner diagonal part-2"></div>
+  </label>
+  <div id="sidebarMenu">
+    <!-- <ul class="sidebarMenuInner">
+      <li>Jelena Jovanovic <span>Web Developer</span></li>
+      <li><a href="https://vanila.io" target="_blank">Company</a></li>
+      <li>
+        <a href="https://instagram.com/plavookac" target="_blank">Instagram</a>
+      </li>
+      <li>
+        <a href="https://twitter.com/plavookac" target="_blank">Twitter</a>
+      </li>
+      <li>
+        <a
+          href="https://www.youtube.com/channel/UCDfZM0IK6RBgud8HYGFXAJg"
+          target="_blank"
+          >YouTube</a
+        >
+      </li>
+      <li>
+        <a href="https://www.linkedin.com/in/plavookac/" target="_blank"
+          >Linkedin</a
+        >
+      </li>
+    </ul> -->
+
+    <!-- >>> for search >>> -->
+    <div class="wrapper">
+      <input type="text" id="inputEkiname" />
+      <br />
+      <button id="searchButton" onclick="ekiSearch()">Search</button>
+    </div>
+    <!-- <<< for search <<< -->
+    <!-- >>> for clock >>> -->
+    <div class="wrapper">
+      <div class="clock" id="clock">
+        <div class="scale" id="scale"></div>
+        <div class="hour line"></div>
+        <div class="min line"></div>
+      </div>
+      <div id="setTime"></div>
+    </div>
+    <script src="./clock.js"></script>
+    <!-- <<< for clock <<< -->
+  </div>
+  <!-- <div id="center" class="main center">
+    <div class="mainInner">
+      <div>PURE CSS SIDEBAR TOGGLE MENU</div>
+    </div>
+    <div class="mainInner">
+      <div>PURE CSS SIDEBAR TOGGLE MENU</div>
+    </div>
+    <div class="mainInner">
+      <div>PURE CSS SIDEBAR TOGGLE MENU</div>
+    </div>
+  </div> -->
+  <!-- <<< for sidebar <<< -->
   <script src="./d3.js" charset="utf-8"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="./search.js"></script>
+  <script src="https://d3js.org/d3-hexbin.v0.2.min.js"></script>
   <script>
     var w = window,
       d = document,
@@ -117,6 +182,7 @@
 
     var userSetHour = 0;
     var userSetTime = 30;
+    var ekiNameToEkiData = {};
 
     d3.select(window).on("resize", resizing);
 
@@ -139,7 +205,7 @@
           .attr("r", function (d) {
             return (1.2 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k);
           })
-          .attr("stroke-width", 1 / Math.cbrt(event.transform.k));
+          .attr("stroke-width", 0.4 / Math.cbrt(event.transform.k));
         g.selectAll("line")
           .attr("transform", event.transform)
           .attr("stroke-width", 2 / Math.cbrt(event.transform.k));
@@ -168,6 +234,9 @@
     showMap();
 
     d3.csv("data.csv").then(function (data) {
+      data.forEach(function (d) {
+        ekiNameToEkiData[d.name] = d;
+      });
       setTimeout(() => {
         showCircle(data);
       }, 250);
@@ -181,7 +250,6 @@
     function showMap() {
       d3.json("./tokyo.topojson").then(function (tk) {
         var tokyo = topojson.feature(tk, tk.objects.tokyo);
-
         g.append("g")
           .attr("id", "states")
           .selectAll("path")
@@ -232,8 +300,68 @@
         .enter()
         .append("line")
         .attr("stroke-width", 2)
+        .attr("class", function (d) {
+          return (
+            "s" + d.fromID + "_" + d.toID + " " + "s" + d.toID + "_" + d.fromID
+          );
+        })
         .call(position);
+
+      links.append("title").text(function (d) {
+        // console.log(d);
+        return d.routeName;
+      });
     }
+
+    // function showhexagon(data){
+    //   function position(p) {
+    //     p.attr("cx", function (d) {
+    //       return projection([d.ido, d.keido])[0];
+    //     });
+    //     p.attr("cy", function (d) {
+    //       return projection([d.ido, d.keido])[1];
+    //     });
+    //     p.attr("r", function (d) {
+    //       return 1.2 * Math.sqrt(d.noriire);
+    //     });
+    //     p.attr("stroke-width", 0.4);
+    //   }
+
+    //   var circle = g
+    //     .selectAll("circle")
+    //     .data(data)
+    //     .enter()
+    //     .append("circle")
+    //     .sort(order)
+    //     .attr("class", "circle")
+    //     .attr("fill", "white")
+    //     .attr("fill-opacity", 0.2)
+    //     .attr("stroke", "white")
+    //     .call(position);
+
+    //   circle.on("click", function (event, d) {
+    //     d3.selectAll("line").attr("opacity", 0);
+    //     console.log(d);
+    //     within_T_min(d.GroupID, 60);
+    //     setTimeout(() => {
+    //       while (stationQueue.length) {
+    //         var rinsetsu_stations = stationQueue.shift();
+    //         g.select(
+    //           ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
+    //         ).attr("opacity", 1);
+    //       }
+    //     }, 1000);
+    //   });
+    //   circle.append("title").text(function (d) {
+    //     // console.log(d);
+    //     return d.name;
+    //   });
+
+    //   // circle.on("mouseover", onMouseover).on("mouseout", onMouseout);
+    //   function order(a, b) {
+    //     return b.noriire - a.noriire;
+    //   }
+    // }
 
     function showCircle(data) {
       function position(p) {
@@ -247,6 +375,9 @@
           return 1.2 * Math.sqrt(d.noriire);
         });
         p.attr("stroke-width", 1);
+        p.attr("id", function (d) {
+          return d.name + d.GroupID;
+        });
       }
 
       var circle = g
@@ -266,9 +397,7 @@
         console.log(d);
         within_T_min(d.GroupID, userSetHour * 60 + userSetTime);
         setTimeout(() => {
-          console.log(stationQueue);
           while (stationQueue.length) {
-            console.log(stationQueue.length);
             var rinsetsu_stations = stationQueue.shift();
             g.select(
               ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
@@ -277,7 +406,7 @@
         }, 1000);
       });
       circle.append("title").text(function (d) {
-        console.log(d);
+        // console.log(d);
         return d.name;
       });
 
@@ -286,22 +415,6 @@
         return b.noriire - a.noriire;
       }
     }
-
-    // function clicked(d) {
-    //   var centroid = path.centroid(d),
-    //       translate = projection.translate();
-
-    //   projection.translate([
-    //     translate[0] - centroid[0] + width / 2,
-    //     translate[1] - centroid[1] + height / 2
-    //   ]);
-
-    //   zoom.translate(projection.translate());
-
-    //   g.selectAll("path").transition()
-    //       .duration(700)
-    //       .attr("d", path);
-    // }
 
     function resizing() {
       w = window;
@@ -320,64 +433,29 @@
       );
     }
 
-    // >>> for tooltip >>>
+    function ekiSearch() {
+      var inputName = document.getElementById("inputEkiname").value;
+      if (ekiNameToEkiData[inputName] == undefined) {
+        console.log("Not Found");
+        alert(inputName + "駅が見つかりません");
+        return;
+      }
+      inputEkidata = ekiNameToEkiData[inputName];
 
-    function onMouseover(event) {
-      console.log("MouseOver");
-      console.log(d3.select(this).datum().name);
-      d3.select(this).attr("fill", "white");
-
-      //console.log(event);
-      // var data_label = [
-      //   d3.select(this).datum().name,
-      //   d3.select(this).datum().noriire,
-      // ];
-      var data_label = d3.select(this).datum().name;
-      circle_cx = d3.select(this).attr("cx");
-      circle_cy = d3.select(this).attr("cy");
-      circle_r = d3.select(this).attr("r");
-
-      y_col = circle_cy - circle_r;
-
-      var textSize = 30;
-      g.selectAll(".data_label")
-        .data(data_label)
-        .enter()
-        .append("text")
-        .attr("class", "data_label")
-        .attr("fill", "black")
-        .attr("stroke", "gray")
-        .attr("font-weight", "bold")
-        // .attr("text-anchor", "center")
-        .attr("x", circle_cx)
-        .attr("y", function (d, i) {
-          return (textSize + 1) * i + y_col - 30;
+      console.log("#" + inputEkidata.name + inputEkidata.GroupID);
+      g.select("#" + inputEkidata.name + inputEkidata.GroupID)
+        .transition()
+        .duration(1500)
+        .ease(d3.easeSin, d3.easeSinInOut)
+        .attr("r", function (d) {
+          console.log(d);
+          return 1.2 * Math.sqrt(d.noriire) * 20;
         })
-        // .attr("transform", event.transform)
-        .attr("font-size", textSize)
-        .text(function (d) {
-          return d;
+        .transition()
+        .ease(d3.easeSin, d3.easeSinInOut)
+        .attr("r", function (d) {
+          return 1.2 * Math.sqrt(d.noriire);
         });
     }
-
-    function onMouseout(event) {
-      console.log("MouseOut");
-      d3.select(this).attr("fill", function (d) {
-        return "white";
-      });
-      svg.selectAll(".data_label").remove();
-    }
-    // <<< for tooltip <<<
   </script>
-  <!-- >>> for clock >>> -->
-  <div class="wrapper">
-    <div class="clock" id="clock">
-      <div class="scale" id="scale"></div>
-      <div class="hour line"></div>
-      <div class="min line"></div>
-    </div>
-    <div id="setTime"></div>
-  </div>
-  <script src="./clock.js"></script>
-  <!-- <<< for clock <<< -->
 </body>
