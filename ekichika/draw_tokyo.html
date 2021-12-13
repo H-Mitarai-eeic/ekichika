@@ -107,7 +107,6 @@
   <script src="./d3.js" charset="utf-8"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="./search.js"></script>
-  <script src="https://d3js.org/d3-hexbin.v0.2.min.js"></script>
   <script>
     var w = window,
       d = document,
@@ -119,6 +118,7 @@
     var userSetHour = 0;
     var userSetTime = 30;
     var ekiNameToEkiData = {};
+    var clicked_stations = [];
 
     d3.select(window).on("resize", resizing);
 
@@ -310,7 +310,7 @@
         p.attr("r", function (d) {
           return 1.2 * Math.sqrt(d.noriire);
         });
-        p.attr("stroke-width", 1);
+        p.attr("stroke-width", 0.4);
         p.attr("id", function (d) {
           return d.name + d.GroupID;
         });
@@ -328,9 +328,29 @@
         .attr("stroke", "white")
         .call(position);
 
+      circle.append("title").text(function (d) {
+        // console.log(d);
+        return d.name;
+      });
+
+      // circle.on("mouseover", onMouseover).on("mouseout", onMouseout);
+      function order(a, b) {
+        return b.noriire - a.noriire;
+      }
+
       circle.on("click", function (event, d) {
+        // d3.selectAll("circle")
+        //   .attr("fill-opacity", 0.2)
+        //   .attr("stroke", "white");
+        // d3.select(this).attr("fill-opacity", 1).attr("stroke", "black");
         d3.selectAll("line").attr("opacity", 0);
         console.log(d);
+        clicked_stations.push(d.GroupID);
+        console.log(clicked_stations);
+        show_within_stations(d);
+      });
+
+      function show_within_stations(d) {
         within_T_min(d.GroupID, userSetHour * 60 + userSetTime);
         setTimeout(() => {
           while (stationQueue.length) {
@@ -340,15 +360,18 @@
             ).attr("opacity", 1);
           }
         }, 1000);
-      });
-      circle.append("title").text(function (d) {
-        // console.log(d);
-        return d.name;
-      });
+      }
 
-      // circle.on("mouseover", onMouseover).on("mouseout", onMouseout);
-      function order(a, b) {
-        return b.noriire - a.noriire;
+      function show_center_station(){
+        within_T_min(d.GroupID, userSetHour * 60 + userSetTime);
+        setTimeout(() => {
+          while (stationQueue.length) {
+            var rinsetsu_stations = stationQueue.shift();
+            g.select(
+              ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
+            ).attr("opacity", 1);
+          }
+        }, 1000);
       }
     }
 
