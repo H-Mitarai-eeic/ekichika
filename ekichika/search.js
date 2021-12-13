@@ -1,7 +1,7 @@
 //search.js
 
 var stationQueue = [];
-var stationQueue4meetup = [];
+//var stationQueue4meetup = [];
 function within_T_min(startGroupID, T) {
     var Adj_list = {};   //隣接リスト　keyはstation ID
     var groupInfo = {};  //グループIDでそのグループ内の駅情報を検索するための辞書 keyはgroupe ID
@@ -147,7 +147,7 @@ function within_T_min(startGroupID, T) {
     }
 }
 function meet_up(startGroupID, T){
-    var N = startGroupID.length();
+    var N = startGroupID.length;
     var Adj_list = {};
     var groupInfo = {};
     var numOfVisitors = {};
@@ -336,8 +336,9 @@ function meet_up(startGroupID, T){
             }
         }
         while (queue4trace.size() > 0){
-            stationQueue4meetup.push(queue4trace.dequeue());
-            //console.log(stationQueue4meetup);
+            //stationQueue4meetup.push(queue4trace.dequeue());
+            stationQueue.push(queue4trace.dequeue());
+            console.log(stationQueue);
         }
     }
 }

@@ -26,7 +26,7 @@
     padding: 40px;
     box-sizing: border-box;
     /* background-color: black; */
-    background-color: rgba(0, 0, 0, 0.5);
+    /* background-color: rgba(0, 0, 0, 0.5); */
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -114,29 +114,6 @@
     <div class="spinner diagonal part-2"></div>
   </label>
   <div id="sidebarMenu">
-    <!-- <ul class="sidebarMenuInner">
-      <li>Jelena Jovanovic <span>Web Developer</span></li>
-      <li><a href="https://vanila.io" target="_blank">Company</a></li>
-      <li>
-        <a href="https://instagram.com/plavookac" target="_blank">Instagram</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/plavookac" target="_blank">Twitter</a>
-      </li>
-      <li>
-        <a
-          href="https://www.youtube.com/channel/UCDfZM0IK6RBgud8HYGFXAJg"
-          target="_blank"
-          >YouTube</a
-        >
-      </li>
-      <li>
-        <a href="https://www.linkedin.com/in/plavookac/" target="_blank"
-          >Linkedin</a
-        >
-      </li>
-    </ul> -->
-
     <!-- >>> for search >>> -->
     <div class="wrapper">
       <input type="text" id="inputEkiname" />
@@ -152,21 +129,12 @@
         <div class="min line"></div>
       </div>
       <div id="setTime"></div>
+      <button id="runButton" onclick="show_whole_paths()">Run</button>
     </div>
     <script src="./clock.js"></script>
     <!-- <<< for clock <<< -->
   </div>
-  <!-- <div id="center" class="main center">
-    <div class="mainInner">
-      <div>PURE CSS SIDEBAR TOGGLE MENU</div>
-    </div>
-    <div class="mainInner">
-      <div>PURE CSS SIDEBAR TOGGLE MENU</div>
-    </div>
-    <div class="mainInner">
-      <div>PURE CSS SIDEBAR TOGGLE MENU</div>
-    </div>
-  </div> -->
+
   <!-- <<< for sidebar <<< -->
   <script src="./d3.js" charset="utf-8"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
