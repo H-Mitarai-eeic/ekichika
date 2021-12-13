@@ -472,7 +472,7 @@
             .attr("transform");
           var kakudairitu =
             0.2 / d3.select("#" + center_station).attr("stroke-width");
-          g.selectAll(".wave_out_animation").attr("to", 8)
+          g.selectAll(".wave_out_animation").attr("to", 8);
           var wave = g
             .append("circle")
             .attr("stroke", "white")
@@ -524,18 +524,23 @@
       inputEkidata = ekiNameToEkiData[inputName];
 
       console.log("#" + inputEkidata.name + inputEkidata.GroupID);
+      var kakudairitu =
+        0.2 /
+        d3
+          .select("#" + inputEkidata.name + inputEkidata.GroupID)
+          .attr("stroke-width");
       g.select("#" + inputEkidata.name + inputEkidata.GroupID)
         .transition()
-        .duration(1500)
+        .duration(1000)
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
           console.log(d);
-          return 1.2 * Math.sqrt(d.noriire) * 20;
+          return (1.2 * Math.sqrt(d.noriire) * 20) / (kakudairitu**3) / 2;
         })
         .transition()
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
-          return 1.2 * Math.sqrt(d.noriire);
+          return (1.2 * Math.sqrt(d.noriire)) / kakudairitu / 2;
         });
     }
   </script>
