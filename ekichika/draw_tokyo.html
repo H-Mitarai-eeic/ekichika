@@ -146,10 +146,10 @@
     <!-- <<< for search <<< -->
     <!-- >>> for clock >>> -->
     <div class="wrapper">
-      <div class="clock" id="clock">
+      <div class="clock" id="clock" draggable="true">
         <div class="scale" id="scale"></div>
         <div class="hour line"></div>
-        <div class="min line"></div>
+        <div class="min line" draggable="true" id="minLine"></div>
       </div>
       <div id="setTime"></div>
       <br />
@@ -472,7 +472,7 @@
             .attr("transform");
           var kakudairitu =
             0.2 / d3.select("#" + center_station).attr("stroke-width");
-          g.selectAll(".wave_out_animation").attr("to", 8)
+          g.selectAll(".wave_out_animation").attr("to", 8);
           var wave = g
             .append("circle")
             .attr("stroke", "white")
