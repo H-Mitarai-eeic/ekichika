@@ -66,9 +66,9 @@ function setClock(x, y) {
   deg_h = hour * 30 + deg_m / 12;
   // var deg_s = now.getSeconds() * (360 / 60);
   if (hour == 0) {
-    document.getElementById("setTime").innerHTML = time + "分";
+    document.getElementById("setTime").innerHTML = time + "m.";
   } else {
-    document.getElementById("setTime").innerHTML = hour + "時間" + time + "分";
+    document.getElementById("setTime").innerHTML = hour + "h. " + time + "m.";
   }
   // それぞれの針に角度を設定
   document.querySelector(".hour").style.transform = `rotate(${deg_h}deg)`;
@@ -90,9 +90,9 @@ window.onload = function () {
     document.querySelector(".scale div:nth-child(" + i + ")").style.transform = `rotate(${i * 30}deg)`;
   }
   if (hour == 0) {
-    document.getElementById("setTime").innerHTML = time + "分";
+    document.getElementById("setTime").innerHTML = time + "m.";
   } else {
-    document.getElementById("setTime").innerHTML = hour + "時間" + time + "分";
+    document.getElementById("setTime").innerHTML = hour + "h. " + time + "m.";
   }
   // それぞれの針に角度を設定
   document.querySelector(".hour").style.transform = `rotate(${deg_h}deg)`;
