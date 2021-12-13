@@ -1,5 +1,8 @@
 //search.js
-
+/*
+引数: stationQueue 空の配列の参照　→　表示するルートが随時pushされる.
+引数: goalStationNameID 空の配列の参照  → 集合地点の "名前+ID" がプッシュされる.
+*/
 function within_T_min(startGroupID, T, stationQueue) {
     var Adj_list = {};   //隣接リスト　keyはstation ID
     var groupInfo = {};  //グループIDでそのグループ内の駅情報を検索するための辞書 keyはgroupe ID
