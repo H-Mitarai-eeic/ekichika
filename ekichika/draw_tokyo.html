@@ -183,6 +183,7 @@
     var ekiNameToEkiData = {};
     var clicked_stations = [];
     var goal_station_name_ID = [];
+    var last_center_station = NaN;
 
     d3.select(window).on("resize", resizing);
 
@@ -237,9 +238,20 @@
     g.append("rect")
       .attr("class", "background")
       .attr("width", width)
-      .attr("height", height);
+      .attr("height", height)
+      .on("click", reset_selections);
     // .attr("stroke", "lightgrey")
     // .attr("stroke-width", 20);
+
+    function reset_selections() {
+      g.selectAll(".wave").remove();
+      g.selectAll(".wave_in").remove();
+      g.selectAll("circle").attr("fill-opacity", 0.2).attr("fill", "white");
+      g.selectAll("line").attr("opacity", 1);
+      clicked_stations = [];
+      last_center_station = NaN;
+    }
+
     showMap();
 
     d3.csv("data.csv").then(function (data) {
@@ -440,11 +452,46 @@
             ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
           ).attr("opacity", 1);
         }
-        if (goal_station_name_ID.length > 0){
+        if (goal_station_name_ID.length > 0) {
           var center_station = goal_station_name_ID.shift();
+
+          if (last_center_station != NaN) {
+            g.select("#" + last_center_station)
+              .attr("fill-opacity", 0.2)
+              .attr("fill", "white");
+            g.select(".wave_in").remove();
+          }
           g.select("#" + center_station)
-          .attr("fill-opacity", 1)
-          .attr("fill", "yellow");
+            .attr("fill-opacity", 1)
+            .attr("fill", "yellow");
+          last_center_station = center_station;
+          var circle_cx = d3.select("#" + center_station).attr("cx");
+          var circle_cy = d3.select("#" + center_station).attr("cy");
+          var circle_transform = d3
+            .select("#" + center_station)
+            .attr("transform");
+          var kakudairitu =
+            0.2 / d3.select("#" + center_station).attr("stroke-width");
+          var wave = g
+            .append("circle")
+            .attr("class", "wave wave_in")
+            .attr("stroke", "white")
+            .attr("stroke-width", 0.2)
+            .attr("opacity", 1)
+            .attr("fill-opacity", 0)
+            .attr("cx", circle_cx)
+            .attr("cy", circle_cy)
+            .attr("r", 0)
+            .attr("transform", circle_transform);
+
+          wave
+            .append("animate")
+            .attr("attributeName", "r")
+            .attr("begin", "0s")
+            .attr("dur", "1s")
+            .attr("from", "25")
+            .attr("to", "0")
+            .attr("repeatCount", "indefinite");
         }
       }, 1000);
     }
