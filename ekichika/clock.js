@@ -102,6 +102,8 @@ window.onload = function () {
 
 function muuXY(e, that) {
   if (!e) e = window.event;
+
+  // console.log(that);
   var x, y;
   if (e.targetTouches) {
     x = e.targetTouches[0].pageX - e.target.offsetLeft;
@@ -114,25 +116,25 @@ function muuXY(e, that) {
   return [x, y];
 }
 
-
+var isDragged = false;
 
 document.getElementById('clock').onmousemove = function (e) {
-  var xy = muuXY(e, this);
-  // console.log('Xの座標は' + xy[0] + 'Yの座標は' + xy[1]);
-  setClock(xy[0], xy[1]);
+  if (isDragged) {
+    var xy = muuXY(e, this);
+    // console.log('Xの座標は' + xy[0] + 'Yの座標は' + xy[1]);
+    setClock(xy[0], xy[1]);
+  }
 }
 
+var clock = document.getElementById('clock');
+clock.onmousedown = function (event) {
+  isDragged = true;
+  clock.onmouseup = function () {
+    isDragged = false;
+    // clock.onmouseup = null;
+  };
+};
 
-
-// clock = document.getElementById('clock');
-// clock.onmousedown = function (event) {
-//   // console.log(event)
-//   document.addEventListener("mousemove", onMouseMove(event));
-// }
-
-// var onMouseMove = function (event) {
-//   console.log(event);
-//   var xy = muuXY(event, this);
-//   // console.log('Xの座標は' + xy[0] + 'Yの座標は' + xy[1]);
-//   setClock(xy[0], xy[1]);
-// }
+clock.ondragstart = function () {
+  return false;
+};
