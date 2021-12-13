@@ -1,7 +1,7 @@
 //search.js
 
 var stationQueue = [];
-
+var stationQueue4meetup = [];
 function within_T_min(startGroupID, T) {
     var Adj_list = {};   //隣接リスト　keyはstation ID
     var groupInfo = {};  //グループIDでそのグループ内の駅情報を検索するための辞書 keyはgroupe ID
@@ -30,8 +30,8 @@ function within_T_min(startGroupID, T) {
     function Make_Adj_List() {
         var groupInfo_flag = {}
 
-        d3.csv("./join.csv").then(function (data) {
-            data.forEach(function (d) {
+        d3.csv("join.csv").then(function(data){
+            data.forEach(function(d){
                 var time_tmp
                 //時間を設定
                 if (d.time == 0) {
@@ -146,7 +146,201 @@ function within_T_min(startGroupID, T) {
         }
     }
 }
+function meet_up(startGroupID, T){
+    var N = startGroupID.length;
+    var Adj_list = {};
+    var groupInfo = {};
+    var numOfVisitors = {};
+    var stationInfo = {};
 
+    //以下の変数は人数分準備
+    var time = Array(N);
+    var previousStation = Array(N);
+    var visited_group_flag = Array(N);    //訪問済みならtrue 未訪問はfalse groupID
+
+    for(var i = 0; i < N; i++){
+        time[i] = {};
+        previousStation[i] = {};
+        visited_group_flag[i] = {};
+    }
+
+    var queue = new pairing_heap();
+
+    var ARAKAWASEN = 0.8;
+    var changeTrains_time = 5;
+    var stopTime = 0.75;
+    new Promise((resolve) => {
+        Make_Adj_List_meetup();
+        resolve();
+    }).then(() => {
+        setTimeout(() => {
+            //console.log(Adj_list);
+            dijkstra_meetup();
+        }, 2000);
+    });
+
+    function Make_Adj_List_meetup(){
+        var groupInfo_flag = {};
+
+        d3.csv("../importantData/join.csv").then(function(data){
+            data.forEach(function(d){
+                var time_tmp
+                //時間を設定
+                if (d.time == 0){
+                    time_tmp = parseFloat(ARAKAWASEN) + parseFloat(stopTime);  //d.time=0のときの例外処理
+                }else{
+                    time_tmp = parseFloat(d.time) + parseFloat(stopTime);
+                }
+                //groupInfoを追加
+                if (groupInfo[d.fromGroupID] == undefined){
+                    groupInfo[d.fromGroupID] = [[d.fromID, d.fromName, d.routeID, d.routeName]];
+                    groupInfo_flag[d.fromGroupID] = [d.fromID];
+                    numOfVisitors[d.fromGroupID] = parseInt(0);
+                    for(var i = 0; i < N; i++){
+                        visited_group_flag[i][d.fromGroupID] = false;
+                    }
+                }else if(groupInfo_flag[d.fromGroupID].indexOf(d.fromID) == -1){
+                    groupInfo[d.fromGroupID].push([d.fromID, d.fromName, d.routeID, d.routeName]);
+                    groupInfo_flag[d.fromGroupID].push(d.fromID);
+                }
+                if (groupInfo[d.toGroupID] == undefined){
+                    groupInfo[d.toGroupID] = [[d.toID, d.toName, d.routeID, d.routeName]];
+                    groupInfo_flag[d.toGroupID] = [d.toID];
+                    numOfVisitors[d.toGroupID] = parseInt(0);
+                    for(var i = 0; i < N; i++){
+                        visited_group_flag[i][d.toGroupID] = false;
+                    }
+                }else if(groupInfo_flag[d.toGroupID].indexOf(d.toID) == -1){
+                    groupInfo[d.toGroupID].push([d.toID, d.toName, d.routeID, d.routeName]);
+                    groupInfo_flag[d.toGroupID].push(d.toID);
+                }
+                //隣接リストに追加
+                if (Adj_list[d.fromID] == undefined){
+                    Adj_list[d.fromID] = [[d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, time_tmp]];
+                    stationInfo[d.fromID] = {GroupID: d.fromGroupID, stationName: d.fromName, routeID: d.routeID, routeName: d.routeName};
+                    for (var i = 0; i < N; i++){
+                        time[i][d.fromID] = T + 100;
+                        //previousStation[i][d.fromID] = [];
+                    }
+                    for (var i = 0; i < groupInfo[d.fromGroupID].length; i++){
+                        if(groupInfo[d.fromGroupID][i][0] != d.fromID){
+                            var StID_tmp = groupInfo[d.fromGroupID][i][0];
+                            var StName_tmp = groupInfo[d.fromGroupID][i][1];
+                            var RouteID_tmp = groupInfo[d.fromGroupID][i][2];
+                            var RouteName_tmp = groupInfo[d.fromGroupID][i][3];
+                            Adj_list[d.fromID].push([d.fromGroupID, StID_tmp, StName_tmp, RouteID_tmp, RouteName_tmp, changeTrains_time]);
+                            Adj_list[StID_tmp].push([d.fromGroupID, d.fromID, d.fromName, d.routeID, d.routeName, changeTrains_time]);
+                        }
+                    }
+                }
+                else{
+                    Adj_list[d.fromID].push([d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, time_tmp]);
+
+                }
+                if (Adj_list[d.toID] == undefined){
+                    Adj_list[d.toID] = [[d.fromGroupID, d.fromID, d.fromName, d.routeID, d.routeName, time_tmp]];
+                    stationInfo[d.toID] = {GroupID: d.toGroupID, stationName: d.toName, routeID: d.routeID, routeName: d.routeName};
+                    for (var i = 0; i < N; i++){
+                        time[i][d.toID] = T + 100;
+                        //previousStation[i][d.toID] = [];
+                    }
+                    //同一グループ内の駅とつなげる
+                    for (var i = 0; i < groupInfo[d.toGroupID].length; i++){
+                        if(groupInfo[d.toGroupID][i][0] != d.toID){
+                            var StID_tmp = groupInfo[d.toGroupID][i][0];
+                            var StName_tmp = groupInfo[d.toGroupID][i][1];
+                            var RouteID_tmp = groupInfo[d.toGroupID][i][2];
+                            var RouteName_tmp = groupInfo[d.toGroupID][i][3];
+                            Adj_list[d.toID].push([d.toGroupID, StID_tmp, StName_tmp, RouteID_tmp, RouteName_tmp, changeTrains_time]);
+                            Adj_list[StID_tmp].push([d.toGroupID, d.toID, d.toName, d.routeID, d.routeName, changeTrains_time]);
+                        }
+                    }
+                }
+                else{
+                    Adj_list[d.toID].push([d.fromGroupID, d.fromID, d.fromName, d.routeID, d.routeName, time_tmp]);
+                } 
+            });
+        });
+    }
+    function dijkstra_meetup(){
+        for(var i = 0; i < N; i++){
+            for(var j = 0; j < groupInfo[startGroupID[i]].length; j++){
+                var startStationID = groupInfo[startGroupID[i]][j][0];
+                time[i][startStationID] = 0;
+                previousStation[i][startStationID] = [startGroupID, -1, "start:" + i, "start:" + i];
+                queue.enqueue(-time[i][startStationID], [i, startStationID]);
+            }
+            console.log("スタート地点", groupInfo[startGroupID[i]]);
+        }
+
+        while(queue.size() != 0){
+            var dequeued_item = queue.dequeue();
+            var i = dequeued_item[0]; //i is personal_id
+            var currentStationID = dequeued_item[1];
+            var currentStationName = stationInfo[currentStationID].stationName;
+            var currentGroupID = stationInfo[currentStationID].GroupID;
+            var currentStationRouteName = stationInfo[currentStationID].routeName;
+
+            if (visited_group_flag[i][currentGroupID] == false){
+                //iさんが未訪問なら訪問したことを記録し
+                //訪問人数を +1
+                visited_group_flag[i][currentGroupID] = true;
+                numOfVisitors[currentGroupID] += parseInt(1);
+                if (numOfVisitors[currentGroupID] == N){
+                    //全員集合してたら
+                    console.log("集合場所", groupInfo[currentGroupID]);
+                    traceBack(currentGroupID);
+                    break;
+                }
+            }
+            for(var j = 0; j < Adj_list[currentStationID].length; j++){
+                var nextStationID = Adj_list[currentStationID][j][1];
+                var dt = parseFloat(Adj_list[currentStationID][j][5]);
+                var current_node_time = parseFloat(time[i][currentStationID]);
+                var next_node_time = parseFloat(time[i][nextStationID]);
+
+                if( (next_node_time > current_node_time + dt) && (current_node_time + dt < T)){
+                    time[i][nextStationID] = current_node_time + dt;
+                    previousStation[i][nextStationID] = [currentGroupID, currentStationID, currentStationName, currentStationRouteName];
+                    queue.enqueue(-time[i][nextStationID], [i, nextStationID]);
+                }
+            }
+        }
+        
+    }
+    function traceBack(goalGroupID){
+        var queue4trace = new pairing_heap();
+        for (var i = 0; i < N; i++){
+            var goalStationID;
+            var currentStationID;
+            minTime = T + 100;
+            for(var j = 0; j < groupInfo[goalGroupID].length; j++){
+                var stationID_tmp = groupInfo[goalGroupID][j][0];
+                if(minTime > time[i][stationID_tmp]){
+                    minTime = time[i][stationID_tmp];
+                    goalStationID = stationID_tmp;
+                }
+            }
+            currentStationID = goalStationID;
+
+            //console.log(time[i][goalStationID]);
+            while (1){
+                //console.log(stationInfo[currentStationID]);
+                if (previousStation[i][currentStationID][1] == -1){
+                    break;
+                }
+                var previousStationID = previousStation[i][currentStationID][1];
+                var currentStationTime = time[i][currentStationID];
+                queue4trace.enqueue(-currentStationTime, [previousStationID, currentStationID]);
+                currentStationID = previousStationID;
+            }
+        }
+        while (queue4trace.size() > 0){
+            stationQueue4meetup.push(queue4trace.dequeue());
+            //console.log(stationQueue4meetup);
+        }
+    }
+}
 function pairing_heap() {
     "use strict";
     var _root = null;
