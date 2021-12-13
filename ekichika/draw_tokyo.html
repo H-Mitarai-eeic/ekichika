@@ -308,60 +308,9 @@
         .call(position);
 
       links.append("title").text(function (d) {
-        // console.log(d);
         return d.routeName;
       });
     }
-
-    // function showhexagon(data){
-    //   function position(p) {
-    //     p.attr("cx", function (d) {
-    //       return projection([d.ido, d.keido])[0];
-    //     });
-    //     p.attr("cy", function (d) {
-    //       return projection([d.ido, d.keido])[1];
-    //     });
-    //     p.attr("r", function (d) {
-    //       return 1.2 * Math.sqrt(d.noriire);
-    //     });
-    //     p.attr("stroke-width", 0.4);
-    //   }
-
-    //   var circle = g
-    //     .selectAll("circle")
-    //     .data(data)
-    //     .enter()
-    //     .append("circle")
-    //     .sort(order)
-    //     .attr("class", "circle")
-    //     .attr("fill", "white")
-    //     .attr("fill-opacity", 0.2)
-    //     .attr("stroke", "white")
-    //     .call(position);
-
-    //   circle.on("click", function (event, d) {
-    //     d3.selectAll("line").attr("opacity", 0);
-    //     console.log(d);
-    //     within_T_min(d.GroupID, 60);
-    //     setTimeout(() => {
-    //       while (stationQueue.length) {
-    //         var rinsetsu_stations = stationQueue.shift();
-    //         g.select(
-    //           ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
-    //         ).attr("opacity", 1);
-    //       }
-    //     }, 1000);
-    //   });
-    //   circle.append("title").text(function (d) {
-    //     // console.log(d);
-    //     return d.name;
-    //   });
-
-    //   // circle.on("mouseover", onMouseover).on("mouseout", onMouseout);
-    //   function order(a, b) {
-    //     return b.noriire - a.noriire;
-    //   }
-    // }
 
     function showCircle(data) {
       function position(p) {
@@ -407,36 +356,50 @@
         //   .attr("fill-opacity", 0.2)
         //   .attr("stroke", "white");
         // d3.select(this).attr("fill-opacity", 1).attr("stroke", "black");
-        d3.selectAll("line").attr("opacity", 0);
+        // d3.selectAll("line").attr("opacity", 0);
         console.log(d);
         clicked_stations.push(d.GroupID);
         console.log(clicked_stations);
-        show_within_stations(d);
+        show_within_stations(d.GroupID);
       });
-
-      function show_within_stations(d) {
-        within_T_min(d.GroupID, userSetHour * 60 + userSetTime);
-        setTimeout(() => {
-          while (stationQueue.length) {
-            var rinsetsu_stations = stationQueue.shift();
-            g.select(
-              ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
-            ).attr("opacity", 1);
-          }
-        }, 1000);
+    }
+    function show_whole_paths() {
+      if (clicked_stations.length == 0) {
+        // 何も選択せずにrunされた時
+        return;
+      } else if (clicked_stations.length == 1) {
+        //一回の時
+        show_within_stations(stationQueue[0]);
+        clicked_stations = [];
+      } else {
+        show_center_station();
+        clicked_stations = [];
       }
+    }
 
-      function show_center_station(){
-        within_T_min(d.GroupID, userSetHour * 60 + userSetTime);
-        setTimeout(() => {
-          while (stationQueue.length) {
-            var rinsetsu_stations = stationQueue.shift();
-            g.select(
-              ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
-            ).attr("opacity", 1);
-          }
-        }, 1000);
-      }
+    function show_within_stations(groupid) {
+      d3.selectAll("line").attr("opacity", 0);
+      within_T_min(groupid, userSetHour * 60 + userSetTime);
+      setTimeout(() => {
+        while (stationQueue.length) {
+          var rinsetsu_stations = stationQueue.shift();
+          g.select(
+            ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
+          ).attr("opacity", 1);
+        }
+      }, 1000);
+    }
+    function show_center_station() {
+      d3.selectAll("line").attr("opacity", 0);
+      meet_up(clicked_stations, 180);
+      setTimeout(() => {
+        while (stationQueue.length) {
+          var rinsetsu_stations = stationQueue.shift();
+          g.select(
+            ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
+          ).attr("opacity", 1);
+        }
+      }, 1000);
     }
 
     function resizing() {
