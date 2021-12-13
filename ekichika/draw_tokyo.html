@@ -25,7 +25,8 @@
     width: 100%;
     padding: 40px;
     box-sizing: border-box;
-    background-color: black;
+    /* background-color: black; */
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -33,7 +34,7 @@
 
   .clock {
     background-color: rgba(255, 243, 217, 0.2);
-    border: 3px solid #5bc6af;
+    border: 3px solid #fff;
     width: 400px;
     height: 400px;
     position: relative;
@@ -43,7 +44,7 @@
   .clock::after {
     width: 16px;
     height: 16px;
-    background: #5bc6af;
+    background: #fff;
     content: "";
 
     position: absolute;
@@ -60,7 +61,7 @@
   .hour {
     width: 8px;
     height: 140px;
-    background: #5bc6af;
+    background: #fff;
     top: calc(50% - 140px);
     left: calc(50% - 4px);
   }
@@ -68,7 +69,7 @@
   .min {
     width: 4px;
     height: 180px;
-    background: #5bc6af;
+    background: #fff;
     top: calc(50% - 180px);
     left: calc(50% - 2px);
   }
@@ -94,16 +95,79 @@
     content: "";
     width: 4px;
     height: 12px;
-    background-color: #5bc6af;
+    background-color: #fff;
   }
 
   #setTime {
     font-size: 30px;
-    color: #5bc6af;
+    color: #fff;
   }
   /* <<< for clock <<< */
 </style>
+<link rel="stylesheet" href="sidebar.css" />
 <body bgcolor="black">
+  <!-- >>> for sidebar >>> -->
+  <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu" />
+  <label for="openSidebarMenu" class="sidebarIconToggle">
+    <div class="spinner diagonal part-1"></div>
+    <div class="spinner horizontal"></div>
+    <div class="spinner diagonal part-2"></div>
+  </label>
+  <div id="sidebarMenu">
+    <!-- <ul class="sidebarMenuInner">
+      <li>Jelena Jovanovic <span>Web Developer</span></li>
+      <li><a href="https://vanila.io" target="_blank">Company</a></li>
+      <li>
+        <a href="https://instagram.com/plavookac" target="_blank">Instagram</a>
+      </li>
+      <li>
+        <a href="https://twitter.com/plavookac" target="_blank">Twitter</a>
+      </li>
+      <li>
+        <a
+          href="https://www.youtube.com/channel/UCDfZM0IK6RBgud8HYGFXAJg"
+          target="_blank"
+          >YouTube</a
+        >
+      </li>
+      <li>
+        <a href="https://www.linkedin.com/in/plavookac/" target="_blank"
+          >Linkedin</a
+        >
+      </li>
+    </ul> -->
+
+    <!-- >>> for search >>> -->
+    <div class="wrapper">
+      <input type="text" id="inputEkiname" />
+      <br />
+      <button id="searchButton" onclick="ekiSearch()">Search</button>
+    </div>
+    <!-- <<< for search <<< -->
+    <!-- >>> for clock >>> -->
+    <div class="wrapper">
+      <div class="clock" id="clock">
+        <div class="scale" id="scale"></div>
+        <div class="hour line"></div>
+        <div class="min line"></div>
+      </div>
+      <div id="setTime"></div>
+    </div>
+    <script src="./clock.js"></script>
+    <!-- <<< for clock <<< -->
+  </div>
+  <!-- <div id="center" class="main center">
+    <div class="mainInner">
+      <div>PURE CSS SIDEBAR TOGGLE MENU</div>
+    </div>
+    <div class="mainInner">
+      <div>PURE CSS SIDEBAR TOGGLE MENU</div>
+    </div>
+    <div class="mainInner">
+      <div>PURE CSS SIDEBAR TOGGLE MENU</div>
+    </div>
+  </div> -->
+  <!-- <<< for sidebar <<< -->
   <script src="./d3.js" charset="utf-8"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="./search.js"></script>
@@ -417,20 +481,4 @@
         });
     }
   </script>
-  <!-- >>> for clock >>> -->
-  <div class="wrapper">
-    <input type="text" id="inputEkiname" />
-    <br />
-    <button id="searchButton" onclick="ekiSearch()">Search</button>
-  </div>
-  <div class="wrapper">
-    <div class="clock" id="clock">
-      <div class="scale" id="scale"></div>
-      <div class="hour line"></div>
-      <div class="min line"></div>
-    </div>
-    <div id="setTime"></div>
-  </div>
-  <script src="./clock.js"></script>
-  <!-- <<< for clock <<< -->
 </body>

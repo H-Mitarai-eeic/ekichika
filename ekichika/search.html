@@ -10,8 +10,10 @@
 <script type="text/javascript">
 
 var stationQueue = [];
+var stationQueue4meetup = [];
 //within_T_min(1130101, 50);
-meet_up([1130101, 1130212, 2400605, 1132005, 1131216, 1131702, 1131502, 2100105, 2400106], 6, 1000);
+//meet_up([1130101, 1130212, 2400605, 1132005, 1131216, 1131702, 1131502, 2100105, 2400106], 6, 1000);
+meet_up([1130101, 1132005], 1000);
 //meet_up([1131502, 1130101], 2, 100);
 
 function within_T_min(startGroupID, T){
@@ -159,7 +161,8 @@ function within_T_min(startGroupID, T){
     }
 }
 
-function meet_up(startGroupID, N, T){
+function meet_up(startGroupID, T){
+    var N = startGroupID.length();
     var Adj_list = {};
     var groupInfo = {};
     var numOfVisitors = {};
@@ -274,13 +277,12 @@ function meet_up(startGroupID, N, T){
             });
         });
     }
-
     function dijkstra_meetup(){
         for(var i = 0; i < N; i++){
             for(var j = 0; j < groupInfo[startGroupID[i]].length; j++){
                 var startStationID = groupInfo[startGroupID[i]][j][0];
                 time[i][startStationID] = 0;
-                previousStation[i][startStationID] = [startGroupID, -1, "start: " + i, "start: " + i];
+                previousStation[i][startStationID] = [startGroupID, -1, "start:" + i, "start:" + i];
                 queue.enqueue(-time[i][startStationID], [i, startStationID]);
             }
             console.log("スタート地点", groupInfo[startGroupID[i]]);
@@ -302,6 +304,7 @@ function meet_up(startGroupID, N, T){
                 if (numOfVisitors[currentGroupID] == N){
                     //全員集合してたら
                     console.log("集合場所", groupInfo[currentGroupID]);
+                    traceBack(currentGroupID);
                     break;
                 }
             }
@@ -318,7 +321,39 @@ function meet_up(startGroupID, N, T){
                 }
             }
         }
-        //console.log(numOfVisitors);
+        
+    }
+    function traceBack(goalGroupID){
+        var queue4trace = new pairing_heap();
+        for (var i = 0; i < N; i++){
+            var goalStationID;
+            var currentStationID;
+            minTime = T + 100;
+            for(var j = 0; j < groupInfo[goalGroupID].length; j++){
+                var stationID_tmp = groupInfo[goalGroupID][j][0];
+                if(minTime > time[i][stationID_tmp]){
+                    minTime = time[i][stationID_tmp];
+                    goalStationID = stationID_tmp;
+                }
+            }
+            currentStationID = goalStationID;
+
+            //console.log(time[i][goalStationID]);
+            while (1){
+                //console.log(stationInfo[currentStationID]);
+                if (previousStation[i][currentStationID][1] == -1){
+                    break;
+                }
+                var previousStationID = previousStation[i][currentStationID][1];
+                var currentStationTime = time[i][currentStationID];
+                queue4trace.enqueue(-currentStationTime, [previousStationID, currentStationID]);
+                currentStationID = previousStationID;
+            }
+        }
+        while (queue4trace.size() > 0){
+            stationQueue4meetup.push(queue4trace.dequeue());
+            //console.log(stationQueue4meetup);
+        }
     }
 }
 // https://qiita.com/330k/items/daa144d82b000c72f774
