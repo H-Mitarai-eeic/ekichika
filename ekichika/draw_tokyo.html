@@ -441,7 +441,8 @@
           ).attr("opacity", 1);
         }
         if (goal_station_name_ID.length > 0){
-          g.select("#" + goal_station_name_ID[0])
+          var center_station = goal_station_name_ID.shift();
+          g.select("#" + center_station)
           .attr("fill-opacity", 1)
           .attr("fill", "yellow");
         }
