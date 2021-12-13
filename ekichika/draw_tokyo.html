@@ -372,15 +372,13 @@
       }
 
       circle.on("click", function (event, d) {
-        // d3.selectAll("circle")
-        //   .attr("fill-opacity", 0.2)
-        //   .attr("stroke", "white");
         d3.select(this).attr("fill-opacity", 1).attr("fill", "red");
 
         var circle_cx = d3.select(this).attr("cx");
         var circle_cy = d3.select(this).attr("cy");
         var circle_transform = d3.select(this).attr("transform");
         var kakudairitu = 0.2 / d3.select(this).attr("stroke-width");
+        // 選択した駅から波動を発生させる
         var wave = g
           .append("circle")
           .attr("class", "wave wave_out")
@@ -473,11 +471,12 @@
             .attr("transform");
           var kakudairitu =
             0.2 / d3.select("#" + center_station).attr("stroke-width");
+          g.selectAll(".wave_out_animation").attr("to", 8)
           var wave = g
             .append("circle")
-            .attr("class", "wave wave_in")
             .attr("stroke", "white")
             .attr("stroke-width", 0.2)
+            .attr("class", "wave wave_in")
             .attr("opacity", 1)
             .attr("fill-opacity", 0)
             .attr("cx", circle_cx)
