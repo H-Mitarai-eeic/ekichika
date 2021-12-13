@@ -245,7 +245,7 @@
 
     function reset_selections() {
       g.selectAll(".wave").remove();
-      g.selectAll(".wave_in").remove();
+      // g.selectAll(".wave_in").remove();
       g.selectAll("circle").attr("fill-opacity", 0.2).attr("fill", "white");
       g.selectAll("line").attr("opacity", 1);
       clicked_stations = [];
@@ -383,7 +383,7 @@
         var kakudairitu = 0.2 / d3.select(this).attr("stroke-width");
         var wave = g
           .append("circle")
-          .attr("class", "wave")
+          .attr("class", "wave wave_out")
           .attr("stroke", "white")
           .attr("stroke-width", 0.2)
           .attr("opacity", 1)
@@ -395,6 +395,7 @@
 
         wave
           .append("animate")
+          .attr("class", "wave_out_animation")
           .attr("attributeName", "r")
           .attr("begin", "0s")
           .attr("dur", "1s")
