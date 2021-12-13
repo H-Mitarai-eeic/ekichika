@@ -18,8 +18,92 @@
     stroke-linecap: round;
     pointer-events: none;
   }
+
+  /* >>> for clock >>> */
+
+  .wrapper {
+    width: 100%;
+    padding: 40px;
+    box-sizing: border-box;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .clock {
+    background-color: rgba(255, 243, 217, 0.2);
+    border: 3px solid #5bc6af;
+    width: 400px;
+    height: 400px;
+    position: relative;
+    border-radius: 50%;
+  }
+
+  .clock::after {
+    width: 16px;
+    height: 16px;
+    background: #5bc6af;
+    content: "";
+
+    position: absolute;
+    top: calc(50% - 8px);
+    left: calc(50% - 8px);
+    border-radius: 50%;
+  }
+
+  .line {
+    position: absolute;
+    transform-origin: bottom;
+  }
+
+  .hour {
+    width: 8px;
+    height: 140px;
+    background: #5bc6af;
+    top: calc(50% - 140px);
+    left: calc(50% - 4px);
+  }
+
+  .min {
+    width: 4px;
+    height: 180px;
+    background: #5bc6af;
+    top: calc(50% - 180px);
+    left: calc(50% - 2px);
+  }
+
+  .scale {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .scale > div {
+    position: absolute;
+    top: 0;
+    left: calc(50% - 2px);
+    width: 4px;
+    height: 50%;
+    transform-origin: bottom;
+  }
+
+  .scale > div::after {
+    position: absolute;
+    top: 0;
+    content: "";
+    width: 4px;
+    height: 12px;
+    background-color: #5bc6af;
+  }
+
+  #setTime {
+    font-size: 30px;
+    color: #5bc6af;
+  }
+  /* <<< for clock <<< */
 </style>
-<body>
+<body bgcolor="black">
   <script src="./d3.js" charset="utf-8"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="./search.js"></script>
@@ -31,6 +115,10 @@
       BODY = d.getElementsByTagName("body")[0];
     var width = w.innerWidth || e.clientWidth || BODY.clientWidth;
     var height = w.innerHeight || e.clientHeight || BODY.clientHeight;
+
+    var userSetHour = 0;
+    var userSetTime = 30;
+    var ekiNameToEkiData = {};
 
     d3.select(window).on("resize", resizing);
 
@@ -82,6 +170,9 @@
     showMap();
 
     d3.csv("data.csv").then(function (data) {
+      data.forEach(function (d) {
+        ekiNameToEkiData[d.name] = d;
+      });
       setTimeout(() => {
         showCircle(data);
       }, 250);
@@ -219,7 +310,10 @@
         p.attr("r", function (d) {
           return 1.2 * Math.sqrt(d.noriire);
         });
-        p.attr("stroke-width", 0.4);
+        p.attr("stroke-width", 1);
+        p.attr("id", function (d) {
+          return d.name + d.GroupID;
+        });
       }
 
       var circle = g
@@ -237,7 +331,7 @@
       circle.on("click", function (event, d) {
         d3.selectAll("line").attr("opacity", 0);
         console.log(d);
-        within_T_min(d.GroupID, 30);
+        within_T_min(d.GroupID, userSetHour * 60 + userSetTime);
         setTimeout(() => {
           while (stationQueue.length) {
             var rinsetsu_stations = stationQueue.shift();
@@ -339,5 +433,46 @@
       svg.selectAll(".data_label").remove();
     }
     // <<< for tooltip <<<
+
+    function ekiSearch() {
+      var inputName = document.getElementById("inputEkiname").value;
+      if (ekiNameToEkiData[inputName] == undefined) {
+        console.log("Not Found");
+        alert(inputName + "駅が見つかりません");
+        return;
+      }
+      inputEkidata = ekiNameToEkiData[inputName];
+
+      console.log("#" + inputEkidata.name + inputEkidata.GroupID);
+      g.select("#" + inputEkidata.name + inputEkidata.GroupID)
+        .transition()
+        .duration(1500)
+        .ease(d3.easeSin, d3.easeSinInOut)
+        .attr("r", function (d) {
+          console.log(d);
+          return 1.2 * Math.sqrt(d.noriire) * 20;
+        })
+        .transition()
+        .ease(d3.easeSin, d3.easeSinInOut)
+        .attr("r", function (d) {
+          return 1.2 * Math.sqrt(d.noriire);
+        });
+    }
   </script>
+  <!-- >>> for clock >>> -->
+  <div class="wrapper">
+    <input type="text" id="inputEkiname" />
+    <br />
+    <button id="searchButton" onclick="ekiSearch()">Search</button>
+  </div>
+  <div class="wrapper">
+    <div class="clock" id="clock">
+      <div class="scale" id="scale"></div>
+      <div class="hour line"></div>
+      <div class="min line"></div>
+    </div>
+    <div id="setTime"></div>
+  </div>
+  <script src="./clock.js"></script>
+  <!-- <<< for clock <<< -->
 </body>
