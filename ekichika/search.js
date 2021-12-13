@@ -328,7 +328,8 @@ function meet_up(startGroupID, T, stationQueue, goalStationNameID){
             }
             if(i == 0){
                 goalStationName = stationInfo[goalStationID].stationName;
-                goalStationNameID.push(goalStationName + goalStationID);
+                //goalStationNameID.push(goalStationName + goalStationID);
+                goalStationNameID.push(goalStationName + goalGroupID);
                 //console.log(goalStationNameID)
             }
             currentStationID = goalStationID;
