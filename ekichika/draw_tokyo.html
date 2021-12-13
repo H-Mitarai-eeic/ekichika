@@ -105,6 +105,7 @@
   /* <<< for clock <<< */
 </style>
 <link rel="stylesheet" href="sidebar.css" />
+<link rel="stylesheet" href="button.css" />
 <body bgcolor="black">
   <!-- >>> for sidebar >>> -->
   <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu" />
@@ -114,11 +115,18 @@
     <div class="spinner diagonal part-2"></div>
   </label>
   <div id="sidebarMenu">
-    <!-- >>> for search >>> -->
     <div class="wrapper">
+      <!-- >>> for search >>> -->
       <input type="text" id="inputEkiname" />
       <br />
-      <button id="searchButton" onclick="ekiSearch()">Search</button>
+      <a href="javascript:ekiSearch();" class="btn btn-svg">
+        <svg>
+          <rect x="2" y="2" rx="0" fill="none" width="200" height="50"></rect>
+        </svg>
+        <span>SEARCH</span>
+      </a>
+
+      <!-- <button id="searchButton" onclick="ekiSearch()">Search</button> -->
     </div>
     <!-- <<< for search <<< -->
     <!-- >>> for clock >>> -->
@@ -129,7 +137,14 @@
         <div class="min line"></div>
       </div>
       <div id="setTime"></div>
-      <button id="runButton" onclick="show_whole_paths()">Run</button>
+      <br />
+      <a href="javascript:show_whole_paths();" class="btn btn-svg">
+        <svg>
+          <rect x="2" y="2" rx="0" fill="none" width="200" height="50"></rect>
+        </svg>
+        <span>RUN</span>
+      </a>
+      <!-- <button id="runButton" onclick="show_whole_paths()">Run</button> -->
     </div>
     <script src="./clock.js"></script>
     <!-- <<< for clock <<< -->
