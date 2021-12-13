@@ -331,20 +331,26 @@
         // show_within_stations(d.GroupID);
       });
     }
+
+    //runされた時呼び出される関数
     function show_whole_paths() {
       if (clicked_stations.length == 0) {
         // 何も選択せずにrunされた時
+        console.log("no stations selected!");
         return;
       } else if (clicked_stations.length == 1) {
         //一回の時
-        show_within_stations(stationQueue[0]);
+        console.log("selected one station");
+        show_within_stations(clicked_stations[0]);
         clicked_stations = [];
       } else {
+        console.log("selected more than one station");
         show_center_station();
         clicked_stations = [];
       }
     }
 
+    //ある駅からn分以内に行ける駅を表示する関数
     function show_within_stations(groupid) {
       d3.selectAll("line").attr("opacity", 0);
       within_T_min(groupid, userSetHour * 60 + userSetTime);
@@ -357,6 +363,8 @@
         }
       }, 1000);
     }
+
+    //複数人で待ち合わせを表示する関数
     function show_center_station() {
       d3.selectAll("line").attr("opacity", 0);
       meet_up(clicked_stations, 180);
@@ -367,7 +375,7 @@
             ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
           ).attr("opacity", 1);
         }
-      }, 1000);
+      }, 3000);
     }
 
     function resizing() {
