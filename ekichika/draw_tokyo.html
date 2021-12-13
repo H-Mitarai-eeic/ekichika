@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <meta charset="utf-8" />
 <style>
+  .body {
+    height: auto;
+    width: auto;
+  }
+
   .background {
     fill: black;
     pointer-events: all;
@@ -23,7 +28,8 @@
 
   .wrapper {
     width: 100%;
-    padding: 40px;
+    height: auto;
+    padding: 20px;
     box-sizing: border-box;
     /* background-color: black; */
     /* background-color: rgba(0, 0, 0, 0.5); */
@@ -35,8 +41,8 @@
   .clock {
     background-color: rgba(255, 243, 217, 0.2);
     border: 3px solid #fff;
-    width: 400px;
-    height: 400px;
+    width: 300px;
+    height: 300px;
     position: relative;
     border-radius: 50%;
   }
@@ -60,17 +66,17 @@
 
   .hour {
     width: 8px;
-    height: 140px;
+    height: 105px;
     background: #fff;
-    top: calc(50% - 140px);
+    top: calc(50% - 105px);
     left: calc(50% - 4px);
   }
 
   .min {
     width: 4px;
-    height: 180px;
+    height: 135px;
     background: #fff;
-    top: calc(50% - 180px);
+    top: calc(50% - 135px);
     left: calc(50% - 2px);
   }
 
@@ -99,13 +105,15 @@
   }
 
   #setTime {
-    font-size: 30px;
+    font: 2.5rem "Fira Sans", sans-serif;
+    /* font-size: 20px; */
     color: #fff;
   }
   /* <<< for clock <<< */
 </style>
 <link rel="stylesheet" href="sidebar.css" />
 <link rel="stylesheet" href="button.css" />
+<link rel="stylesheet" href="form.css" />
 <body bgcolor="black">
   <!-- >>> for sidebar >>> -->
   <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu" />
@@ -117,7 +125,13 @@
   <div id="sidebarMenu">
     <div class="wrapper">
       <!-- >>> for search >>> -->
-      <input type="text" id="inputEkiname" />
+
+      <div class="cp_iptxt">
+        <input class="ef" type="text" placeholder="" id="inputEkiname" />
+        <label>Station Name</label>
+        <span class="focus_line"></span>
+      </div>
+
       <br />
       <a href="javascript:ekiSearch();" class="btn btn-svg">
         <svg>
@@ -125,8 +139,6 @@
         </svg>
         <span>SEARCH</span>
       </a>
-
-      <!-- <button id="searchButton" onclick="ekiSearch()">Search</button> -->
     </div>
     <!-- <<< for search <<< -->
     <!-- >>> for clock >>> -->
