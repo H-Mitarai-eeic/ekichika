@@ -106,15 +106,33 @@ function muuXY(e, that) {
   if (e.targetTouches) {
     x = e.targetTouches[0].pageX - e.target.offsetLeft;
     y = e.targetTouches[0].pageY - e.target.offsetTop;
-  } else if (that) {
+  }
+  else if (that) {
     x = e.pageX - that.offsetLeft;
     y = e.pageY - that.offsetTop;
   }
   return [x, y];
 }
 
+
+
 document.getElementById('clock').onmousemove = function (e) {
   var xy = muuXY(e, this);
   // console.log('Xの座標は' + xy[0] + 'Yの座標は' + xy[1]);
   setClock(xy[0], xy[1]);
 }
+
+
+
+// clock = document.getElementById('clock');
+// clock.onmousedown = function (event) {
+//   // console.log(event)
+//   document.addEventListener("mousemove", onMouseMove(event));
+// }
+
+// var onMouseMove = function (event) {
+//   console.log(event);
+//   var xy = muuXY(event, this);
+//   // console.log('Xの座標は' + xy[0] + 'Yの座標は' + xy[1]);
+//   setClock(xy[0], xy[1]);
+// }
