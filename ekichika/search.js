@@ -1,6 +1,7 @@
 //search.js
 
 var stationQueue = [];
+var goalStationNameID;
 //var stationQueue4meetup = [];
 function within_T_min(startGroupID, T) {
     var Adj_list = {};   //隣接リスト　keyはstation ID
@@ -270,7 +271,7 @@ function meet_up(startGroupID, T){
                 previousStation[i][startStationID] = [startGroupID, -1, "start:" + i, "start:" + i];
                 queue.enqueue(-time[i][startStationID], [i, startStationID]);
             }
-            console.log("スタート地点", groupInfo[startGroupID[i]]);
+            //console.log("スタート地点", groupInfo[startGroupID[i]]);
         }
 
         while(queue.size() != 0){
@@ -288,7 +289,7 @@ function meet_up(startGroupID, T){
                 numOfVisitors[currentGroupID] += parseInt(1);
                 if (numOfVisitors[currentGroupID] == N){
                     //全員集合してたら
-                    console.log("集合場所", groupInfo[currentGroupID]);
+                    //console.log("集合場所", groupInfo[currentGroupID]);
                     traceBack(currentGroupID);
                     break;
                 }
@@ -321,6 +322,11 @@ function meet_up(startGroupID, T){
                     goalStationID = stationID_tmp;
                 }
             }
+            if(i == 0){
+                goalStationName = stationInfo[goalStationID].stationName;
+                goalStationNameID = goalStationName + goalStationID;
+                console.log(goalStationNameID)
+            }
             currentStationID = goalStationID;
 
             //console.log(time[i][goalStationID]);
@@ -338,7 +344,7 @@ function meet_up(startGroupID, T){
         while (queue4trace.size() > 0){
             //stationQueue4meetup.push(queue4trace.dequeue());
             stationQueue.push(queue4trace.dequeue());
-            console.log(stationQueue);
+            //console.log(stationQueue);
         }
     }
 }
