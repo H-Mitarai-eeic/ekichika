@@ -176,7 +176,7 @@ function meet_up(startGroupID, T){
         setTimeout(() => {
             //console.log(Adj_list);
             dijkstra_meetup();
-        }, 2000);
+        }, 500);
     });
 
     function Make_Adj_List_meetup(){
