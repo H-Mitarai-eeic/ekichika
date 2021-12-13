@@ -18,8 +18,92 @@
     stroke-linecap: round;
     pointer-events: none;
   }
+
+  /* >>> for clock >>> */
+
+  .wrapper {
+    width: 100%;
+    padding: 40px;
+    box-sizing: border-box;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .clock {
+    background-color: rgba(255, 243, 217, 0.2);
+    border: 3px solid #5bc6af;
+    width: 400px;
+    height: 400px;
+    position: relative;
+    border-radius: 50%;
+  }
+
+  .clock::after {
+    width: 16px;
+    height: 16px;
+    background: #5bc6af;
+    content: "";
+
+    position: absolute;
+    top: calc(50% - 8px);
+    left: calc(50% - 8px);
+    border-radius: 50%;
+  }
+
+  .line {
+    position: absolute;
+    transform-origin: bottom;
+  }
+
+  .hour {
+    width: 8px;
+    height: 140px;
+    background: #5bc6af;
+    top: calc(50% - 140px);
+    left: calc(50% - 4px);
+  }
+
+  .min {
+    width: 4px;
+    height: 180px;
+    background: #5bc6af;
+    top: calc(50% - 180px);
+    left: calc(50% - 2px);
+  }
+
+  .scale {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .scale > div {
+    position: absolute;
+    top: 0;
+    left: calc(50% - 2px);
+    width: 4px;
+    height: 50%;
+    transform-origin: bottom;
+  }
+
+  .scale > div::after {
+    position: absolute;
+    top: 0;
+    content: "";
+    width: 4px;
+    height: 12px;
+    background-color: #5bc6af;
+  }
+
+  #setTime {
+    font-size: 30px;
+    color: #5bc6af;
+  }
+  /* <<< for clock <<< */
 </style>
-<body>
+<body bgcolor=black>
   <script src="./d3.js" charset="utf-8"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="./search.js"></script>
@@ -30,6 +114,9 @@
       BODY = d.getElementsByTagName("body")[0];
     var width = w.innerWidth || e.clientWidth || BODY.clientWidth;
     var height = w.innerHeight || e.clientHeight || BODY.clientHeight;
+
+    var userSetHour = 0;
+    var userSetTime = 30;
 
     d3.select(window).on("resize", resizing);
 
@@ -45,6 +132,7 @@
       .zoom()
       .scaleExtent([1, 200])
       .on("zoom", function (event) {
+        // g.attr("transform", event.transform);
         g.selectAll("path").attr("transform", event.transform);
         g.selectAll("circle")
           .attr("transform", event.transform)
@@ -169,51 +257,31 @@
         .sort(order)
         .attr("class", "circle")
         .attr("fill", "white")
-        .attr("fill-opacity", 0)
+        .attr("fill-opacity", 0.2)
         .attr("stroke", "white")
-        .call(position)
-        // .on("mouseover", function (event, d) {
-        //   //event忘れないように
-        //   tooltip.style("visibility", "visible").html(d.name);
-        // })
-        // .on("mousemove", function (event, d) {
-        //   var [x, y] = projection([d.ido, d.keido]);
-        //   tooltip.style("top", y + "px").style("left", x + "px");
-        // })
-        // .on("mouseout", function (event, d) {
-        //   tooltip.style("visibility", "hidden");
-        // })
-        .on("click", function (event, d) {
-          d3.selectAll("line").attr("opacity", 0);
-          console.log(d);
-          within_T_min(d.GroupID, 60);
-          setTimeout(() => {
-            console.log(stationQueue);
-            while (stationQueue.length) {
-              console.log(stationQueue.length);
-              var rinsetsu_stations = stationQueue.shift();
-              g.select(
-                ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
-              ).attr("opacity", 1);
-            }
-          }, 1000);
-          // setTimeout(() => {
-          //   deque_and_visualize();
-          // }, 1000);
-          // function deque_and_visualize() {
-          //   while (stationQueue.length) {
-          //     setTimeout(() => {
-          //       var rinsetsu_statons = stationQueue.shift();
-          //       console.log(rinsetsu_statons);
-          //       d3.select(
-          //         "." + rinsetsu_statons[0] + "_" + rinsetsu_statons[1]
-          //       ).attr("opacity", 1);
-          //     }, 100);
-          //   }
-          // }
-        });
+        .call(position);
 
-      circle.on("mouseover", onMouseover).on("mouseout", onMouseout);
+      circle.on("click", function (event, d) {
+        d3.selectAll("line").attr("opacity", 0);
+        console.log(d);
+        within_T_min(d.GroupID, userSetHour * 60 + userSetTime);
+        setTimeout(() => {
+          console.log(stationQueue);
+          while (stationQueue.length) {
+            console.log(stationQueue.length);
+            var rinsetsu_stations = stationQueue.shift();
+            g.select(
+              ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
+            ).attr("opacity", 1);
+          }
+        }, 1000);
+      });
+      circle.append("title").text(function (d) {
+        console.log(d);
+        return d.name;
+      });
+
+      // circle.on("mouseover", onMouseover).on("mouseout", onMouseout);
       function order(a, b) {
         return b.noriire - a.noriire;
       }
@@ -301,4 +369,15 @@
     }
     // <<< for tooltip <<<
   </script>
+  <!-- >>> for clock >>> -->
+  <div class="wrapper">
+    <div class="clock" id="clock">
+      <div class="scale" id="scale"></div>
+      <div class="hour line"></div>
+      <div class="min line"></div>
+    </div>
+    <div id="setTime"></div>
+  </div>
+  <script src="./clock.js"></script>
+  <!-- <<< for clock <<< -->
 </body>
