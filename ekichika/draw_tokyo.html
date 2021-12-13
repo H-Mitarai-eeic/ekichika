@@ -179,8 +179,10 @@
 
     var userSetHour = 0;
     var userSetTime = 30;
+    var stationQueue = [];
     var ekiNameToEkiData = {};
     var clicked_stations = [];
+    var goal_station_name_ID = [];
 
     d3.select(window).on("resize", resizing);
 
@@ -397,7 +399,6 @@
     //runされた時呼び出される関数
     function show_whole_paths() {
       d3.selectAll("line").attr("opacity", 0);
-      // d3.selectAll("circle").attr("fill-opacity", 0.2).attr("fill", "white");
       if (clicked_stations.length == 0) {
         // 何も選択せずにrunされた時
         console.log("no stations selected!");
@@ -418,7 +419,7 @@
 
     //ある駅からn分以内に行ける駅を表示する関数
     function show_within_stations(groupid) {
-      within_T_min(groupid, userSetHour * 60 + userSetTime);
+      within_T_min(groupid, userSetHour * 60 + userSetTime, stationQueue);
       setTimeout(() => {
         while (stationQueue.length) {
           var rinsetsu_stations = stationQueue.shift();
@@ -431,7 +432,7 @@
 
     //複数人で待ち合わせを表示する関数
     function show_center_station() {
-      var touchaku_eki = meet_up(clicked_stations, 180);
+      meet_up(clicked_stations, 180, stationQueue, goal_station_name_ID);
       setTimeout(() => {
         while (stationQueue.length) {
           var rinsetsu_stations = stationQueue.shift();
@@ -439,9 +440,11 @@
             ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
           ).attr("opacity", 1);
         }
-        g.select("#" + touchaku_eki)
+        if (goal_station_name_ID.length > 0){
+          g.select("#" + goal_station_name_ID[0])
           .attr("fill-opacity", 1)
           .attr("fill", "yellow");
+        }
       }, 1000);
     }
 
