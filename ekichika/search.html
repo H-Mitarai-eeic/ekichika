@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
 var stationQueue = [];
-var stationQueue4meetup = [];
+//var stationQueue4meetup = [];
 //within_T_min(1130101, 50);
 //meet_up([1130101, 1130212, 2400605, 1132005, 1131216, 1131702, 1131502, 2100105, 2400106], 6, 1000);
 meet_up([1130101, 1132005], 1000);
@@ -351,8 +351,9 @@ function meet_up(startGroupID, T){
             }
         }
         while (queue4trace.size() > 0){
-            stationQueue4meetup.push(queue4trace.dequeue());
-            //console.log(stationQueue4meetup);
+            //stationQueue4meetup.push(queue4trace.dequeue());
+            stationQueue.push(queue4trace.dequeue());
+            console.log(stationQueue);
         }
     }
 }
