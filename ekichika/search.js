@@ -325,7 +325,7 @@ function meet_up(startGroupID, T){
             if(i == 0){
                 goalStationName = stationInfo[goalStationID].stationName;
                 goalStationNameID = goalStationName + goalStationID;
-                console.log(goalStationNameID)
+                //console.log(goalStationNameID)
             }
             currentStationID = goalStationID;
 
