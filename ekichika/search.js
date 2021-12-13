@@ -1,9 +1,6 @@
 //search.js
 
-var stationQueue = [];
-var goalStationNameID;
-//var stationQueue4meetup = [];
-function within_T_min(startGroupID, T) {
+function within_T_min(startGroupID, T, stationQueue) {
     var Adj_list = {};   //隣接リスト　keyはstation ID
     var groupInfo = {};  //グループIDでそのグループ内の駅情報を検索するための辞書 keyはgroupe ID
     var stationInfo = {};   //駅idで駅情報検索
@@ -147,7 +144,7 @@ function within_T_min(startGroupID, T) {
         }
     }
 }
-function meet_up(startGroupID, T){
+function meet_up(startGroupID, T, stationQueue, goalStationNameID){
     var N = startGroupID.length;
     var Adj_list = {};
     var groupInfo = {};
@@ -170,15 +167,15 @@ function meet_up(startGroupID, T){
     var ARAKAWASEN = 0.8;
     var changeTrains_time = 5;
     var stopTime = 0.75;
-    new Promise((resolve) => {
-        Make_Adj_List_meetup();
-        resolve();
-    }).then(() => {
-        setTimeout(() => {
-            //console.log(Adj_list);
-            dijkstra_meetup();
-        }, 500);
-    });
+    var processFlag = 0;
+    
+    //実際の処理
+
+    Make_Adj_List_meetup();
+    setTimeout(() => {
+        //console.log(Adj_list);
+        dijkstra_meetup();
+    }, 500);
 
     function Make_Adj_List_meetup(){
         var groupInfo_flag = {};
@@ -261,9 +258,11 @@ function meet_up(startGroupID, T){
                     Adj_list[d.toID].push([d.fromGroupID, d.fromID, d.fromName, d.routeID, d.routeName, time_tmp]);
                 } 
             });
+            return 1;
         });
     }
     function dijkstra_meetup(){
+        //返り値は集合地点の　駅名+駅ID
         for(var i = 0; i < N; i++){
             for(var j = 0; j < groupInfo[startGroupID[i]].length; j++){
                 var startStationID = groupInfo[startGroupID[i]][j][0];
@@ -290,6 +289,7 @@ function meet_up(startGroupID, T){
                 if (numOfVisitors[currentGroupID] == N){
                     //全員集合してたら
                     //console.log("集合場所", groupInfo[currentGroupID]);
+                    //return traceBack(currentGroupID);
                     traceBack(currentGroupID);
                     break;
                 }
@@ -307,6 +307,7 @@ function meet_up(startGroupID, T){
                 }
             }
         }
+        return false;
         
     }
     function traceBack(goalGroupID){
@@ -324,7 +325,7 @@ function meet_up(startGroupID, T){
             }
             if(i == 0){
                 goalStationName = stationInfo[goalStationID].stationName;
-                goalStationNameID = goalStationName + goalStationID;
+                goalStationNameID.push(goalStationName + goalStationID);
                 //console.log(goalStationNameID)
             }
             currentStationID = goalStationID;
@@ -348,17 +349,18 @@ function meet_up(startGroupID, T){
         }
     }
 }
-function pairing_heap() {
+// https://qiita.com/330k/items/daa144d82b000c72f774
+function pairing_heap(){
     "use strict";
     var _root = null;
     var _size = 0;
-    var _merge = function (i, j) {
+    var _merge = function (i, j){
         var ret = null;
 
-        if (i === null) return j;
-        if (j === null) return i;
+        if(i === null) return j;
+        if(j === null) return i;
 
-        if (i.p < j.p) {
+        if(i.p < j.p){
             ret = i;
             i = j;
             j = ret;
@@ -368,18 +370,18 @@ function pairing_heap() {
 
         return i;
     };
-    var _mergeList = function (s) {
+    var _mergeList = function (s){
         var n = null;
         var a = null;
         var b = null;
         var j = null;
 
-        while (s !== null) {
+        while(s !== null){
             a = s;
             b = null;
             s = s.next;
             a.next = null;
-            if (s !== null) {
+            if(s !== null){
                 b = s;
                 s = s.next;
                 b.next = null;
@@ -388,7 +390,7 @@ function pairing_heap() {
             a.next = n;
             n = a;
         }
-        while (n !== null) {
+        while(n !== null){
             j = n;
             n = n.next;
             s = _merge(j, s);
@@ -396,7 +398,7 @@ function pairing_heap() {
         return s;
     };
 
-    var enqueue = function (priority, value) {
+    var enqueue = function(priority, value){
         _root = _merge(_root, {
             p: priority,
             v: value,
@@ -405,23 +407,23 @@ function pairing_heap() {
         });
         _size = _size + 1;
     };
-    var dequeue = function () {
+    var dequeue = function(){
         var result = null;
 
-        if (_size) {
+        if(_size){
             result = _root.v;
             _root = _mergeList(_root.head);
             _size = _size - 1;
 
             return result;
-        } else {
+        }else{
             return (void 0);
         }
     };
-    var top = function () {
+    var top = function(){
         return _root.v;
     };
-    var size = function () {
+    var size = function(){
         return _size;
     };
 
