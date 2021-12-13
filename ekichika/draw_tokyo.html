@@ -409,7 +409,6 @@
 
     //runされた時呼び出される関数
     function show_whole_paths() {
-      d3.selectAll("line").attr("opacity", 0);
       if (clicked_stations.length == 0) {
         // 何も選択せずにrunされた時
         console.log("no stations selected!");
@@ -417,11 +416,13 @@
       } else if (clicked_stations.length == 1) {
         //一回の時
         console.log("selected one station");
+        d3.selectAll("line").attr("opacity", 0);
         show_within_stations(clicked_stations[0]);
         // clicked_stations = [];
         //stationQueue = [];
       } else {
         console.log("selected more than one station");
+        d3.selectAll("line").attr("opacity", 0);
         show_center_station();
         // clicked_stations = [];
         //stationQueue = [];
