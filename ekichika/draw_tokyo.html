@@ -310,7 +310,6 @@
         .call(position);
 
       circle.append("title").text(function (d) {
-        // console.log(d);
         return d.name;
       });
 
@@ -323,17 +322,17 @@
         // d3.selectAll("circle")
         //   .attr("fill-opacity", 0.2)
         //   .attr("stroke", "white");
-        // d3.select(this).attr("fill-opacity", 1).attr("stroke", "black");
-        // d3.selectAll("line").attr("opacity", 0);
+        d3.select(this).attr("fill-opacity", 1).attr("fill", "red");
         console.log(d);
         clicked_stations.push(d.GroupID);
         console.log(clicked_stations);
-        // show_within_stations(d.GroupID);
       });
     }
 
     //runされた時呼び出される関数
     function show_whole_paths() {
+      d3.selectAll("line").attr("opacity", 0);
+      // d3.selectAll("circle").attr("fill-opacity", 0.2).attr("fill", "white");
       if (clicked_stations.length == 0) {
         // 何も選択せずにrunされた時
         console.log("no stations selected!");
@@ -342,17 +341,18 @@
         //一回の時
         console.log("selected one station");
         show_within_stations(clicked_stations[0]);
-        clicked_stations = [];
+        // clicked_stations = [];
+        stationQueue = [];
       } else {
         console.log("selected more than one station");
         show_center_station();
-        clicked_stations = [];
+        // clicked_stations = [];
+        stationQueue = [];
       }
     }
 
     //ある駅からn分以内に行ける駅を表示する関数
     function show_within_stations(groupid) {
-      d3.selectAll("line").attr("opacity", 0);
       within_T_min(groupid, userSetHour * 60 + userSetTime);
       setTimeout(() => {
         while (stationQueue.length) {
@@ -366,8 +366,7 @@
 
     //複数人で待ち合わせを表示する関数
     function show_center_station() {
-      d3.selectAll("line").attr("opacity", 0);
-      meet_up(clicked_stations, 180);
+      var touchaku_eki = meet_up(clicked_stations, 180);
       setTimeout(() => {
         while (stationQueue.length) {
           var rinsetsu_stations = stationQueue.shift();
@@ -375,7 +374,10 @@
             ".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1]
           ).attr("opacity", 1);
         }
-      }, 3000);
+        g.select("#" + touchaku_eki)
+          .attr("fill-opacity", 1)
+          .attr("fill", "yellow");
+      }, 1000);
     }
 
     function resizing() {
