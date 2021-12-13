@@ -147,7 +147,7 @@ function within_T_min(startGroupID, T) {
     }
 }
 function meet_up(startGroupID, T){
-    var N = startGroupID.length();
+    var N = startGroupID.length;
     var Adj_list = {};
     var groupInfo = {};
     var numOfVisitors = {};
