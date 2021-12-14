@@ -40,6 +40,7 @@ button.btn {
 }
 
 a.btn-svg {
+  font-family: 'Lora', serif;
   font-weight: 100;
   line-height: 54px;
 
