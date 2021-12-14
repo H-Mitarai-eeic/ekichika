@@ -155,8 +155,8 @@
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="./search.js"></script>
   <script src="./clock.js"></script>
+  <script src="./tooltip.js"></script>
   <script src="./menu.js"></script>
-
   <script>
     var w = window,
       d = document,
@@ -172,6 +172,9 @@
     var clicked_stations = new Set();
     var goal_station_name_ID = [];
     var last_center_station = NaN;
+    var last_center_station_red_flag = 0;
+    var last_nearest_station = NaN;
+    var last_nearest_station_red_flag = 0;
 
     var mode = "one";
 
@@ -409,8 +412,11 @@
         clicked_stations.add(d.GroupID);
         console.log(clicked_stations);
       });
+      //circle.on("mouseover", showStaionTooltip)
+      //          .on("mouseout", hideStationTooltip);
     }
 
+    //delete
     //runされた時呼び出される関数
     function show_whole_paths() {
       if (clicked_stations.size == 0) {
@@ -439,6 +445,7 @@
       }
     }
 
+    //delete
     //ある駅からn分以内に行ける駅を表示する関数
     function show_within_stations(groupid) {
       within_T_min(groupid, userSetHour * 60 + userSetTime, stationQueue).then(
@@ -455,6 +462,7 @@
       );
     }
 
+    //delete
     //複数人で待ち合わせを表示する関数
     function show_center_station() {
       meet_up(clicked_stations, 180, stationQueue, goal_station_name_ID).then(
@@ -468,16 +476,39 @@
               .attr("opacity", 1);
           }
           if (goal_station_name_ID.length > 0) {
+            // center_stationは駅名+グループID
+            console.log(goal_station_name_ID);
             var center_station = goal_station_name_ID.shift();
 
             if (last_center_station != NaN) {
-              g.select("#" + last_center_station)
-                .transition()
-                .duration(500)
-                .ease(d3.easeLinear)
-                .attr("fill-opacity", 0.2)
-                .attr("fill", "white");
+              if (last_center_station_red_flag == 1) {
+                g.select("#" + last_center_station)
+                  .attr("fill-opacity", 1)
+                  .attr("fill", "red");
+              } else {
+                g.select("#" + last_center_station)
+                  .transition()
+                  .duration(500)
+                  .ease(d3.easeLinear)
+                  .attr("fill-opacity", 0.2)
+                  .attr("fill", "white");
+              }
               g.select(".wave_in").remove();
+            }
+            console.log(g.select("#" + center_station).attr("fill"));
+            console.log(last_nearest_station_red_flag);
+            if (
+              g.select("#" + center_station).attr("fill") == "rgb(255, 0, 0)" ||
+              g.select("#" + center_station).attr("fill") == "red" ||
+              (g.select("#" + center_station).attr("fill") ==
+                "rgb(148, 0, 211)" &&
+                last_nearest_station_red_flag == 1)
+            ) {
+              console.log("conter_station_red !!");
+              last_center_station_red_flag = 1;
+            } else {
+              console.log("conter_station_not_red !!");
+              last_center_station_red_flag = 0;
             }
             g.select("#" + center_station)
               .transition()
@@ -494,6 +525,7 @@
             var kakudairitu =
               0.2 / d3.select("#" + center_station).attr("stroke-width");
             g.selectAll(".wave_out_animation").attr("to", 8);
+
             var wave = g
               .append("circle")
               .attr("stroke", "white")
@@ -514,6 +546,49 @@
               .attr("from", "25")
               .attr("to", "0")
               .attr("repeatCount", "indefinite");
+
+            if (last_nearest_station != NaN) {
+              if (last_nearest_station_red_flag == 1) {
+                g.select("#" + last_nearest_station)
+                  .attr("fill-opacity", 1)
+                  .attr("fill", "red");
+              } else {
+                g.select("#" + last_nearest_station)
+                  .transition()
+                  .duration(500)
+                  .ease(d3.easeLinear)
+                  .attr("fill-opacity", 0.2)
+                  .attr("fill", "white");
+              }
+            }
+
+            //ハブ駅の表示
+            if (goal_station_name_ID.length > 0) {
+              var nearest_hub_station = goal_station_name_ID.shift();
+
+              console.log(g.select("#" + nearest_hub_station).attr("fill"));
+              if (
+                g.select("#" + nearest_hub_station).attr("fill") ==
+                  "rgb(255, 0, 0)" ||
+                g.select("#" + nearest_hub_station).attr("fill") == "red" ||
+                (g.select("#" + center_station).attr("fill") ==
+                  "rgb(0, 255, 0)" &&
+                  last_center_station_red_flag == 1)
+              ) {
+                console.log("hub_station_red !!");
+                last_nearest_station_red_flag = 1;
+              } else {
+                console.log("hub_station_not_red !!");
+                last_nearest_station_red_flag = 0;
+              }
+              g.select("#" + nearest_hub_station)
+                .transition()
+                .duration(500)
+                .ease(d3.easeLinear)
+                .attr("fill-opacity", 1)
+                .attr("fill", "darkviolet");
+              last_nearest_station = nearest_hub_station;
+            }
           }
         }
       );
@@ -529,12 +604,12 @@
       svg.selectAll(".background").attr("width", width).attr("height", height);
     }
 
-    function openGoogleMap(d) {
-      window.open(
-        "https://www.google.co.jp/maps/search/%E3%83%AC%E3%82%B9%E3%83%88%E3%83%A9%E3%83%B3+" +
-          d.name
-      );
-    }
+    // function openGoogleMap(d) {
+    //   window.open(
+    //     "https://www.google.co.jp/maps/search/%E3%83%AC%E3%82%B9%E3%83%88%E3%83%A9%E3%83%B3+" +
+    //       d.name
+    //   );
+    // }
 
     var isAleradySearched = false;
     function ekiSearch() {
@@ -585,7 +660,13 @@
     }
 
     function run() {
-      console.log("hoge");
+      if (mode == "one") {
+        single_person();
+      } else if (mode == "meet") {
+        multi_person();
+      } else if (mode == "meetWithTime") {
+        multi_person();
+      }
     }
 
     document.getElementById("inputEkiname").addEventListener("keydown", (e) => {
@@ -597,4 +678,7 @@
       }
     });
   </script>
+  <script src="./single_person.js"></script>
+  <script src="./multi_person.js"></script>
+  <script src="./multi_person_within_time.js"></script>
 </body>
