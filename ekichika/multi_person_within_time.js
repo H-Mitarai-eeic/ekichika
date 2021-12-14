@@ -30,7 +30,7 @@ function show_multi_station() {
     }
     while(goal_station_name_ID.length){
         var station = goal_station_name_ID.shift();
-        g.select("#" + center_station)
+        g.select("#" + station)
           .transition()
           .duration(500)
           .ease(d3.easeLinear)
