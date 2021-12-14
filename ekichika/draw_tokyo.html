@@ -364,8 +364,8 @@
 
     //ある駅からn分以内に行ける駅を表示する関数
     function show_within_stations(groupid) {
-      within_T_min(groupid, userSetHour * 60 + userSetTime, stationQueue);
-      setTimeout(() => {
+      within_T_min(groupid, userSetHour * 60 + userSetTime, stationQueue)
+      .then(() => {
         while (stationQueue.length) {
           var rinsetsu_stations = stationQueue.shift();
           g.select(".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1])
@@ -374,13 +374,13 @@
             .ease(d3.easeLinear)
             .attr("opacity", 1);
         }
-      }, 1000);
+      });
     }
 
     //複数人で待ち合わせを表示する関数
     function show_center_station() {
-      meet_up(clicked_stations, 180, stationQueue, goal_station_name_ID);
-      setTimeout(() => {
+      meet_up(clicked_stations, 180, stationQueue, goal_station_name_ID)
+      .then(() => {
         while (stationQueue.length) {
           var rinsetsu_stations = stationQueue.shift();
           g.select(".s" + rinsetsu_stations[0] + "_" + rinsetsu_stations[1])
@@ -431,7 +431,7 @@
             .attr("to", "0")
             .attr("repeatCount", "indefinite");
         }
-      }, 1000);
+      });
     }
 
     function resizing() {
