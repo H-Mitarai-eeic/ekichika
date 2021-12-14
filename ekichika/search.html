@@ -14,10 +14,10 @@ main();
 function main(){
     var stationQueue = [];
     var goalStationNameID = [];
-    meet_up([1130101, 1132005], 1000, stationQueue, goalStationNameID);
-    setTimeout(() => {
+    meet_up([1130101, 1132005], 1000, stationQueue, goalStationNameID)
+    .then(() => {
         console.log(stationQueue);
-    }, 1000);
+    });
 }
 async function within_T_min(startGroupID, T, stationQueue) {
     var Adj_list = {};   //隣接リスト　keyはstation ID
