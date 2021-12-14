@@ -113,7 +113,7 @@
     var userSetTime = 30;
     var stationQueue = [];
     var ekiNameToEkiData = {};
-    var clicked_stations = [];
+    var clicked_stations = new Set();
     var goal_station_name_ID = [];
     var last_center_station = NaN;
 
@@ -184,48 +184,52 @@
         .duration(500)
         .ease(d3.easeLinear)
         .attr("opacity", 1);
-      clicked_stations = [];
+      clicked_stations.clear();
       last_center_station = NaN;
     }
 
-    showMap().then(() =>{
-      d3.csv("joinWithIdoKeido.csv").then(function (data){
-        showline(data);
-      }).then(() => {
-        d3.csv("data.csv").then(function (data) {
-          data.forEach(function (d) {
-            ekiNameToEkiData[d.name] = d;
+    showMap().then(() => {
+      d3.csv("joinWithIdoKeido.csv")
+        .then(function (data) {
+          showline(data);
+        })
+        .then(() => {
+          d3.csv("data.csv").then(function (data) {
+            data.forEach(function (d) {
+              ekiNameToEkiData[d.name] = d;
+            });
+            showCircle(data);
           });
-          showCircle(data);
         });
-      });
     });
 
     function showMap() {
-      return new Promise(resolve => {
-        d3.json("./tokyo.topojson").then(function (tk) {
-          var tokyo = topojson.feature(tk, tk.objects.tokyo);
-          g.append("g")
-            .attr("id", "states")
-            .selectAll("path")
-            .data(tokyo.features)
-            .enter()
-            .append("path")
-            .attr("d", path);
-          // .on("click", clicked);
+      return new Promise((resolve) => {
+        d3.json("./tokyo.topojson")
+          .then(function (tk) {
+            var tokyo = topojson.feature(tk, tk.objects.tokyo);
+            g.append("g")
+              .attr("id", "states")
+              .selectAll("path")
+              .data(tokyo.features)
+              .enter()
+              .append("path")
+              .attr("d", path);
+            // .on("click", clicked);
 
-          g.append("path")
-            .datum(
-              topojson.mesh(tk, tk.objects.tokyo, function (a, b) {
-                return a !== b;
-              })
-            )
-            .attr("id", "state-borders")
-            .attr("stroke-width", 1.5)
-            .attr("d", path);
-        }).then(() => {
-          resolve(true)
-        });
+            g.append("path")
+              .datum(
+                topojson.mesh(tk, tk.objects.tokyo, function (a, b) {
+                  return a !== b;
+                })
+              )
+              .attr("id", "state-borders")
+              .attr("stroke-width", 1.5)
+              .attr("d", path);
+          })
+          .then(() => {
+            resolve(true);
+          });
       });
     }
 
@@ -344,18 +348,18 @@
           .attr("repeatCount", "indefinite");
 
         console.log(d);
-        clicked_stations.push(d.GroupID);
+        clicked_stations.add(d.GroupID);
         console.log(clicked_stations);
       });
     }
 
     //runされた時呼び出される関数
     function show_whole_paths() {
-      if (clicked_stations.length == 0) {
+      if (clicked_stations.size == 0) {
         // 何も選択せずにrunされた時
         console.log("no stations selected!");
         return;
-      } else if (clicked_stations.length == 1) {
+      } else if (clicked_stations.size == 1) {
         //一回の時
         console.log("selected one station");
         d3.selectAll("line")
@@ -363,9 +367,9 @@
           .duration(500)
           .ease(d3.easeLinear)
           .attr("opacity", 0);
-        show_within_stations(clicked_stations[0]);
-        // clicked_stations = [];
-        //stationQueue = [];
+        for (var value of clicked_stations) {
+          show_within_stations(value);
+        }
       } else {
         console.log("selected more than one station");
         d3.selectAll("line")
@@ -374,8 +378,6 @@
           .ease(d3.easeLinear)
           .attr("opacity", 0);
         show_center_station();
-        // clicked_stations = [];
-        //stationQueue = [];
       }
     }
 
