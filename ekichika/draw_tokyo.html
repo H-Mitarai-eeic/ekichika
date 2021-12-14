@@ -50,13 +50,7 @@
       <!-- >>> for search >>> -->
 
       <div class="cp_iptxt">
-        <input
-          class="ef"
-          type="text"
-          placeholder=""
-          id="inputEkiname"
-          oninput="clearForm()"
-        />
+        <input class="ef" type="text" placeholder="" id="inputEkiname" />
         <label>Station Name</label>
         <span class="focus_line"></span>
       </div>
@@ -497,20 +491,36 @@
     }
 
     function clearForm() {
+      console.log(document.getElementById("inputEkiname").composing);
       if (isAleradySearched) {
+        // document.getElementById("inputEkiname").value = document
+        //   .getElementById("inputEkiname")
+        //   .value.slice(-1);
         document.getElementById("inputEkiname").value = "";
         isAleradySearched = false;
       }
       return;
     }
 
-    document.getElementById("inputEkiname").onkeypress = (e) => {
-      // form1に入力されたキーを取得
-      const key = e.keyCode || e.charCode || 0;
-      // 13はEnterキーのキーコード
-      if (key == 13) {
+    // document.getElementById("inputEkiname").onkeypress = (e) => {
+    //   // form1に入力されたキーを取得
+    //   const key = e.keyCode || e.charCode || 0;
+    //   // 13はEnterキーのキーコード
+    //   if (key == 13) {
+    //     ekiSearch();
+    //   }
+    //   if (key == 229) {
+    //     clearForm();
+    //   }
+    // };
+
+    document.getElementById("inputEkiname").addEventListener("keydown", (e) => {
+      if (e.keyCode == 13) {
         ekiSearch();
       }
-    };
+      if (e.keyCode == 229) {
+        clearForm();
+      }
+    });
   </script>
 </body>
