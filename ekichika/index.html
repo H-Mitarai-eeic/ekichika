@@ -140,7 +140,7 @@
         <div id="setTime" class="wrapper"></div>
         <br />
       </div>
-      <a href="javascript:show_whole_paths();" class="btn btn-svg">
+      <a href="javascript:run();" class="btn btn-svg">
         <svg>
           <rect x="2" y="2" rx="0" fill="none" width="200" height="50"></rect>
         </svg>
@@ -154,8 +154,9 @@
   <script src="./d3.js" charset="utf-8"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="./search.js"></script>
-  <script src="./menu.js"></script>
   <script src="./clock.js"></script>
+  <script src="./menu.js"></script>
+
   <script>
     var w = window,
       d = document,
@@ -171,6 +172,8 @@
     var clicked_stations = new Set();
     var goal_station_name_ID = [];
     var last_center_station = NaN;
+
+    var mode = "one";
 
     d3.select(window).on("resize", resizing);
 
@@ -579,6 +582,10 @@
         isAleradySearched = false;
       }
       return;
+    }
+
+    function run() {
+      console.log("hoge");
     }
 
     document.getElementById("inputEkiname").addEventListener("keydown", (e) => {
