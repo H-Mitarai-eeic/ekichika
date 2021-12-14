@@ -166,6 +166,7 @@ async function meet_up(startGroupID_set, T, stationQueue, goalStationNameID){
     var groupInfo = {};
     var numOfVisitors = {};
     var stationInfo = {};
+    var meetupFlag = {nearest: false, hub: false};
 
     //以下の変数は人数分準備
     var time = Array(N);
@@ -189,6 +190,7 @@ async function meet_up(startGroupID_set, T, stationQueue, goalStationNameID){
     var ARAKAWASEN = 0.8;
     var changeTrains_time = 5;
     var stopTime = 0.75;
+    var hubStationThreshold = 3;
     
     //実際の処理
    await Make_Adj_List_meetup();
@@ -310,8 +312,22 @@ async function meet_up(startGroupID_set, T, stationQueue, goalStationNameID){
                         //全員集合してたら
                         //console.log("集合場所", groupInfo[currentGroupID]);
                         //return traceBack(currentGroupID);
-                        traceBack(currentGroupID);
-                        break;
+                        var noriire = groupInfo[currentGroupID].length;
+                        console.log(noriire)
+                        if(meetupFlag.nearest == false){
+                            meetupFlag.nearest = true;
+                            if(noriire >= hubStationThreshold){
+                                meetupFlag.hub = true;
+                            }
+                            traceBack(currentGroupID);
+                        }else if(meetupFlag.hub == false && noriire >= hubStationThreshold){
+                            meetupFlag.hub = true;
+                            traceBack(currentGroupID);
+                        }
+                        console.log(meetupFlag);
+                        if(meetupFlag.nearest && meetupFlag.hub){
+                            break;
+                        }
                     }
                 }
                 for(var j = 0; j < Adj_list[currentStationID].length; j++){
