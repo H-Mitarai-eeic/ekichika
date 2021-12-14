@@ -32,12 +32,7 @@
     pointer-events: none;
   }
 </style>
-<!-- <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=Lora&display=swap"
-  rel="stylesheet"
-/> -->
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link
@@ -48,6 +43,7 @@
 <link rel="stylesheet" href="button.css" />
 <link rel="stylesheet" href="form.css" />
 <link rel="stylesheet" href="clock.css" />
+<link rel="stylesheet" href="menu.css" />
 <body bgcolor="black">
   <!-- >>> for sidebar >>> -->
   <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu" checked />
@@ -65,7 +61,6 @@
         <label>Station Name</label>
         <span class="focus_line"></span>
       </div>
-      <!-- <div id="errorDiv">hogehoge</div> -->
 
       <br />
       <a href="javascript:ekiSearch();" class="btn btn-svg">
@@ -76,24 +71,82 @@
       </a>
     </div>
     <!-- <<< for search <<< -->
+
+    <!-- >>> for menu >>> -->
+    <div class="container">
+      <div class="radio-tile-group">
+        <!-- <form name="formMenu"> -->
+        <div class="input-container">
+          <input
+            id="one"
+            class="radio-button"
+            type="radio"
+            name="radio"
+            checked
+            value="one"
+            onchange="onMenuChange()"
+          />
+          <div class="radio-tile">
+            <div class="icon one-icon">
+              <img src="./fig/one_.png" width="30" height="30" />
+            </div>
+          </div>
+        </div>
+
+        <div class="input-container">
+          <input
+            id="meet"
+            class="radio-button"
+            type="radio"
+            name="radio"
+            value="meet"
+            onchange="onMenuChange()"
+          />
+          <div class="radio-tile">
+            <div class="icon meet-icon">
+              <img src="./fig/meet_.png" width="50" height="23" />
+            </div>
+          </div>
+        </div>
+
+        <div class="input-container">
+          <input
+            id="meetWithTime"
+            class="radio-button"
+            type="radio"
+            name="radio"
+            value="meetWithTime"
+            onchange="onMenuChange()"
+          />
+          <div class="radio-tile">
+            <div class="icon car-icon">
+              <img src="./fig/meetWithTime_.png" width="45" height="36" />
+            </div>
+          </div>
+        </div>
+        <!-- </form> -->
+      </div>
+    </div>
+    <!-- <<< for menu <<< -->
+
     <!-- >>> for clock >>> -->
     <div class="wrapper">
-      <div class="clock" id="clock" draggable="true">
-        <div class="scale" id="scale"></div>
-        <div class="hour line"></div>
-        <div class="min line" draggable="true" id="minLine"></div>
+      <div id="clockAndTime">
+        <div class="clock" id="clock" draggable="true">
+          <div class="scale" id="scale"></div>
+          <div class="hour line"></div>
+          <div class="min line" draggable="true" id="minLine"></div>
+        </div>
+        <div id="setTime" class="wrapper"></div>
+        <br />
       </div>
-      <div id="setTime"></div>
-      <br />
       <a href="javascript:show_whole_paths();" class="btn btn-svg">
         <svg>
           <rect x="2" y="2" rx="0" fill="none" width="200" height="50"></rect>
         </svg>
         <span>RUN</span>
       </a>
-      <!-- <button id="runButton" onclick="show_whole_paths()">Run</button> -->
     </div>
-    <script src="./clock.js"></script>
     <!-- <<< for clock <<< -->
   </div>
 
@@ -101,6 +154,8 @@
   <script src="./d3.js" charset="utf-8"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="./search.js"></script>
+  <script src="./menu.js"></script>
+  <script src="./clock.js"></script>
   <script src="./tooltip.js"></script>
   <script>
     var w = window,
@@ -593,9 +648,6 @@
     function clearForm() {
       console.log(document.getElementById("inputEkiname").composing);
       if (isAleradySearched) {
-        // document.getElementById("inputEkiname").value = document
-        //   .getElementById("inputEkiname")
-        //   .value.slice(-1);
         document.getElementById("inputEkiname").value = "";
         isAleradySearched = false;
       }
