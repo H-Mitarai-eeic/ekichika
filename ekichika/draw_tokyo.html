@@ -502,18 +502,6 @@
       return;
     }
 
-    // document.getElementById("inputEkiname").onkeypress = (e) => {
-    //   // form1に入力されたキーを取得
-    //   const key = e.keyCode || e.charCode || 0;
-    //   // 13はEnterキーのキーコード
-    //   if (key == 13) {
-    //     ekiSearch();
-    //   }
-    //   if (key == 229) {
-    //     clearForm();
-    //   }
-    // };
-
     document.getElementById("inputEkiname").addEventListener("keydown", (e) => {
       if (e.keyCode == 13) {
         ekiSearch();
