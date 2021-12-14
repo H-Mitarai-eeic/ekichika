@@ -179,7 +179,7 @@ async function meet_up(startGroupID_set, T, stationQueue, goalStationNameID){
         visited_group_flag[i] = {};
     }
     var counter = 0
-    for (var value of set) {
+    for (var value of startGroupID_set) {
         startGroupID[counter] = value;
         counter++;
     }
