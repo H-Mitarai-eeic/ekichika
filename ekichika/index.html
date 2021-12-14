@@ -101,6 +101,7 @@
   <script src="./d3.js" charset="utf-8"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="./search.js"></script>
+  <script src="./tooltip.js"></script>
   <script>
     var w = window,
       d = document,
@@ -351,6 +352,8 @@
         clicked_stations.add(d.GroupID);
         console.log(clicked_stations);
       });
+      //circle.on("mouseover", showStaionTooltip)
+      //          .on("mouseout", hideStationTooltip);
     }
 
     //runされた時呼び出される関数
