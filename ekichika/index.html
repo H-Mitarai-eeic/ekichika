@@ -117,6 +117,9 @@
     var clicked_stations = new Set();
     var goal_station_name_ID = [];
     var last_center_station = NaN;
+    var last_center_station_red_flag = 0;
+    var last_nearest_station = NaN;
+    var last_nearest_station_red_flag = 0;
 
     d3.select(window).on("resize", resizing);
 
@@ -413,16 +416,34 @@
               .attr("opacity", 1);
           }
           if (goal_station_name_ID.length > 0) {
+            // center_stationは駅名+グループID
             var center_station = goal_station_name_ID.shift();
 
             if (last_center_station != NaN) {
-              g.select("#" + last_center_station)
-                .transition()
-                .duration(500)
-                .ease(d3.easeLinear)
-                .attr("fill-opacity", 0.2)
-                .attr("fill", "white");
+              console.log(last_center_station_red_flag);
+              if (last_center_station_red_flag == 1) {
+                g.select("#" + last_center_station)
+                  .attr("fill-opacity", 1)
+                  .attr("fill", "red");
+              } else {
+                g.select("#" + last_center_station)
+                  .transition()
+                  .duration(500)
+                  .ease(d3.easeLinear)
+                  .attr("fill-opacity", 0.2)
+                  .attr("fill", "white");
+              }
               g.select(".wave_in").remove();
+            }
+            if (
+              g.select("#" + center_station).attr("fill") == "rgb(255, 0, 0)" ||
+              g.select("#" + center_station).attr("fill") == "red"
+            ) {
+              console.log("conter_station_red !!");
+              last_center_station_red_flag = 1;
+            } else {
+              console.log("conter_station_not_red !!");
+              last_center_station_red_flag = 0;
             }
             g.select("#" + center_station)
               .transition()
@@ -459,6 +480,45 @@
               .attr("from", "25")
               .attr("to", "0")
               .attr("repeatCount", "indefinite");
+            
+            //ハブ駅の表示
+            if (goal_station_name_ID.length > 0) {
+              var nearest_hub_station = goal_station_name_ID.shift();
+              if (last_nearest_station != NaN) {
+                console.log(last_nearest_station_red_flag);
+                if (last_nearest_station_red_flag == 1) {
+                  g.select("#" + last_nearest_station)
+                    .attr("fill-opacity", 1)
+                    .attr("fill", "red");
+                } else {
+                  g.select("#" + last_nearest_station)
+                    .transition()
+                    .duration(500)
+                    .ease(d3.easeLinear)
+                    .attr("fill-opacity", 0.2)
+                    .attr("fill", "white");
+                }
+                g.select(".wave_in").remove();
+              }
+              if (
+                g.select("#" + nearest_hub_station).attr("fill") ==
+                  "rgb(255, 0, 0)" ||
+                g.select("#" + nearest_hub_station).attr("fill") == "red"
+              ) {
+                console.log("hub_station_red !!");
+                last_nearest_station_red_flag = 1;
+              } else {
+                console.log("hub_station_not_red !!");
+                last_nearest_station_red_flag = 0;
+              }
+              g.select("#" + nearest_hub_station)
+                .transition()
+                .duration(500)
+                .ease(d3.easeLinear)
+                .attr("fill-opacity", 1)
+                .attr("fill", "darkviolet");
+              last_nearest_station = nearest_hub_station;
+            }
           }
         }
       );
