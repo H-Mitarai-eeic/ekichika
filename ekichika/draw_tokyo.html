@@ -177,43 +177,44 @@
       last_center_station = NaN;
     }
 
-    showMap();
-
-    d3.csv("data.csv").then(function (data) {
-      data.forEach(function (d) {
-        ekiNameToEkiData[d.name] = d;
-      });
-      setTimeout(() => {
-        showCircle(data);
-      }, 250);
-    });
-    d3.csv("joinWithIdoKeido.csv").then(function (data) {
-      setTimeout(() => {
+    showMap().then(() =>{
+      d3.csv("joinWithIdoKeido.csv").then(function (data){
         showline(data);
-      }, 120);
+      }).then(() => {
+        d3.csv("data.csv").then(function (data) {
+          data.forEach(function (d) {
+            ekiNameToEkiData[d.name] = d;
+          });
+          showCircle(data);
+        });
+      });
     });
 
     function showMap() {
-      d3.json("./tokyo.topojson").then(function (tk) {
-        var tokyo = topojson.feature(tk, tk.objects.tokyo);
-        g.append("g")
-          .attr("id", "states")
-          .selectAll("path")
-          .data(tokyo.features)
-          .enter()
-          .append("path")
-          .attr("d", path);
-        // .on("click", clicked);
+      return new Promise(resolve => {
+        d3.json("./tokyo.topojson").then(function (tk) {
+          var tokyo = topojson.feature(tk, tk.objects.tokyo);
+          g.append("g")
+            .attr("id", "states")
+            .selectAll("path")
+            .data(tokyo.features)
+            .enter()
+            .append("path")
+            .attr("d", path);
+          // .on("click", clicked);
 
-        g.append("path")
-          .datum(
-            topojson.mesh(tk, tk.objects.tokyo, function (a, b) {
-              return a !== b;
-            })
-          )
-          .attr("id", "state-borders")
-          .attr("stroke-width", 1.5)
-          .attr("d", path);
+          g.append("path")
+            .datum(
+              topojson.mesh(tk, tk.objects.tokyo, function (a, b) {
+                return a !== b;
+              })
+            )
+            .attr("id", "state-borders")
+            .attr("stroke-width", 1.5)
+            .attr("d", path);
+        }).then(() => {
+          resolve(true)
+        });
       });
     }
 
