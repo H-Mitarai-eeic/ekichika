@@ -190,7 +190,7 @@ async function meet_up(startGroupID_set, T, stationQueue, goalStationNameID){
     var ARAKAWASEN = 0.8;
     var changeTrains_time = 5;
     var stopTime = 0.75;
-    var hubStationThreshold = 3;
+    var hubStationThreshold = 6;
     
     //実際の処理
    await Make_Adj_List_meetup();
