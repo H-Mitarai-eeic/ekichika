@@ -2,6 +2,21 @@
 /*
 引数: stationQueue 空の配列の参照　→　表示するルートが随時pushされる.
 引数: goalStationNameID 空の配列の参照  → 集合地点の "名前+ID" がプッシュされる.
+
+=============使い方============
+
+    within_T_min(startGroupID, 60, stationQueue)
+        .then(() => {
+            - 探索後に行いたい処理 - 
+        });
+
+また
+    meet_up(startGroupID, 60, stationQueue, goalStationNameID)
+        .then(() => {
+            - 探索後に行いたい処理 - 
+        });
+
+とすれば、thenの中身が探索終了後に実行されるはず
 */
 async function within_T_min(startGroupID, T, stationQueue) {
     var Adj_list = {};   //隣接リスト　keyはstation ID
