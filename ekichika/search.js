@@ -312,7 +312,8 @@ async function meet_up(startGroupID_set, T, stationQueue, goalStationNameID){
                         //全員集合してたら
                         //console.log("集合場所", groupInfo[currentGroupID]);
                         //return traceBack(currentGroupID);
-                        var noriire = groupInfo[currentGroupID].length;
+                        //var noriire = groupInfo[currentGroupID].length;
+                        var noriire = Adj_list[currentStationID].length;
                         console.log(noriire)
                         if(meetupFlag.nearest == false){
                             meetupFlag.nearest = true;
