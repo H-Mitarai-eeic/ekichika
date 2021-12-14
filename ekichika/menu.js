@@ -1,12 +1,23 @@
-function clickBtn1() {
-  let str = "";
-  const color1 = document.form1.color1;
+onMenuChange();
 
-  for (let i = 0; i < color1.length; i++) {
-    if (color1[i].checked) {//(color1[i].checked === true)と同じ
-      str = color1[i].value;
-      break;
+
+function onMenuChange() {
+  let elems = document.getElementsByName("radio");
+  let val = "";
+
+  for (let i = 0; i < elems.length; i++) {
+    if (elems[i].checked) {
+      val = elems[i].value;
     }
+  } // end for i
+
+  console.log(val);
+
+  if (val == "one") {
+    document.getElementById("clockAndTime").style.display = "block";
+  } else if (val == "meet") {
+    document.getElementById("clockAndTime").style.display = "none";
+  } else if (val == "meetWithTime") {
+    document.getElementById("clockAndTime").style.display = "block";
   }
-  document.getElementById("span1").textContent = str;
 }
