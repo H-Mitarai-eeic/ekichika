@@ -1,41 +1,58 @@
+var stationTooltip;
+var stationTooltipZoom = d3.zoom().scaleExtent([1, 200]);
+var stationTooltipScale = 1;
+
+stationTooltipZoom.on("zoom", function(event){
+    stationTooltipScale = event.transform.k;
+    console.log(stationTooltipScale);
+    stationTooltip.attr("transform", event.transform)
+                .attr("font-size", fontsize * Math.cbrt(event.transform.k));
+});
+
 function showStaionTooltip(event){
     //console.log(d3.select(this));
+    var selected_circle = d3.select(this);
 
-    var data_stationTooltip = [d3.select(this).datum().GroupID, d3.select(this).datum().name]
-    circle_cx = d3.select(this).attr("cx")
-    circle_cy = d3.select(this).attr("cy")
-    circle_r = d3.select(this).attr("r")
+    var data_stationTooltip = [selected_circle.datum().GroupID, selected_circle.datum().name]
+    var circle_cx = selected_circle.attr("cx")
+    var circle_cy = selected_circle.attr("cy")
+    var circle_r = selected_circle.attr("r")
 
-    y_col = circle_cy - circle_r
+    var circle_transform = selected_circle.attr("transform");
+    //var circle_scale = selected_circle.attr("scale");
+    var y_col = circle_cy - circle_r * 10;
 
-    var stationTooltip = d3.select(this).selectAll(".stationTooltip")
+    var fontsize = 10;
+    console.log(stationTooltipScale);
+
+    stationTooltip = svg.selectAll(".stationTooltip")
         .data(data_stationTooltip)
         .enter()
         .append("g")
         .attr("class", "stationTooltip")
-        .attr("transform", "translate("+ 0 +","+ 0 +")");
+        .attr("transform", circle_transform);
     stationTooltip.append("text")
         .attr("class", "stationTooltipText")
         .attr("fill", "black")
         .attr("stroke", "none")
         .attr("text-anchor", "end")
-        .attr("x", 0)
-        .attr("y", function(d, i){return 10 * i;})
-        .attr("font-size", 100)
+        .attr("x", circle_cx)
+        .attr("y", function(d, i){return fontsize / Math.cbrt(stationTooltipScale) * i + y_col;})
+        .attr("font-size", fontsize / Math.cbrt(stationTooltipScale))
         .text(function(d){return d; });
     /*
     stationTooltip.append("rect")
         .attr("class", "stationTooltipBg")
-        .attr("width", 2000)
-        .attr("height", 2000)
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("fill", "yellow")
-        .attr("stroke", "black");
-    console.log("stationTooltip", stationTooltip.selectAll("rect"));
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("x", circle_cx)
+        .attr("y", circle_cy)
+        .attr("fill", "white")
+        .attr("stroke", "black");*/
+    //console.log("stationTooltip", stationTooltip.selectAll("rect"));
     //stationTooltip.on("zoom", resizeStationTooltip);
-    */
-    console.log("stationTooltip", stationTooltip.selectAll("text"));
+    
+    //console.log("stationTooltip", stationTooltip);
 
     function resizeStationTooltip(event){
         d3.selectAll()
