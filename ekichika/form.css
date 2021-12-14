@@ -1,5 +1,5 @@
 .cp_iptxt {
-  font-family: "Lora", serif;
+  /* font-family: "Lora", serif; */
   position: relative;
   width: 80%;
   margin: 40px 3%;
@@ -8,7 +8,7 @@
 .cp_iptxt input[type="text"] {
   /* font-size: 15px/24px; */
   /* sans-serif; */
-  font-family: "Lora", serif;
+  /* font-family: "Lora", serif; */
   font-size: 23px;
   box-sizing: border-box;
   width: 100%;
