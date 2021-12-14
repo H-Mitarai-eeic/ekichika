@@ -414,6 +414,7 @@
       //          .on("mouseout", hideStationTooltip);
     }
 
+    //delete
     //runされた時呼び出される関数
     function show_whole_paths() {
       if (clicked_stations.size == 0) {
@@ -442,6 +443,7 @@
       }
     }
 
+    //delete
     //ある駅からn分以内に行ける駅を表示する関数
     function show_within_stations(groupid) {
       within_T_min(groupid, userSetHour * 60 + userSetTime, stationQueue).then(
@@ -457,7 +459,8 @@
         }
       );
     }
-
+    
+    //delete
     //複数人で待ち合わせを表示する関数
     function show_center_station() {
       meet_up(clicked_stations, 180, stationQueue, goal_station_name_ID).then(
@@ -599,12 +602,12 @@
       svg.selectAll(".background").attr("width", width).attr("height", height);
     }
 
-    function openGoogleMap(d) {
-      window.open(
-        "https://www.google.co.jp/maps/search/%E3%83%AC%E3%82%B9%E3%83%88%E3%83%A9%E3%83%B3+" +
-          d.name
-      );
-    }
+    // function openGoogleMap(d) {
+    //   window.open(
+    //     "https://www.google.co.jp/maps/search/%E3%83%AC%E3%82%B9%E3%83%88%E3%83%A9%E3%83%B3+" +
+    //       d.name
+    //   );
+    // }
 
     var isAleradySearched = false;
     function ekiSearch() {
@@ -663,4 +666,7 @@
       }
     });
   </script>
+  <script src="./single_person.js"></script>
+  <script src="./multi_person.js"></script>
+  <script src="./multi_person_within_time.js"></script>
 </body>
