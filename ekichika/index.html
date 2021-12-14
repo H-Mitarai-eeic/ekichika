@@ -140,7 +140,7 @@
         <div id="setTime" class="wrapper"></div>
         <br />
       </div>
-      <a href="javascript:show_whole_paths();" class="btn btn-svg">
+      <a href="javascript:run();" class="btn btn-svg">
         <svg>
           <rect x="2" y="2" rx="0" fill="none" width="200" height="50"></rect>
         </svg>
@@ -154,9 +154,9 @@
   <script src="./d3.js" charset="utf-8"></script>
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="./search.js"></script>
-  <script src="./menu.js"></script>
   <script src="./clock.js"></script>
   <script src="./tooltip.js"></script>
+  <script src="./menu.js"></script>
   <script>
     var w = window,
       d = document,
@@ -175,6 +175,8 @@
     var last_center_station_red_flag = 0;
     var last_nearest_station = NaN;
     var last_nearest_station_red_flag = 0;
+
+    var mode = "one";
 
     d3.select(window).on("resize", resizing);
 
@@ -459,7 +461,7 @@
         }
       );
     }
-    
+
     //delete
     //複数人で待ち合わせを表示する関数
     function show_center_station() {
@@ -655,6 +657,16 @@
         isAleradySearched = false;
       }
       return;
+    }
+
+    function run() {
+      if (mode == "one") {
+        single_person();
+      } else if (mode == "meet") {
+        multi_person();
+      } else if (mode == "meetWithTime") {
+        multi_person();
+      }
     }
 
     document.getElementById("inputEkiname").addEventListener("keydown", (e) => {
