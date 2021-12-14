@@ -1,7 +1,7 @@
 //search.js
 /*
 引数: stationQueue 空の配列の参照　→　表示するルートが随時pushされる.
-引数: goalStationNameID 空の配列の参照  → 集合地点の "名前+ID" がプッシュされる.
+引数: goalStationNameID 空の配列の参照  → 集合地点の "名前+GROUPID" がプッシュされる.
 
 =============使い方============
 
