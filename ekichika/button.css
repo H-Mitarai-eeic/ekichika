@@ -80,3 +80,7 @@ a.btn-svg:hover svg rect {
 a.btn-svg span {
   color: #fff;
 }
+
+#search {
+  float: right;
+}

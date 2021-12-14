@@ -44,6 +44,7 @@
 <link rel="stylesheet" href="form.css" />
 <link rel="stylesheet" href="clock.css" />
 <link rel="stylesheet" href="menu.css" />
+<link rel="stylesheet" href="search.css" />
 <body bgcolor="black">
   <!-- >>> for sidebar >>> -->
   <input type="checkbox" class="openSidebarMenu" id="openSidebarMenu" checked />
@@ -53,23 +54,24 @@
     <div class="spinner diagonal part-2"></div>
   </label>
   <div id="sidebarMenu">
-    <div class="wrapper">
-      <!-- >>> for search >>> -->
+    <!-- <div class="wrapper"> -->
+    <!-- >>> for search >>> -->
 
-      <div class="cp_iptxt">
+    <!-- <div class="cp_iptxt">
         <input class="ef" type="text" placeholder="" id="inputEkiname" />
         <label>Station Name</label>
         <span class="focus_line"></span>
       </div>
 
-      <br />
-      <a href="javascript:ekiSearch();" class="btn btn-svg">
+      <a href="javascript:ekiSearch();" class="btn btn-svg" id="search">
         <svg>
           <rect x="2" y="2" rx="0" fill="none" width="200" height="50"></rect>
         </svg>
         <span>SEARCH</span>
       </a>
-    </div>
+      <br /> -->
+
+    <!-- </div> -->
     <!-- <<< for search <<< -->
 
     <!-- >>> for menu >>> -->
@@ -131,6 +133,12 @@
 
     <!-- >>> for clock >>> -->
     <div class="wrapper">
+      <a href="javascript:run();" class="btn btn-svg">
+        <svg>
+          <rect x="2" y="2" rx="0" fill="none" width="200" height="50"></rect>
+        </svg>
+        <span>RUN</span>
+      </a>
       <div id="clockAndTime">
         <div class="clock" id="clock" draggable="true">
           <div class="scale" id="scale"></div>
@@ -140,14 +148,13 @@
         <div id="setTime" class="wrapper"></div>
         <br />
       </div>
-      <a href="javascript:run();" class="btn btn-svg">
-        <svg>
-          <rect x="2" y="2" rx="0" fill="none" width="200" height="50"></rect>
-        </svg>
-        <span>RUN</span>
-      </a>
     </div>
     <!-- <<< for clock <<< -->
+
+    <div class="search">
+      <input type="text" placeholder="Station Name" id="inputEkiname" />
+      <button onclick="ekiSearch()" id="search">＞</button>
+    </div>
   </div>
 
   <!-- <<< for sidebar <<< -->
