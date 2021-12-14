@@ -160,8 +160,8 @@ async function within_T_min(startGroupID, T, stationQueue) {
         });
     }
 }
-async function meet_up(startGroupID, T, stationQueue, goalStationNameID){
-    var N = startGroupID.length;
+async function meet_up(startGroupID_set, T, stationQueue, goalStationNameID){
+    var N = startGroupID_set.size;
     var Adj_list = {};
     var groupInfo = {};
     var numOfVisitors = {};
@@ -171,11 +171,17 @@ async function meet_up(startGroupID, T, stationQueue, goalStationNameID){
     var time = Array(N);
     var previousStation = Array(N);
     var visited_group_flag = Array(N);    //訪問済みならtrue 未訪問はfalse groupID
+    var startGroupID = Array(N);
 
     for(var i = 0; i < N; i++){
         time[i] = {};
         previousStation[i] = {};
         visited_group_flag[i] = {};
+    }
+    var counter = 0
+    for (var value of set) {
+        startGroupID[counter] = value;
+        counter++;
     }
 
     var queue = new pairing_heap();
