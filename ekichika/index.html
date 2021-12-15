@@ -76,6 +76,8 @@
     <!-- <<< for search <<< -->
 
     <!-- >>> for menu >>> -->
+
+
     <div class="container">
       <div class="radio-tile-group">
         <!-- <form name="formMenu"> -->
@@ -140,6 +142,8 @@
         </svg>
         <span>RUN</span>
       </a>
+
+
       <div id="clockAndTime">
         <div class="clock" id="clock" draggable="true">
           <div class="scale" id="scale"></div>
@@ -152,13 +156,8 @@
     </div>
     <!-- <<< for clock <<< -->
 
-    <div class="search">
-      <input type="text" placeholder="Station Name" id="inputEkiname" />
-      <button onclick="ekiSearch()" id="search">
-        <img src="fig/search2.png" width="20px" height="20px" />
-      </button>
-    </div>
-    <div id="open">How to Use</div>
+
+
   </div>
 
   <div id="mask" class="hidden"></div>
@@ -203,6 +202,13 @@
     </p>
     <div id="close3" class="close">Close</div>
   </section>
+
+  <div class="search">
+    <input type="text" placeholder="Station Name" id="inputEkiname" />
+    <button onclick="ekiSearch()" id="search">
+      <img src="fig/search2.png" width="20px" height="20px" />
+    </button>
+  </div>
 
   <!-- <<< for sidebar <<< -->
   <script src="./d3.js" charset="utf-8"></script>
@@ -652,6 +658,13 @@
       }
     });
   </script>
+
+
+
+  <div id="open">
+    <img src="fig/help.png" width="25px" height="25px" />
+  </div>
+
   <script src="./single_person.js"></script>
   <script src="./multi_person.js"></script>
   <script src="./multi_person_within_time.js"></script>
