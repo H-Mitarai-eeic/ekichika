@@ -617,7 +617,31 @@
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
           console.log(d);
-          return (1.2 * Math.sqrt(d.noriire) * 20) / kakudairitu ** 3 / 2;
+          return (1.2 * Math.sqrt(d.noriire) * 5) / kakudairitu ** 3 / 2;
+        })
+        .transition()
+        .ease(d3.easeSin, d3.easeSinInOut)
+        .attr("r", function (d) {
+          return (1.2 * Math.sqrt(d.noriire)) / kakudairitu / 2;
+        })
+        .transition()
+        .duration(1000)
+        .ease(d3.easeSin, d3.easeSinInOut)
+        .attr("r", function (d) {
+          console.log(d);
+          return (1.2 * Math.sqrt(d.noriire) * 5) / kakudairitu ** 3 / 2;
+        })
+        .transition()
+        .ease(d3.easeSin, d3.easeSinInOut)
+        .attr("r", function (d) {
+          return (1.2 * Math.sqrt(d.noriire)) / kakudairitu / 2;
+        })
+        .transition()
+        .duration(1000)
+        .ease(d3.easeSin, d3.easeSinInOut)
+        .attr("r", function (d) {
+          console.log(d);
+          return (1.2 * Math.sqrt(d.noriire) * 5) / kakudairitu ** 3 / 2;
         })
         .transition()
         .ease(d3.easeSin, d3.easeSinInOut)
