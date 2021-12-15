@@ -234,7 +234,7 @@
     var projection = d3
       .geoMercator()
       .scale(60000)
-      .center([139.463191, 35.710335])
+      .center([139.38, 35.710335]) //[139.463191, 35.710335]
       .translate([width / 2, height / 2]);
 
     var path = d3.geoPath().projection(projection);
@@ -267,6 +267,24 @@
           "stroke-width",
           1.5 / Math.cbrt(event.transform.k)
         );
+        //テキスト
+        if (event.transform.k > 10) {
+          g.selectAll("text")
+            .attr("transform", event.transform)
+            .attr("font-size", function (d) {
+              return (
+                (0.6 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k)
+              );
+            })
+            .attr("dy", function (d) {
+              return (
+                (0.2 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k)
+              );
+            })
+            .attr("opacity", (event.transform.k - 9) / 15);
+        } else {
+          g.selectAll("text").attr("opacity", 0);
+        }
       });
 
     var svg = d3
@@ -518,18 +536,36 @@
         }
       });
 
-      // circle
-      //   .append("text")
-      //   .attr({
-      //     // 真ん中若干下に配置されるように、文字色は白に。
-      //     "text-anchor": "middle",
-      //     dy: ".35em",
-      //     fill: "white",
-      //   })
-      //   // iは0から始まるので、+1しておく
-      //   .text(function (d) {
-      //     return d.name;
-      //   });
+      var text = g
+        .selectAll("text")
+        .data(data)
+        .enter()
+        .append("text")
+        .attr("class", "text")
+        .attr("fill", "black")
+        .attr("text-anchor", "middle")
+        .attr("stroke", "none")
+        .attr("opacity", 0)
+        // .style("font-family","Ubuntu")
+        .call(textPosition);
+
+      function textPosition(p) {
+        p.attr("x", function (d) {
+          return projection([d.ido, d.keido])[0];
+        });
+        p.attr("y", function (d) {
+          return projection([d.ido, d.keido])[1];
+        });
+        p.text(function (d) {
+          return d.name;
+        });
+        p.attr("font-size", function (d) {
+          return 0.6 * Math.sqrt(d.noriire);
+        });
+        p.attr("dy", function (d) {
+          return 0.2 * Math.sqrt(d.noriire);
+        });
+      }
     }
 
     function resizing() {
