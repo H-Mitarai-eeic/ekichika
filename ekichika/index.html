@@ -285,14 +285,6 @@
         } else {
           g.selectAll("text").attr("opacity", 0);
         }
-        // g.selectAll("text")
-        //   .attr("transform", event.transform)
-        //   .attr("font-size", function (d) {
-        //     return (0.6 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k);
-        //   })
-        //   .attr("dy", function (d) {
-        //     return (0.2 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k);
-        //   });
       });
 
     var svg = d3
@@ -554,6 +546,7 @@
         .attr("text-anchor", "middle")
         .attr("stroke", "none")
         .attr("opacity", 0)
+        // .style("font-family","Ubuntu")
         .call(textPosition);
 
       function textPosition(p) {
