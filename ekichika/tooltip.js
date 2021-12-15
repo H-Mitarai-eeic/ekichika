@@ -10,7 +10,8 @@ var stationTooltipBgHeight = 20;
 var stationTooltipDataN = 2;
 
 var stationTooltips = svg.append("g")
-.attr("class", "stationTooltips");
+.attr("class", "stationTooltips")
+.attr("transform", "translate(0, 0) scale(1)");
 
 function tooltipHandlerOnCircle(event){
   var selected_circle = d3.select(this);
@@ -45,7 +46,7 @@ function showStationTooltip(event, data, ID, x, y, transform, y_offset=20, x_off
   stationTooltip = stationTooltips
       .append("g")
       .attr("class", "stationTooltip" + ID)
-      .attr("transform", transform)
+      //.attr("transform", transform)
       .call(zoom);
   //console.log(stationTooltipZoom);
   stationTooltip.selectAll(".stationTooltipText")
@@ -82,12 +83,14 @@ function resizeStationTooltip(event){
   stationTooltipScale = event.transform.k;
   var y_offset = 20;
   var scaled_fontsize = stationTooltipFontSize / Math.cbrt(stationTooltipScale);
-  //console.log(scaled_fontsize);
-  if(stationTooltip != undefined){
-    var current_y = parseFloat(stationTooltip.selectAll(".stationTooltipText").attr("y"));
-    var current_x = parseFloat(stationTooltip.selectAll(".stationTooltipBg").attr("x"));
-    //console.log(current_y);
-    stationTooltip.attr("transform", event.transform);
+  console.log(stationTooltips.selectAll(".stationTooltipText").empty());
+  if (stationTooltips != undefined){
+    stationTooltips.attr("transform", event.transform);
+  }
+  if(stationTooltips != undefined && stationTooltips.selectAll(".stationTooltipText").empty() != true){
+    var current_y = parseFloat(stationTooltips.selectAll(".stationTooltipText").attr("y"));
+    var current_x = parseFloat(stationTooltips.selectAll(".stationTooltipBg").attr("x"));
+    
     stationTooltip.selectAll(".stationTooltipText")
               .attr("font-size", scaled_fontsize)
               .attr("y", function(d, i){
