@@ -7,19 +7,7 @@ var stationTooltipBgWidth = 60;
 var stationTooltipBgHeight = 20;
 
 var stationTooltipDataN = 2;
-//circle.on("mouseover", showStaionTooltip)
-      //   .on("mouseout", hideStationTooltip);
-/*
-var stationTooltipZoom = d3.zoom().scaleExtent([1, 200])
-  .on("zoom", function(event){
-    //tooltip
-    stationTooltipScale = event.transform.k;
-    console.log(stationTooltipScale)
-    if (stationTooltip != undefined){
-      resizeStationTooltip(event);
-  }
-});
-*/
+
 function showStationTooltip(event){
   //console.log(d3.select(this));
   var selected_circle = d3.select(this);
