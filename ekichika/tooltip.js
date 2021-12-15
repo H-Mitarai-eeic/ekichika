@@ -66,7 +66,7 @@ function showStationTooltip(event){
       .attr("x", circle_cx - stationTooltipBgWidth/ Math.cbrt(stationTooltipScale) /2)
       .attr("y", y_col - scaled_fontsize)
       .attr("fill", "white")
-      .attr("fill-opacity", 0.2)
+      .attr("fill-opacity", 0.1)
       .attr("stroke", "black")
       .attr("stroke-width", 0.1);
   //console.log("stationTooltip", stationTooltip.selectAll("rect"));
