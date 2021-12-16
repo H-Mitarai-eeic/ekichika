@@ -444,54 +444,68 @@
 
       circle.on("click", function (event, d) {
         if (mode == "one") {
-          g.selectAll("circle")
-            .transition()
-            .duration(500)
-            .ease(d3.easeLinear)
-            .attr("fill-opacity", 0.2)
-            .attr("fill", "white");
-          g.selectAll(".wave").remove();
-          d3.select(this)
-            .transition()
-            .duration(500)
-            .ease(d3.easeLinear)
-            .attr("fill-opacity", 1)
-            .attr("fill", "red");
-
-          var circle_cx = d3.select(this).attr("cx");
-          var circle_cy = d3.select(this).attr("cy");
-          var circle_transform = d3.select(this).attr("transform");
-          var kakudairitu = 0.2 / d3.select(this).attr("stroke-width");
-          // 選択した駅から波動を発生させる
-          var wave = g
-            .append("circle")
-            .attr("class", "wave wave_out")
-            .attr("stroke", "white")
-            .attr("stroke-width", 0.2)
-            .attr("opacity", 1)
-            .attr("fill-opacity", 0)
-            .attr("cx", circle_cx)
-            .attr("cy", circle_cy)
-            .attr("r", 0)
-            .attr("transform", circle_transform);
-
-          wave
-            .append("animate")
-            .attr("class", "wave_out_animation")
-            .attr("attributeName", "r")
-            .attr("begin", "0s")
-            .attr("dur", "1s")
-            .attr("from", "0")
-            .attr("to", "25")
-            .attr("repeatCount", "indefinite");
-
           console.log(d);
-          clicked_stations.clear(); //空にする
-          clicked_stations_names.clear();
-          clicked_stations.add(d.GroupID);
-          clicked_stations_names.add(d.name + d.GroupID);
-          console.log(clicked_stations);
-          console.log(clicked_stations_names);
+          if (clicked_stations_names.has(d.name + d.GroupID)){
+            clicked_stations.clear(); //空にする
+            clicked_stations_names.clear();
+            console.log(clicked_stations);
+            console.log(clicked_stations_names);
+            g.selectAll("circle")
+                .transition()
+                .duration(500)
+                .ease(d3.easeLinear)
+                .attr("fill-opacity", 0.2)
+                .attr("fill", "white");
+            g.selectAll(".wave").remove();
+          } else {
+            clicked_stations.clear(); //空にする
+            clicked_stations_names.clear();
+            clicked_stations.add(d.GroupID);
+            clicked_stations_names.add(d.name + d.GroupID);
+
+            console.log(clicked_stations);
+            console.log(clicked_stations_names);
+            g.selectAll("circle")
+                .transition()
+                .duration(500)
+                .ease(d3.easeLinear)
+                .attr("fill-opacity", 0.2)
+                .attr("fill", "white");
+            g.selectAll(".wave").remove();
+            d3.select(this)
+                .transition()
+                .duration(500)
+                .ease(d3.easeLinear)
+                .attr("fill-opacity", 1)
+                .attr("fill", "red");
+
+            var circle_cx = d3.select(this).attr("cx");
+            var circle_cy = d3.select(this).attr("cy");
+            var circle_transform = d3.select(this).attr("transform");
+            var kakudairitu = 0.2 / d3.select(this).attr("stroke-width");
+            // 選択した駅から波動を発生させる
+            var wave = g
+                .append("circle")
+                .attr("class", "wave wave_out")
+                .attr("stroke", "white")
+                .attr("stroke-width", 0.2)
+                .attr("opacity", 1)
+                .attr("fill-opacity", 0)
+                .attr("cx", circle_cx)
+                .attr("cy", circle_cy)
+                .attr("r", 0)
+                .attr("transform", circle_transform);
+
+            wave
+                .append("animate")
+                .attr("class", "wave_out_animation")
+                .attr("attributeName", "r")
+                .attr("begin", "0s")
+                .attr("dur", "1s")
+                .attr("from", "0")
+                .attr("to", "25")
+                .attr("repeatCount", "indefinite");
+          }
         } else {
           d3.select(this)
             .transition()
