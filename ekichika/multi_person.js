@@ -34,11 +34,17 @@ function show_center_station() {
           .attr("fill", "red");
       }
       if (goal_station_name_ID.length == 1) {
+
+        document.getElementById("goalGreen").style.display = "block";
+        document.getElementById("goalPurple").style.display = "none";
         // center_stationは駅名+グループID
         var center_station = goal_station_name_ID.shift();
+        document.getElementById("goalGreenName").innerHTML = center_station.replace(/[0-9]/gi, '');
+
         // 最短駅までの時間
         var center_station_time = goal_station_time.shift();
         console.log("center_station_time:" + center_station_time);
+        document.getElementById("goalGreenTime").innerHTML = getDisplayTime(center_station_time);//Math.ceil(center_station_time) + "min";
 
         g.select("#" + center_station)
           .transition()
@@ -48,13 +54,20 @@ function show_center_station() {
           .attr("fill", "lime");
         show_waves(center_station);
       } else if (goal_station_name_ID.length == 2) {
+        document.getElementById("goalGreen").style.display = "block";
+        document.getElementById("goalPurple").style.display = "block";
+
         var center_station = goal_station_name_ID.shift();
         var nearest_hub_station = goal_station_name_ID.shift();
+        document.getElementById("goalGreenName").innerHTML = center_station.replace(/[0-9]/gi, '');
+        document.getElementById("goalPurpleName").innerHTML = nearest_hub_station.replace(/[0-9]/gi, '');
 
         var center_station_time = goal_station_time.shift();
         var nearest_hub_station_time = goal_station_time.shift();
         console.log("center_station_time:" + center_station_time);
         console.log("nearest_hub_station_time:" + nearest_hub_station_time);
+        document.getElementById("goalGreenTime").innerHTML = getDisplayTime(center_station_time);//Math.ceil(center_station_time) + "min";
+        document.getElementById("goalPurpleTime").innerHTML = getDisplayTime(nearest_hub_station_time); //+ "min";
 
         g.select("#" + center_station)
           .transition()
@@ -101,4 +114,16 @@ function show_waves(ekiID) {
     .attr("from", "25")
     .attr("to", "0")
     .attr("repeatCount", "indefinite");
+}
+
+function getDisplayTime(time) {
+  time = Math.ceil(time);
+  if (time < 60) {
+    return time + "min";
+  } else if (time % 60 == 0) {
+    return Math.floor(time / 60) + "h";
+  } else if (time % 60 > 0) {
+    return Math.floor(time / 60) + "h " + (time % 60) + "min";
+  }
+  return -1;
 }
