@@ -57,6 +57,8 @@ function show_center_station() {
           .ease(d3.easeLinear)
           .attr("fill-opacity", 1)
           .attr("fill", "lime");
+        Greens = [];
+        Greens.push(center_station);
         show_waves(center_station);
       } else if (goal_station_name_ID.length == 2) {
         document.getElementById("goalGreen").style.display = "block";
@@ -80,6 +82,8 @@ function show_center_station() {
           .ease(d3.easeLinear)
           .attr("fill-opacity", 1)
           .attr("fill", "lime");
+        Greens = [];
+        Greens.push(center_station);
         g.select("#" + nearest_hub_station)
           .transition()
           .duration(500)

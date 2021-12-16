@@ -227,6 +227,7 @@
     var ekiNameToEkiData = {};
     var clicked_stations = new Set();
     var clicked_stations_names = new Set();
+    var Greens = [];
     var goal_station_name_ID = [];
     var goal_station_time = [];
 
@@ -516,12 +517,21 @@
           if (clicked_stations_names.has(d.name + d.GroupID)){
             clicked_stations_names.delete(d.name + d.GroupID)
             console.log(clicked_stations_names);
-            d3.select(this)
-                .transition()
-                .duration(500)
-                .ease(d3.easeLinear)
-                .attr("fill-opacity", 0.2)
-                .attr("fill", "white");
+            if (Greens.length > 0 && Greens[0] == d.name + d.GroupID){
+                d3.select(this)
+                    .transition()
+                    .duration(500)
+                    .ease(d3.easeLinear)
+                    .attr("fill-opacity", 1)
+                    .attr("fill", "lime");
+            } else {
+                d3.select(this)
+                    .transition()
+                    .duration(500)
+                    .ease(d3.easeLinear)
+                    .attr("fill-opacity", 0.2)
+                    .attr("fill", "white");
+            }
             g.select(".wave_" + d.name).remove();
           } else {
             clicked_stations_names.add(d.name + d.GroupID);
