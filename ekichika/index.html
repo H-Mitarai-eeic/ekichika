@@ -225,7 +225,7 @@
 
     var projection = d3
       .geoMercator()
-      .scale(90000)
+      .scale(60000)
       .center([139.38, 35.710335]) //[139.463191, 35.710335]
       .translate([width / 2, height / 2]);
 
@@ -240,42 +240,42 @@
         g.selectAll(".circle")
           .attr("transform", event.transform)
           .attr("r", function (d) {
-            return (1.8 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k);
+            return (1.2 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k);
           })
-          .attr("stroke-width", 0.6 / Math.cbrt(event.transform.k));
+          .attr("stroke-width", 0.4 / Math.cbrt(event.transform.k));
         //波
         g.selectAll(".wave")
           .attr("transform", event.transform)
           .attr("r", function (d) {
-            return 150 / Math.cbrt(event.transform.k);
+            return 100 / Math.cbrt(event.transform.k);
           })
-          .attr("stroke-width", 0.3 / Math.cbrt(event.transform.k));
+          .attr("stroke-width", 0.2 / Math.cbrt(event.transform.k));
         //線
         g.selectAll("line")
           .attr("transform", event.transform)
-          .attr("stroke-width", 3 / Math.cbrt(event.transform.k));
+          .attr("stroke-width", 2 / Math.cbrt(event.transform.k));
         //境界
         g.selectAll("#state-borders").attr(
           "stroke-width",
-          2.25 / Math.cbrt(event.transform.k)
+          1.5 / Math.cbrt(event.transform.k)
         );
         //tooltip
         resizeStationTooltip(event);
         //テキスト
-        if (event.transform.k > 5) {
+        if (event.transform.k > 10) {
           g.selectAll("text")
             .attr("transform", event.transform)
             .attr("font-size", function (d) {
               return (
-                (0.9 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k)
+                (0.6 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k)
               );
             })
             .attr("dy", function (d) {
               return (
-                (0.3 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k)
+                (0.2 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k)
               );
             })
-            .attr("opacity", (event.transform.k - 5) / 15);
+            .attr("opacity", (event.transform.k - 9) / 15);
         } else {
           g.selectAll("text").attr("opacity", 0);
         }
@@ -350,7 +350,7 @@
                 })
               )
               .attr("id", "state-borders")
-              .attr("stroke-width", 2.25)
+              .attr("stroke-width", 1.5)
               .attr("d", path);
           })
           .then(() => {
@@ -387,7 +387,7 @@
         .data(data)
         .enter()
         .append("line")
-        .attr("stroke-width", 3)
+        .attr("stroke-width", 2)
         .attr("class", function (d) {
           return (
             "s" + d.fromID + "_" + d.toID + " " + "s" + d.toID + "_" + d.fromID
@@ -409,9 +409,9 @@
           return projection([d.ido, d.keido])[1];
         });
         p.attr("r", function (d) {
-          return 1.8 * Math.sqrt(d.noriire);
+          return 1.2 * Math.sqrt(d.noriire);
         });
-        p.attr("stroke-width", 0.6);
+        p.attr("stroke-width", 0.4);
         p.attr("id", function (d) {
           return d.name + d.GroupID;
         });
@@ -460,7 +460,7 @@
             .append("circle")
             .attr("class", "wave wave_out")
             .attr("stroke", "white")
-            .attr("stroke-width", 0.3)
+            .attr("stroke-width", 0.2)
             .attr("opacity", 1)
             .attr("fill-opacity", 0)
             .attr("cx", circle_cx)
@@ -496,13 +496,13 @@
           var circle_cx = d3.select(this).attr("cx");
           var circle_cy = d3.select(this).attr("cy");
           var circle_transform = d3.select(this).attr("transform");
-          var kakudairitu = 0.3 / d3.select(this).attr("stroke-width");
+          var kakudairitu = 0.2 / d3.select(this).attr("stroke-width");
           // 選択した駅から波動を発生させる
           var wave = g
             .append("circle")
             .attr("class", "wave wave_out")
             .attr("stroke", "white")
-            .attr("stroke-width", 0.3)
+            .attr("stroke-width", 0.2)
             .attr("opacity", 1)
             .attr("fill-opacity", 0)
             .attr("cx", circle_cx)
@@ -517,7 +517,7 @@
             .attr("begin", "0s")
             .attr("dur", "1s")
             .attr("from", "0")
-            .attr("to", "37.5")
+            .attr("to", "25")
             .attr("repeatCount", "indefinite");
 
           console.log(d);
@@ -555,10 +555,10 @@
           return d.name;
         });
         p.attr("font-size", function (d) {
-          return 0.9 * Math.sqrt(d.noriire);
+          return 0.6 * Math.sqrt(d.noriire);
         });
         p.attr("dy", function (d) {
-          return 0.3 * Math.sqrt(d.noriire);
+          return 0.2 * Math.sqrt(d.noriire);
         });
       }
     }
@@ -603,7 +603,7 @@
 
       console.log("#" + inputEkidata.name + inputEkidata.GroupID);
       var kakudairitu =
-        0.3 /
+        0.2 /
         d3
           .select("#" + inputEkidata.name + inputEkidata.GroupID)
           .attr("stroke-width");
@@ -614,36 +614,36 @@
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
           console.log(d);
-          return (1.8 * Math.sqrt(d.noriire) * 5) / kakudairitu ** 3 / 2;
+          return (1.2 * Math.sqrt(d.noriire) * 5) / kakudairitu ** 3 / 2;
         })
         .transition()
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
-          return (1.8 * Math.sqrt(d.noriire)) / kakudairitu / 2;
-        })
-        .transition()
-        .duration(1000)
-        .ease(d3.easeSin, d3.easeSinInOut)
-        .attr("r", function (d) {
-          console.log(d);
-          return (1.8 * Math.sqrt(d.noriire) * 5) / kakudairitu ** 3 / 2;
-        })
-        .transition()
-        .ease(d3.easeSin, d3.easeSinInOut)
-        .attr("r", function (d) {
-          return (1.8 * Math.sqrt(d.noriire)) / kakudairitu / 2;
+          return (1.2 * Math.sqrt(d.noriire)) / kakudairitu / 2;
         })
         .transition()
         .duration(1000)
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
           console.log(d);
-          return (1.8 * Math.sqrt(d.noriire) * 5) / kakudairitu ** 3 / 2;
+          return (1.2 * Math.sqrt(d.noriire) * 5) / kakudairitu ** 3 / 2;
         })
         .transition()
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
-          return (1.8 * Math.sqrt(d.noriire)) / kakudairitu / 2;
+          return (1.2 * Math.sqrt(d.noriire)) / kakudairitu / 2;
+        })
+        .transition()
+        .duration(1000)
+        .ease(d3.easeSin, d3.easeSinInOut)
+        .attr("r", function (d) {
+          console.log(d);
+          return (1.2 * Math.sqrt(d.noriire) * 5) / kakudairitu ** 3 / 2;
+        })
+        .transition()
+        .ease(d3.easeSin, d3.easeSinInOut)
+        .attr("r", function (d) {
+          return (1.2 * Math.sqrt(d.noriire)) / kakudairitu / 2;
         });
     }
 
