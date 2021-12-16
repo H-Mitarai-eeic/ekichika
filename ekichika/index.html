@@ -51,6 +51,7 @@
 <link rel="stylesheet" href="ekilist.css" />
 <link rel="stylesheet" href="goalStations.css" />
 <link rel="stylesheet" href="fukidashi.css" />
+<link rel="stylesheet" href="denkouKeijiban.css" />
 
 <body bgcolor="black">
   <!-- >>> for sidebar >>> -->
@@ -61,6 +62,7 @@
     <div class="spinner diagonal part-2"></div>
   </label>
   <div id="sidebarMenu">
+    <p class="ledText" id="ledText"><span id="keiziban" >駅を2つ以上選んでください</span></p>
     <!-- <div class="wrapper"> -->
     <!-- >>> for search >>> -->
 
@@ -84,7 +86,7 @@
     <!-- >>> for menu >>> -->
 
 
-    <div class="container">
+    <div class="container" id="container">
       <div class="radio-tile-group">
         <!-- <form name="formMenu"> -->
           <div class="input-container">
@@ -147,6 +149,10 @@
     <!-- <<< for clock <<< -->
     <!-- <br> -->
     <div id="selectedEkilist">
+    </div>
+    <div id="goalStations">
+      <div id="goalGreen"><span class="border-radius green"></span><span id="goalGreenName">茗荷谷</span><br><span class="border-radius"></span><span id="goalGreenTime">25min</span></div>
+      <div id="goalPurple"><span class="border-radius purple"></span><span id="goalPurpleName">押上（東京スカイツリー前）</span><br><span class="border-radius"></span><span id="goalPurpleTime">30min</span></div>
     </div>
   </div>
 
@@ -222,6 +228,7 @@
     var ekiNameToEkiData = {};
     var clicked_stations = new Set();
     var clicked_stations_names = new Set();
+    var Greens = [];
     var goal_station_name_ID = [];
     var goal_station_time = [];
 
@@ -512,12 +519,21 @@
           if (clicked_stations_names.has(d.name + d.GroupID)){
             clicked_stations_names.delete(d.name + d.GroupID)
             console.log(clicked_stations_names);
-            d3.select(this)
-                .transition()
-                .duration(500)
-                .ease(d3.easeLinear)
-                .attr("fill-opacity", 0.2)
-                .attr("fill", "white");
+            if (Greens.length > 0 && Greens[0] == d.name + d.GroupID){
+                d3.select(this)
+                    .transition()
+                    .duration(500)
+                    .ease(d3.easeLinear)
+                    .attr("fill-opacity", 1)
+                    .attr("fill", "lime");
+            } else {
+                d3.select(this)
+                    .transition()
+                    .duration(500)
+                    .ease(d3.easeLinear)
+                    .attr("fill-opacity", 0.2)
+                    .attr("fill", "white");
+            }
             g.select(".wave_" + d.name).remove();
           } else {
             clicked_stations_names.add(d.name + d.GroupID);
@@ -706,6 +722,23 @@
         clearForm();
       }
     });
+    
+    document.getElementById("inputEkiname").addEventListener("keydown", (e) => {
+      if (e.keyCode == 13) {
+        ekiSearch();
+      }
+      if (e.keyCode == 229) {
+        clearForm();
+      }
+    });
+
+    document.getElementById('container').addEventListener('mouseover', function(){
+      document.getElementById("ledText").style.display = "none";
+});
+    BODY.addEventListener('click', function(){
+      document.getElementById("ledText").style.display = "none";
+});
+    
   </script>
 
 
