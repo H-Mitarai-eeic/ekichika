@@ -397,11 +397,13 @@ async function meet_up_within_T_min(startGroupID_set, T, stationQueue, goalStati
     var previousStation = Array(N);
     var visited_group_flag = Array(N);    //訪問済みならtrue 未訪問はfalse groupID
     var startGroupID = Array(N);
+    var tracedFlag = Array(N);
 
     for(var i = 0; i < N; i++){
         time[i] = {};
         previousStation[i] = {};
         visited_group_flag[i] = {};
+        tracedFlag[i] = {};
     }
     var counter = 0
     for (var value of startGroupID_set) {
@@ -569,7 +571,6 @@ async function meet_up_within_T_min(startGroupID_set, T, stationQueue, goalStati
             }
             if(i == 0){
                 goalStationName = stationInfo[goalStationID].stationName;
-                //goalStationNameID.push(goalStationName + goalStationID);
                 goalStationNameID.push(goalStationName + goalGroupID);
                 //console.log(goalStationNameID)
             }
@@ -578,9 +579,10 @@ async function meet_up_within_T_min(startGroupID_set, T, stationQueue, goalStati
             //console.log(time[i][goalStationID]);
             while (1){
                 //console.log(stationInfo[currentStationID]);
-                if (previousStation[i][currentStationID][1] == -1){
+                if (previousStation[i][currentStationID][1] == -1 || tracedFlag[i][currentStationID] == true){
                     break;
                 }
+                tracedFlag[i][currentStationID] = true;
                 var previousStationID = previousStation[i][currentStationID][1];
                 var currentStationTime = time[i][currentStationID];
                 queue4trace.enqueue(-currentStationTime, [previousStationID, currentStationID]);
