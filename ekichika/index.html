@@ -262,6 +262,7 @@
         );
         //tooltip
         resizeStationTooltip(event);
+        hideStationTooltipOnZoom(event);
         //テキスト
         if (event.transform.k > 6) {
           g.selectAll("text")

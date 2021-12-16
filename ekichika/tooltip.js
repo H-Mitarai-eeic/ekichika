@@ -3,6 +3,8 @@ var stationTooltip;
 var stationTooltipScale = 1;  //for tooltip
 var stationTooltipPreviousScale = 1;
 var stationTooltipFontSize = 10;
+var stationTooltipLowerScaleThreshold = 1.8;
+var stationTooltipHigherScaleThreshold = 10.5;
 
 //var stationTooltipBgWidth = 60;
 //var stationTooltipBgHeight = 20;
@@ -28,7 +30,7 @@ function tooltipHandlerOnCircle(event){
   if(event.type == "mouseover"){
     stationTooltipFlag[stationTooltipClass] = true;
     setTimeout(() => {
-      if(stationTooltipFlag[stationTooltipClass]){
+      if(stationTooltipFlag[stationTooltipClass] && stationTooltipScale > stationTooltipLowerScaleThreshold && stationTooltipScale < stationTooltipHigherScaleThreshold){
         showStationTooltip(event, data, stationTooltipClass ,cx, cy, transform);
       }
     }, 180);
@@ -40,7 +42,7 @@ function tooltipHandlerOnCircle(event){
         hideStationTooltip(event, stationTooltipClass);
         delete stationTooltipFlag[stationTooltipClass];
       }
-    }, 20);
+    }, 0);
   }
 }
 
@@ -94,7 +96,6 @@ function showStationTooltip(event, data, stationTooltipClass, x, y, transform, y
       .attr("stroke-width", 0.1);
 }
 function hideStationTooltip(event, stationTooltipClass){
-  console
   svg.selectAll("." + stationTooltipClass).remove();
 }
 function resizeStationTooltip(event){
@@ -144,6 +145,11 @@ function resizeStationTooltip(event){
               })
   }
   stationTooltipPreviousScale = stationTooltipScale;
+}
+function hideStationTooltipOnZoom(event){
+  if (event.transform.k < stationTooltipLowerScaleThreshold || event.transform.k > stationTooltipHigherScaleThreshold){
+    stationTooltips.selectAll("g").remove();
+  }
 }
 
 function tooltipHandlerOnTooltip(event){
