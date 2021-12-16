@@ -16,7 +16,7 @@ function multi_person() {
 clicked_stations_names;
 
 function show_center_station() {
-  meet_up(clicked_stations, 180, stationQueue, goal_station_name_ID).then(
+  meet_up(clicked_stations, 180, stationQueue, goal_station_name_ID, goal_station_time).then(
     () => {
       while (stationQueue.length) {
         var rinsetsu_stations = stationQueue.shift();
@@ -36,6 +36,10 @@ function show_center_station() {
       if (goal_station_name_ID.length == 1) {
         // center_stationは駅名+グループID
         var center_station = goal_station_name_ID.shift();
+        // 最短駅までの時間
+        var center_station_time = goal_station_time.shift();
+        console.log("center_station_time:" + center_station_time);
+
         g.select("#" + center_station)
           .transition()
           .duration(500)
@@ -46,6 +50,12 @@ function show_center_station() {
       } else if (goal_station_name_ID.length == 2) {
         var center_station = goal_station_name_ID.shift();
         var nearest_hub_station = goal_station_name_ID.shift();
+
+        var center_station_time = goal_station_time.shift();
+        var nearest_hub_station_time = goal_station_time.shift();
+        console.log("center_station_time:" + center_station_time);
+        console.log("nearest_hub_station_time:" + nearest_hub_station_time);
+
         g.select("#" + center_station)
           .transition()
           .duration(500)
