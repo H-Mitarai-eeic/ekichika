@@ -38,6 +38,7 @@ function show_center_station() {
         var center_station = goal_station_name_ID.shift();
         // 最短駅までの時間
         var center_station_time = goal_station_time.shift();
+        console.log("center_station_time:" + center_station_time);
 
         g.select("#" + center_station)
           .transition()
@@ -52,7 +53,9 @@ function show_center_station() {
 
         var center_station_time = goal_station_time.shift();
         var nearest_hub_station_time = goal_station_time.shift();
-        
+        console.log("center_station_time:" + center_station_time);
+        console.log("nearest_hub_station_time:" + nearest_hub_station_time);
+
         g.select("#" + center_station)
           .transition()
           .duration(500)
