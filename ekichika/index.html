@@ -200,7 +200,7 @@
   <script src="//d3js.org/topojson.v1.min.js"></script>
   <script src="./search.js"></script>
   <script src="./clock.js"></script>
-  <script src="./tooltip.js"></script>
+  <!--<script src="./tooltip.js"></script>-->
   <script src="./menu.js"></script>
   <script src="./ekilist.js"></script>
   <script>
@@ -529,8 +529,8 @@
         }
         insertAllSelectedEkilist();
       });
-      circle.on("mouseover", showStationTooltip)
-        .on("mouseout", hideStationTooltip);
+      circle.on("mouseover", tooltipHandlerOnCircle)
+                .on("mouseout", tooltipHandlerOnCircle);
 
       var text = g
         .selectAll("text")
@@ -687,4 +687,5 @@
   <script src="./multi_person.js"></script>
   <script src="./multi_person_within_time.js"></script>
   <script src="./modal.js"></script>
+  <script src="./tooltip.js"></script>
 </body>
