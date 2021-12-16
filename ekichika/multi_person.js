@@ -1,4 +1,8 @@
 function multi_person() {
+  for (var single_station of clicked_stations_names){
+    single_station = single_station.replace(/[0-9]/gi, '');
+    clicked_stations.add(ekiNameToEkiData[single_station].GroupID);
+  }
   if (clicked_stations.size < 2) {
     console.log("num of stations selected is not enough!");
     return;
@@ -11,6 +15,7 @@ function multi_person() {
       .attr("opacity", 0);
     show_center_station();
   }
+  clicked_stations.clear();
 }
 
 clicked_stations_names;
