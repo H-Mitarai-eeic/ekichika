@@ -50,6 +50,7 @@
 <link rel="stylesheet" href="modal.css" />
 <link rel="stylesheet" href="ekilist.css" />
 <link rel="stylesheet" href="goalStations.css" />
+<link rel="stylesheet" href="fukidashi.css" />
 
 <body bgcolor="black">
   <!-- >>> for sidebar >>> -->
@@ -86,34 +87,37 @@
     <div class="container">
       <div class="radio-tile-group">
         <!-- <form name="formMenu"> -->
-        <div class="input-container">
-          <input id="one" class="radio-button" type="radio" name="radio" checked value="one"
+          <div class="input-container">
+            <input id="one" class="radio-button" type="radio" name="radio" checked value="one"
             onchange="onMenuChange()" />
-          <div class="radio-tile">
-            <div class="icon one-icon">
-              <img src="./fig/one_.png" width="30" height="30" />
+            <div class="radio-tile">
+              <div class="icon one-icon">
+                <img src="./fig/one_.png" width="30" height="30" />
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="input-container">
-          <input id="meet" class="radio-button" type="radio" name="radio" value="meet" onchange="onMenuChange()" />
-          <div class="radio-tile">
-            <div class="icon meet-icon">
-              <img src="./fig/meet_.png" width="50" height="22" />
+          <p class="fukidashi">ひとりでどこまでいけるかな</p>
+          
+          <div class="input-container">
+            <input id="meet" class="radio-button" type="radio" name="radio" value="meet" onchange="onMenuChange()" />
+            <div class="radio-tile">
+              <div class="icon meet-icon">
+                <img src="./fig/meet_.png" width="50" height="22" />
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="input-container">
-          <input id="meetWithTime" class="radio-button" type="radio" name="radio" value="meetWithTime"
+          <p class="fukidashi">どこに集合しようかな</p>
+          
+          <div class="input-container">
+            <input id="meetWithTime" class="radio-button" type="radio" name="radio" value="meetWithTime"
             onchange="onMenuChange()" />
-          <div class="radio-tile">
-            <div class="icon car-icon">
-              <img src="./fig/meetWithTime_.png" width="45" height="35" />
+            <div class="radio-tile">
+              <div class="icon car-icon">
+                <img src="./fig/meetWithTime_.png" width="45" height="35" />
+              </div>
             </div>
           </div>
-        </div>
+          <p class="fukidashi">みんなでどこまでいけるかな</p>
         <!-- </form> -->
       </div>
     </div>
