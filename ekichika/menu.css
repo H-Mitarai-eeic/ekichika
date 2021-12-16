@@ -11,7 +11,7 @@ body {
   align-items: center;
   height: auto;
   padding-top: 70px;
-  /* padding-bottom: 5px; */
+  padding-bottom: 5px;
 }
 .radio-tile-group {
   display: flex;
