@@ -229,6 +229,7 @@
     var clicked_stations = new Set();
     var clicked_stations_names = new Set();
     var Greens = [];
+    var Purples = [];
     var goal_station_name_ID = [];
     var goal_station_time = [];
 
@@ -526,6 +527,13 @@
                     .ease(d3.easeLinear)
                     .attr("fill-opacity", 1)
                     .attr("fill", "lime");
+            } else if (Purples.length > 0 && Purples[0] == d.name + d.GroupID){
+                d3.select(this)
+                    .transition()
+                    .duration(500)
+                    .ease(d3.easeLinear)
+                    .attr("fill-opacity", 1)
+                    .attr("fill", "darkviolet");
             } else {
                 d3.select(this)
                     .transition()
