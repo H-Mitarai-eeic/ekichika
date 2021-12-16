@@ -31,7 +31,7 @@ function tooltipHandlerOnCircle(event){
       if(stationTooltipFlag[stationTooltipClass]){
         showStationTooltip(event, data, stationTooltipClass ,cx, cy, transform);
       }
-    }, 200);
+    }, 180);
   }
   else if(event.type == "mouseout"){
     stationTooltipFlag[stationTooltipClass] = false;
@@ -40,7 +40,7 @@ function tooltipHandlerOnCircle(event){
         hideStationTooltip(event, stationTooltipClass);
         delete stationTooltipFlag[stationTooltipClass];
       }
-    }, 200);
+    }, 20);
   }
 }
 

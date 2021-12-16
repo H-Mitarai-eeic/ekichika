@@ -160,7 +160,7 @@ async function within_T_min(startGroupID, T, stationQueue) {
         });
     }
 }
-async function meet_up(startGroupID_set, T, stationQueue, goalStationNameID){
+async function meet_up(startGroupID_set, T, stationQueue, goalStationNameID, goalStationMaxTime){
     var N = startGroupID_set.size;
     var Adj_list = {};
     var groupInfo = {};
@@ -309,21 +309,19 @@ async function meet_up(startGroupID_set, T, stationQueue, goalStationNameID){
                     visited_group_flag[i][currentGroupID] = true;
                     numOfVisitors[currentGroupID] += parseInt(1);
                     if (numOfVisitors[currentGroupID] == N){
-                        //全員集合してたら
-                        //console.log("集合場所", groupInfo[currentGroupID]);
-                        //return traceBack(currentGroupID);
-                        //var noriire = groupInfo[currentGroupID].length;
                         var noriire = Adj_list[currentStationID].length;
-                        //console.log(noriire)
+
                         if(meetupFlag.nearest == false){
                             meetupFlag.nearest = true;
                             if(noriire >= hubStationThreshold){
                                 meetupFlag.hub = true;
                             }
                             traceBack(currentGroupID);
+                            goalStationMaxTime.push(time[i][currentStationID]);
                         }else if(meetupFlag.hub == false && noriire >= hubStationThreshold){
                             meetupFlag.hub = true;
                             traceBack(currentGroupID);
+                            goalStationMaxTime.push(time[i][currentStationID]);
                         }
                         //console.log(meetupFlag);
                         if(meetupFlag.nearest && meetupFlag.hub){
