@@ -1,9 +1,11 @@
 function multi_person_within_time() {
-  for (var single_station of clicked_stations_names){
+  for (var single_station of clicked_stations_names) {
     single_station = single_station.replace(/[0-9]/gi, '');
     clicked_stations.add(ekiNameToEkiData[single_station].GroupID);
   }
   if (clicked_stations.size < 2) {
+    document.getElementById("keiziban").innerHTML = "駅を2つ以上選んでください";
+    document.getElementById("ledText").style.display = "block";
     console.log("num of stations selected is not enough!");
     return;
   } else {
