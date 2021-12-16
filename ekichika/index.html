@@ -262,7 +262,7 @@
         //tooltip
         resizeStationTooltip(event);
         //テキスト
-        if (event.transform.k > 10) {
+        if (event.transform.k > 6) {
           g.selectAll("text")
             .attr("transform", event.transform)
             .attr("font-size", function (d) {
@@ -275,7 +275,7 @@
                 (0.2 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k)
               );
             })
-            .attr("opacity", (event.transform.k - 9) / 15);
+            .attr("opacity", (event.transform.k - 6) / 5);
         } else {
           g.selectAll("text").attr("opacity", 0);
         }
@@ -610,11 +610,11 @@
       console.log("#" + inputEkidata.name + inputEkidata.GroupID);
       g.select("#" + inputEkidata.name + inputEkidata.GroupID)
         .transition()
-        .duration(1000)
+        .duration(500)
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
           console.log(d);
-          return (1.2 * Math.sqrt(d.noriire) * 5) / kakudairitu ** 3 / 2;
+          return (1.2 * Math.sqrt(d.noriire) * 5) / kakudairitu / 2;
         })
         .transition()
         .ease(d3.easeSin, d3.easeSinInOut)
@@ -622,11 +622,11 @@
           return (1.2 * Math.sqrt(d.noriire)) / kakudairitu / 2;
         })
         .transition()
-        .duration(1000)
+        .duration(500)
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
           console.log(d);
-          return (1.2 * Math.sqrt(d.noriire) * 5) / kakudairitu ** 3 / 2;
+          return (1.2 * Math.sqrt(d.noriire) * 4) / kakudairitu / 2;
         })
         .transition()
         .ease(d3.easeSin, d3.easeSinInOut)
@@ -634,11 +634,11 @@
           return (1.2 * Math.sqrt(d.noriire)) / kakudairitu / 2;
         })
         .transition()
-        .duration(1000)
+        .duration(500)
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
           console.log(d);
-          return (1.2 * Math.sqrt(d.noriire) * 5) / kakudairitu ** 3 / 2;
+          return (1.2 * Math.sqrt(d.noriire) * 3) / kakudairitu / 2;
         })
         .transition()
         .ease(d3.easeSin, d3.easeSinInOut)
