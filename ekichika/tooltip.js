@@ -9,7 +9,8 @@ var stationTooltipFontSize = 10;
 
 //var stationTooltipDataN = 2;
 
-var stationFoldedTooltipDelFlag = {};
+var stationFoldedTooltipFlag = {};  //key：クラス, true for show, false for remove
+var stationTooltipFlag = {};
 
 var stationTooltips = svg.append("g")
   .attr("class", "stationTooltips")
@@ -22,16 +23,28 @@ function tooltipHandlerOnCircle(event){
   var data = [selected_circle.datum().name];
   var ID = data[0] + data[1];
   var transform = selected_circle.attr("transform");
+  var stationTooltipClass = "stationTooltip" + ID;
 
   if(event.type == "mouseover"){
-    showStationTooltip(event, data, ID ,cx, cy, transform);
+    stationTooltipFlag[stationTooltipClass] = true;
+    setTimeout(() => {
+      if(stationTooltipFlag[stationTooltipClass]){
+        showStationTooltip(event, data, stationTooltipClass ,cx, cy, transform);
+      }
+    }, 200);
   }
   else if(event.type == "mouseout"){
-    hideStationTooltip(event, ID);
+    stationTooltipFlag[stationTooltipClass] = false;
+    setTimeout(() => {
+      if(stationTooltipFlag[stationTooltipClass] == false){
+        hideStationTooltip(event, stationTooltipClass);
+        delete stationTooltipFlag[stationTooltipClass];
+      }
+    }, 200);
   }
 }
 
-function showStationTooltip(event, data, ID, x, y, transform, y_offset=-10, x_offset=0){
+function showStationTooltip(event, data, stationTooltipClass, x, y, transform, y_offset=-10, x_offset=0){
   var y_col = parseFloat(y) + y_offset / Math.cbrt(stationTooltipScale);
   var x_col = parseFloat(x) + x_offset / Math.cbrt(stationTooltipScale);
   var scaled_fontsize = stationTooltipFontSize / Math.cbrt(stationTooltipScale);
@@ -47,7 +60,7 @@ function showStationTooltip(event, data, ID, x, y, transform, y_offset=-10, x_of
 
   stationTooltip = stationTooltips
       .append("g")
-      .attr("class", "stationTooltip" + ID)
+      .attr("class", stationTooltipClass)
       .call(zoom);
   //console.log(stationTooltipZoom);
   stationTooltip.selectAll(".stationTooltipText")
@@ -80,8 +93,9 @@ function showStationTooltip(event, data, ID, x, y, transform, y_offset=-10, x_of
       .attr("stroke", "white")
       .attr("stroke-width", 0.1);
 }
-function hideStationTooltip(event, ID){
-  svg.selectAll(".stationTooltip" + ID).remove();
+function hideStationTooltip(event, stationTooltipClass){
+  console
+  svg.selectAll("." + stationTooltipClass).remove();
 }
 function resizeStationTooltip(event){
   stationTooltipScale = event.transform.k;
@@ -252,5 +266,5 @@ function resizeStationFoldedTooltip(event){
   stationTooltipPreviousScale = stationTooltipScale;
 }
 function stationFoldedTooltipChColor(event, tooltipClass){
-  
+
 }
