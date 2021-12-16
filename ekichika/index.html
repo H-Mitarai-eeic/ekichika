@@ -51,6 +51,7 @@
 <link rel="stylesheet" href="ekilist.css" />
 <link rel="stylesheet" href="goalStations.css" />
 <link rel="stylesheet" href="fukidashi.css" />
+<link rel="stylesheet" href="denkouKeijiban.css" />
 
 <body bgcolor="black">
   <!-- >>> for sidebar >>> -->
@@ -61,6 +62,7 @@
     <div class="spinner diagonal part-2"></div>
   </label>
   <div id="sidebarMenu">
+    <p class="ledText" id="ledText"><span id="keiziban" >駅を2つ以上選んでください</span></p>
     <!-- <div class="wrapper"> -->
     <!-- >>> for search >>> -->
 
@@ -84,7 +86,7 @@
     <!-- >>> for menu >>> -->
 
 
-    <div class="container">
+    <div class="container" id="container">
       <div class="radio-tile-group">
         <!-- <form name="formMenu"> -->
           <div class="input-container">
@@ -710,6 +712,23 @@
         clearForm();
       }
     });
+    
+    document.getElementById("inputEkiname").addEventListener("keydown", (e) => {
+      if (e.keyCode == 13) {
+        ekiSearch();
+      }
+      if (e.keyCode == 229) {
+        clearForm();
+      }
+    });
+
+    document.getElementById('container').addEventListener('mouseover', function(){
+      document.getElementById("ledText").style.display = "none";
+});
+    BODY.addEventListener('click', function(){
+      document.getElementById("ledText").style.display = "none";
+});
+    
   </script>
 
 
