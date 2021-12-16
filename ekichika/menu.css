@@ -10,8 +10,8 @@ body {
   justify-content: center;
   align-items: center;
   height: auto;
-  padding-top: 100px;
-  padding-bottom: 15px;
+  padding-top: 70px;
+  padding-bottom: 5px;
 }
 .radio-tile-group {
   display: flex;
