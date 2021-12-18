@@ -36,6 +36,19 @@
   .text {
     pointer-events: none;
   }
+
+
+  #title{
+    color: #fff;
+    position: absolute;
+    /* right: 410px; */
+    /* top: 30px; */
+    /* left: 180px;
+    top: 15px; */
+    bottom: 30px;
+    right: 50px;
+    font-size: 25px;
+  }
 </style>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -151,8 +164,12 @@
     <div id="selectedEkilist">
     </div>
     <div id="goalStations">
-      <div id="goalGreen"><span class="border-radius green"></span><span id="goalGreenName">茗荷谷</span><br><span class="border-radius"></span><span id="goalGreenTime">25min</span></div>
-      <div id="goalPurple"><span class="border-radius purple"></span><span id="goalPurpleName">押上（東京スカイツリー前）</span><br><span class="border-radius"></span><span id="goalPurpleTime">30min</span></div>
+      <div id="goalGreen"><span class="border-radius green"></span><span id="goalGreenName" class="padleft">茗荷谷</span><br><span class="border-radius"></span><span id="goalGreenTime" class="padleft">25min</span></div>
+      <div id="goalPurple"><span class="border-radius purple"></span><span id="goalPurpleName" class="padleft">押上（東京スカイツリー前）</span><br><span class="border-radius"></span><span id="goalPurpleTime" class="padleft">30min</span></div>
+      <div id="goalOne"><span class="border-radius green"></span><span class="border-radius purple"></span><span id="goalOneName" class="padleft">押上（東京スカイツリー前）</span><br><span class="border-radius"></span><span class="border-radius"></span><span id="goalOneTime" class="padleft">30min</span></div>
+    </div>
+    <div id="open">
+      <img src="fig/help.png" width="40px" height="40px" />
     </div>
   </div>
 
@@ -176,7 +193,8 @@
       1. 集合する複数人の最寄り駅をクリックする．<br />
       2. RUNボタンを押す．<br />
       <br />
-      最も早く集合できる駅が<strong><span class="textGreen">黄緑色</div>
+      最も早く集合できる駅が
+      <strong><span class="textGreen">黄緑色</div>
       </strong>
       で表示され，<br />集まりやすい大きな駅が
       <strong>
@@ -193,7 +211,9 @@
       2. マウスを使って時計をセッティングする．<br />
       3. RUNボタンを押す．<br />
       <br />
-      設定した時間以内に全員が行ける全ての駅が表示されます．<br />
+      設定した時間以内に全員が行ける駅が
+      <span class="textLightBlue"><strong>薄青色</strong></span>
+      で表示されます．<br />
     </p>
     </p>
     <div id="close3" class="close">Close</div>
@@ -202,9 +222,11 @@
   <div class="search">
     <input type="text" placeholder="Station Name" id="inputEkiname" />
     <button onclick="ekiSearch()" id="search">
-      <img src="fig/search2.png" width="20px" height="20px" />
+      <img src="fig/search2.png" width="19px" height="19px" />
     </button>
   </div>
+  
+  <div id="title">EKICHIKA</div>
 
   <!-- <<< for sidebar <<< -->
   <script src="./d3.js" charset="utf-8"></script>
@@ -229,6 +251,7 @@
     var clicked_stations = new Set();
     var clicked_stations_names = new Set();
     var Greens = [];
+    var Purples = [];
     var goal_station_name_ID = [];
     var goal_station_time = [];
 
@@ -253,7 +276,7 @@
         g.selectAll(".circle")
           .attr("transform", event.transform)
           .attr("r", function (d) {
-            return (1.2 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k);
+            return (1.35 * Math.sqrt(d.noriire)) / Math.cbrt(event.transform.k);
           })
           .attr("stroke-width", 0.4 / Math.cbrt(event.transform.k));
         //波
@@ -423,7 +446,7 @@
           return projection([d.ido, d.keido])[1];
         });
         p.attr("r", function (d) {
-          return 1.2 * Math.sqrt(d.noriire);
+          return 1.35 * Math.sqrt(d.noriire);
         });
         p.attr("stroke-width", 0.4);
         p.attr("id", function (d) {
@@ -526,6 +549,13 @@
                     .ease(d3.easeLinear)
                     .attr("fill-opacity", 1)
                     .attr("fill", "lime");
+            } else if (Purples.length > 0 && Purples[0] == d.name + d.GroupID){
+                d3.select(this)
+                    .transition()
+                    .duration(500)
+                    .ease(d3.easeLinear)
+                    .attr("fill-opacity", 1)
+                    .attr("fill", "darkviolet");
             } else {
                 d3.select(this)
                     .transition()
@@ -662,36 +692,36 @@
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
           console.log(d);
-          return (1.2 * Math.sqrt(d.noriire) * 5) / kakudairitu / 2;
+          return (1.35 * Math.sqrt(d.noriire) * 5) / kakudairitu / 2;
         })
         .transition()
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
-          return (1.2 * Math.sqrt(d.noriire)) / kakudairitu / 2;
-        })
-        .transition()
-        .duration(500)
-        .ease(d3.easeSin, d3.easeSinInOut)
-        .attr("r", function (d) {
-          console.log(d);
-          return (1.2 * Math.sqrt(d.noriire) * 4) / kakudairitu / 2;
-        })
-        .transition()
-        .ease(d3.easeSin, d3.easeSinInOut)
-        .attr("r", function (d) {
-          return (1.2 * Math.sqrt(d.noriire)) / kakudairitu / 2;
+          return (1.35 * Math.sqrt(d.noriire)) / kakudairitu / 2;
         })
         .transition()
         .duration(500)
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
           console.log(d);
-          return (1.2 * Math.sqrt(d.noriire) * 3) / kakudairitu / 2;
+          return (1.35 * Math.sqrt(d.noriire) * 4) / kakudairitu / 2;
         })
         .transition()
         .ease(d3.easeSin, d3.easeSinInOut)
         .attr("r", function (d) {
-          return (1.2 * Math.sqrt(d.noriire)) / kakudairitu / 2;
+          return (1.35 * Math.sqrt(d.noriire)) / kakudairitu / 2;
+        })
+        .transition()
+        .duration(500)
+        .ease(d3.easeSin, d3.easeSinInOut)
+        .attr("r", function (d) {
+          console.log(d);
+          return (1.35 * Math.sqrt(d.noriire) * 3) / kakudairitu / 2;
+        })
+        .transition()
+        .ease(d3.easeSin, d3.easeSinInOut)
+        .attr("r", function (d) {
+          return (1.35 * Math.sqrt(d.noriire)) / kakudairitu / 2;
         });
     }
 
@@ -743,9 +773,7 @@
 
 
 
-  <div id="open">
-    <img src="fig/help.png" width="25px" height="25px" />
-  </div>
+
 
   <script src="./single_person.js"></script>
   <script src="./multi_person.js"></script>

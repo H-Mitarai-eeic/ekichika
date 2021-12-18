@@ -24,7 +24,7 @@
   /* TODO set below */
   /* top: 250px; */
   bottom: 25px;
-  right: 60px;
+  left: 25px;
   /* top: -100px; */
   float: right;
   /* padding-right: 100px; */
@@ -46,10 +46,11 @@
 }
 
 .modal {
+  font-size: 18px;
   padding-top: 60px;
   background: rgba(121, 121, 120, 0.9);
   color: rgb(255, 255, 255);
-  width: 300px;
+  /* width: 620px; */
   padding: 40px;
   border-radius: 4px;
   position: fixed;
@@ -80,4 +81,7 @@
 }
 .textPuple {
   color: rgb(207, 160, 252);
+}
+.textLightBlue {
+  color: rgb(24, 47, 255);
 }
