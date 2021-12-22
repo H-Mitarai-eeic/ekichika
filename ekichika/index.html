@@ -607,8 +607,8 @@
         }
         insertAllSelectedEkilist();
       });
-      circle.on("mouseover", tooltipHandlerOnCircle)
-                .on("mouseout", tooltipHandlerOnCircle);
+      circle.on("mouseover", foldedTooltipHandlerOnCircle)
+                .on("mouseout", foldedTooltipHandlerOnCircle);
 
       var text = g
         .selectAll("text")

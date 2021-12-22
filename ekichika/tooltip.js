@@ -310,11 +310,22 @@ function hideStationFoldedTooltipOnZoom(event){
 function foldedTooltipHandlerOnFoldedTooltip(event){
   var selectedTooltip = d3.select(this);
   var stationTooltipClass = selectedTooltip.attr("class")
+
+  var defaultFillColor = "black";
+  var defaultFillOpacity = 0.2;
+  var defaultTextColor = "white";
+
+  var mouseoverFillColor = "white";
+  var mouseoverFillOpacity = 0.2;
+  var mouseoverTextColor = "black";
+
   if(event.type == "mouseover"){
     stationTooltipFlag[stationTooltipClass] = true;
+    ChFoldedTooltipColor(event, stationTooltipClass, mouseoverFillColor, mouseoverFillOpacity, mouseoverTextColor)
   }
   else if(event.type == "mouseout"){
     stationTooltipFlag[stationTooltipClass] = false;
+    ChFoldedTooltipColor(event, stationTooltipClass, defaultFillColor, defaultFillOpacity, defaultTextColor)
     setTimeout(() => {
       if(stationTooltipFlag[stationTooltipClass] == false){
         hideStationTooltip(event, stationTooltipClass);
@@ -323,6 +334,13 @@ function foldedTooltipHandlerOnFoldedTooltip(event){
     }, 10);
   }
 }
-function ChFoldedTooltipColor(event, stationFoldedTooltipClass){
-  svg.selectAll("." + stationFoldedTooltipClass).attr()
+function ChFoldedTooltipColor(event, stationFoldedTooltipClass, fillColor, fillOpacity, textColor){
+  svg.selectAll("." + stationFoldedTooltipClass)
+    .selectAll(".stationTooltipBg")
+    .attr("fill", fillColor)
+    .attr("fill-opacity", fillOpacity);
+
+  svg.selectAll("." + stationFoldedTooltipClass)
+  .selectAll(".stationTooltipText")
+  .attr("text", textColor);
 }
