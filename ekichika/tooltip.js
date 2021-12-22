@@ -219,8 +219,8 @@ function showStationFoldedTooltip(event, data, stationFoldedTooltipClass, x, y, 
   stationTooltip = stationTooltips
       .append("g")
       .attr("class", stationFoldedTooltipClass)
-      .on("mouseover", tooltipHandlerOnTooltip)
-      .on("mouseout", tooltipHandlerOnTooltip);
+      .on("mouseover", foldedTooltipHandlerOnFoldedTooltip)
+      .on("mouseout", foldedTooltipHandlerOnFoldedTooltip);
   //console.log(stationTooltipZoom);
   stationTooltip.selectAll(".stationTooltipText")
       .data(data)
