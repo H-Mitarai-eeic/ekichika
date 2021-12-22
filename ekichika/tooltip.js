@@ -180,7 +180,6 @@ function foldedTooltipHandlerOnCircle(event){
   var ID = data[0] + data[1];
   var transform = selected_circle.attr("transform");
   var stationTooltipClass = "stationFoldedTooltip" + ID;
-  console.log(event);
   if(event.type == "mouseover"){
     stationTooltipFlag[stationTooltipClass] = true;
     setTimeout(() => {
