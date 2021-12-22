@@ -186,7 +186,7 @@ function foldedTooltipHandlerOnCircle(event){
     setTimeout(() => {
       if(stationTooltipFlag[stationTooltipClass] && stationTooltipScale > stationTooltipLowerScaleThreshold && stationTooltipScale < stationTooltipHigherScaleThreshold){
         if(stationTooltips.select("." + stationTooltipClass).empty()){
-          showStationTooltip(event, data, stationTooltipClass ,cx, cy, transform);
+          showStationFoldedTooltip(event, data, stationTooltipClass ,cx, cy, transform);
         }
       }
     }, 180);
@@ -195,7 +195,7 @@ function foldedTooltipHandlerOnCircle(event){
     stationTooltipFlag[stationTooltipClass] = false;
     setTimeout(() => {
       if(stationTooltipFlag[stationTooltipClass] == false){
-        hideStationTooltip(event, stationTooltipClass);
+        hideStationFoldedTooltip(event, stationTooltipClass);
         delete stationTooltipFlag[stationTooltipClass];
       }
     }, 2000);
