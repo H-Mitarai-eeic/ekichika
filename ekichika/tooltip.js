@@ -198,7 +198,7 @@ function foldedTooltipHandlerOnCircle(event){
         hideStationTooltip(event, stationTooltipClass);
         delete stationTooltipFlag[stationTooltipClass];
       }
-    }, 200);
+    }, 2000);
   }
 }
 
@@ -331,7 +331,7 @@ function foldedTooltipHandlerOnFoldedTooltip(event){
         hideStationTooltip(event, stationTooltipClass);
         delete stationTooltipFlag[stationTooltipClass];
       }
-    }, 100);
+    }, 200);
   }
 }
 function ChFoldedTooltipColor(event, stationFoldedTooltipClass, fillColor, fillOpacity, textColor){
