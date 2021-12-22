@@ -341,5 +341,5 @@ function ChFoldedTooltipColor(event, stationFoldedTooltipClass, fillColor, fillO
 
   svg.selectAll("." + stationFoldedTooltipClass)
   .selectAll(".stationTooltipText")
-  .attr("text", textColor);
+  .attr("fill", textColor);
 }
