@@ -26,6 +26,7 @@ function tooltipHandlerOnCircle(event){
   var ID = data[0] + data[1];
   var transform = selected_circle.attr("transform");
   var stationTooltipClass = "stationTooltip" + ID;
+  console.log(event);
 
   if(event.type == "mouseover"){
     stationTooltipFlag[stationTooltipClass] = true;
